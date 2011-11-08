@@ -1,0 +1,16 @@
+<div class="sidebar_box">
+<div>
+  <span>Archives: </span>
+  <hr/>
+  <div class="sidebar_subbox">
+  <% @archives.each do |archive| %>
+    <div class="cal_element">
+    <span>
+    <% name = archive[:year].to_s + ", " + archive[:month].to_s %>
+    <%= link_to(name, archives_path(archive[:year], archive[:month])) + " (" + archive[:count].to_s + ')' %>
+    </span>
+    </div>
+  <% end %>
+  </div>
+</div>
+</div>

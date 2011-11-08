@@ -1,0 +1,7 @@
+<h1>Search results</h1>
+<% if @posts.empty? %>
+No search results contained "<%= params[:search] %>"
+<% else %>
+<%= raw @posts.map { |p| render :partial => 'posts/post', :locals => { :post => p } }.join('<hr style="margin:0px 10px 10px 15px;"/>') %>
+<%= will_paginate @posts %>
+<% end %>

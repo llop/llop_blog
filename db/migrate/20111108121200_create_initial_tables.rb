@@ -45,8 +45,8 @@ class CreateInitialTables < ActiveRecord::Migration
       create table comments ( 
         id serial not null primary key, 
         name character varying(36) not null, 
-        email character varying(36) not null, 
-        uri character varying(36) default null, 
+        email character varying(128) not null, 
+        uri character varying(128) default null, 
         body text not null, 
         post_id integer not null references posts(id), 
         created_at timestamp without time zone not null 

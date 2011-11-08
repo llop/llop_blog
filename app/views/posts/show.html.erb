@@ -1,0 +1,53 @@
+<div style="padding:10px; padding-bottom:30px;">
+  <div>
+  <table style="width:100%">
+  <tr>
+    <td style="width:60px; height:60px; text-align:center; vertical-align:top;">
+    <div class="cal" style="margin:0px; margin-top:12px; padding:1px;">
+      <div style="line-height:15px;"><%= I18n.translate('date.abbr_month_names')[@post.created_at.month] %></div>
+      <div style="font-size:2em; top:0px; line-height:28px;"><%= @post.created_at.day %></div>
+      <div style="line-height:15px;"><%= @post.created_at.year %></div>
+    </div>
+    </td>
+    <td>
+    <div style="margin:5px; margin-right:0px;">
+      <div><span style="font-size:2em"><%= link_to @post.title, post_path(@post.id) %></span></div>
+      <hr style="margin-bottom:0px;"/>
+      <div style="float:left;" class="menu_element"><%= link_to @post.category.name, category_path(@post.category.id) %></div>
+      <div style="float:right;" class="com_element">
+      <% c = @post.comments.count %>
+      <% if c == 0 %>
+        <%= link_to "No responses", "#leave_reply" %>
+      <% else %>
+        <%= link_to (c.to_s + " response" + (c == 1 ? "" : "s")), "#comments" %>
+      <% end %>
+      </div>
+    </div>
+    </td>
+  </tr>
+  </table>
+  </div>
+  <div style="padding:0px 5px 0px 10px;">
+    <div style="padding-bottom:15px; padding-top:5px;"><p><span style="font-style:italic;"><%=raw @post.summary %></span></p></div>
+  </div>
+  <div style="padding:0px 5px 0px 10px;">
+    <div><%= raw @post.body %></div>
+  </div>
+  <div style="float:right; padding-top:10px;">
+  <%= render :partial => 'tags/tags', :object => @post.tags %>
+  </div>
+</div>
+<% unless c == 0 %>
+<div style="text-align:center; padding-top:15px;">
+  <span style="font-family:courier">********************************************************</span>
+</div>
+<div style="padding:20px; padding-bottom:0px;">
+  <div style="padding-bottom:20px;"><span style="font-size:1.8em"><a name="comments">Comments</a></span></div>
+  <%= render @post.comments %>
+</div>
+<% end %>
+<div style="text-align:center; padding-bottom:15px;">
+  <span style="font-family:courier">********************************************************</span>
+</div>
+<%= render "comments/form" %>
+

@@ -1,0 +1,28 @@
+<div style="padding-bottom:20px;">
+<table style="width:100%">
+<tr>
+<td>
+<div>
+  <div style="float:left;">
+  <span>
+  <% if comment.uri %>
+    <%= link_to comment.name, comment.uri, :target => '_blank' %>
+  <% else %>
+    <%= label_tag 'name', comment.name %>
+  <% end %> says:
+  </span> 
+  </div>
+  <div style="float:right;"><%= l comment.created_at, :format => :short %></div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div>
+  <div><hr/></div>
+  <div><%= raw comment.body %></div>
+</div>
+</td>
+</tr>
+</table>
+</div>

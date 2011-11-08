@@ -1,0 +1,35 @@
+<% unless @comment.errors.empty? %>
+<!-- jump to the leave reply form in case errors were found -->
+<script type="text/javascript" language="javascript">
+  function jump_2_reply_form() { window.location.hash = "leave_reply"; }
+  window.onload = jump_2_reply_form;
+</script>
+<% end %>
+<div style="padding:0px 25px 10px 25px;">
+  <div style="padding-bottom:15px;">
+    <span style="font-size:1.8em"><a name="leave_reply">Leave a reply</a></span>
+  </div>
+  <%= form_for @comment, :url => post_comments_path(@post.id) do |f| %>
+    <%= f.error_messages :header_message => 'Invalid reply', :message => nil, :header_tag => :h3 %>
+    <div style="padding:3px 0px 3px 0px;">
+      <div style="width:120px; float:left;"><%= f.label :name %></div>
+      <div><%= f.text_field :name %><span> (required)</span></div>
+    </div>
+    <div style="padding:3px 0px 3px 0px;">
+      <div style="width:120px; float:left;"><%= f.label :email %></div>
+      <div><%= f.text_field :email %><span> (required) (Not published)</span></div>
+    </div>
+    <div style="padding:3px 0px 3px 0px;">
+      <div style="width:120px; float:left;"><%= f.label :uri %></div>
+      <div><%= f.text_field :uri %></div>
+    </div>
+    <div style="padding:3px 0px 3px 0px;">
+      <div style="width:120px; float:left;"><%= f.label "Your comment" %></div>
+      <div><%= f.text_area :body %></div>
+    </div>
+    <div style="padding:3px 0px 3px 0px;">
+      <div style="width:120px; float:left;">&nbsp;</div>
+      <div><%= f.submit "Submit comment" %></div>
+    </div>
+  <% end %>
+</div>

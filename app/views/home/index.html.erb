@@ -1,1 +1,14 @@
-<h1>Funciona!</h1>
+<% content_for :head do %>
+  <%= stylesheet_link_tag    "application" %>
+  <%= javascript_include_tag "application" %>
+  <style>
+    body {   background-color: #EEEEEE; }
+    #wrapper {   width: 1000px;  margin: auto;   overflow: auto; }
+    #content {   width: 700px;  float: left;   background: #DDDDDD; }
+    #sidebar {   width: 300px;   float: right; }
+  </style>
+<% end %>
+<% content_for :body do %>
+<h1>Hello, Rails!</h1>
+<%= link_to "My Blog", posts_path %>
+<% end %>

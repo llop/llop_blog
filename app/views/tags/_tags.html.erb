@@ -1,0 +1,7 @@
+<% unless tags.empty? %>
+  <% html_arr = [] %>
+  <% tags.each { |tag| html_arr << link_to(tag.name, tag_path(tag.id)) } %>
+  <div class="tag_element">
+  <%= raw html_arr.join ', ' %>
+  </div>
+<% end %>

@@ -1,0 +1,23 @@
+<% content_for :head do %>
+  <title>Llop's blog</title>
+  <%= stylesheet_link_tag    "application" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+<% end %>
+<% content_for :body do %>
+  <div id="body_wrapper">
+    <div id="header"><div class="regular_border" style="height:100px; padding-bottom:0px; margin-bottom:0px;"/></div>
+	  <div id="content_wrapper">
+	    <div class="regular_border">
+	      <%= yield %>
+      </div>
+      <div class="regular_border" style="padding-left:25px;">
+        <span>&copy; 2011 Albert Lobo Cusid&oacute;</span>
+      </div>
+    </div>
+	  <div id="sidebar">
+	    <%= render "sidebar/sidebar" %>
+	  </div>
+  </div>
+<% end %>
+<%= render :template => 'layouts/application' %>

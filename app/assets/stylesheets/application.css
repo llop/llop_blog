@@ -5,3 +5,25 @@
  *= require_self
  *= require_tree . 
 */
+
+/** By element */
+body { background-color:#FFFFFF; font-family:"trebuchet ms"; font-size:0.9em;  }
+hr { border-style:none; border-top:1px dotted; margin-bottom:10px; }
+a { text-decoration:none; color:#555555; } 
+
+/** By id */
+#body_wrapper { width:1000px; margin:auto; overflow:auto; }
+#header { width:1000px; height:100px; background:url("/assets/header.png"); }
+#content_wrapper { width:700px; float:left; }
+#sidebar { width:300px; float:right; }
+
+/** By class */
+.regular_border { padding:10px; margin:10px; border-style:solid; border-width:1px; }
+.sidebar_box { padding:10px; margin:10px; margin-left:0px; border-style:solid; border-width:1px; }
+.sidebar_subbox { margin:10px; }
+.menu_element { background:url("/assets/pg.gif"); background-repeat:no-repeat; padding-left:20px; margin:2px; margin-left:0px; }
+.tag_element { background:url("/assets/tg.gif"); background-repeat:no-repeat; padding-left:20px; margin:2px; margin-left:0px; }
+.cal_element { background:url("/assets/sg.gif"); background-repeat:no-repeat; padding-left:20px; margin:2px; margin-left:0px; }
+.com_element { background:url("/assets/cg.gif"); background-repeat:no-repeat; padding-left:20px; margin:2px; margin-left:0px; }
+.cal { background:url("/assets/cal.gif"); background-repeat:no-repeat; }
+.errorExplanation { padding:0px 15px 0px 15px; margin-bottom:15px; border-style:solid; border-width:1px; border-color:red; }

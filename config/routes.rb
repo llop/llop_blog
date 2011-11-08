@@ -1,4 +1,19 @@
-Template::Application.routes.draw do
+LlopBlog::Application.routes.draw do
+  
+  # RESTful stuff
+  # Try to route only to working actions using :only constraint
+  # Make urls more descriptive prefixing everything with '/blog'
+  scope "/blog" do
+    resources :posts, :only => [ :index, :show ] do
+      resources :comments, :only => [ :create ]
+    end
+    resources :categories,  :only => [ :show ]
+    resources :tags,        :only => [ :show ]
+    get 'search', :controller => 'posts'
+    match 'archives/:year/:month' => 'posts#archives', :via => :get, :as => 'archives'
+  end
+  match 'blog' => 'posts#index', :via => :get
+
   get "home/index"
 
   # The priority is based upon order of creation:

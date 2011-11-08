@@ -1,0 +1,8 @@
+<div class="sidebar_box">
+<div class="sidebar_subbox">
+<% @tags_data.each do |tag_data| %>
+  <% size = "%.1f" % (((tag_data.count / @posts_count.to_f) * 0.8) + 0.8)  %>
+  <%= link_to tag_data.name, tag_path(tag_data.id), :style => "font-size:#{size}em;" %>
+<% end %>
+</div>
+</div>
