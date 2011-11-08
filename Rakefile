@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Template::Application.load_tasks
+LlopBlog::Application.load_tasks
