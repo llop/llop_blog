@@ -21,28 +21,16 @@ class CreateInitialTables < ActiveRecord::Migration
         title character varying(128) not null, 
         summary text not null, 
         body text not null, 
-        category_id integer not null references categories(id) on delete restrict, 
+        category_id integer not null references categories(id), 
         created_at timestamp without time zone not null, 
-        updated_at timestamp without time zone not null, 
-        searchable tsvector 
+        updated_at timestamp without time zone not null
       );
     SQL
-    execute "update posts set searchable = to_tsvector('english', title || ' ' || summary || ' ' || body);"
-    execute "create index textsearch_idx on posts using gin(searchable);"
     execute <<-SQL
-      create function searchable_trigger() returns trigger AS $$ 
-        begin 
-          new.searchable := 
-            setweight(to_tsvector('pg_catalog.english', new.title), 'A') || 
-            setweight(to_tsvector('pg_catalog.english', new.summary), 'B') || 
-            setweight(to_tsvector('pg_catalog.english', new.body), 'D'); 
-          return new; 
-        end 
-      $$ language plpgsql;
-    SQL
-    execute <<-SQL
-      create trigger tsvectorupdate before insert or update 
-      on posts for each row execute procedure searchable_trigger();
+      create index textsearch_idx on posts using gin(( 
+        setweight(to_tsvector('pg_catalog.english', title), 'A') || 
+        setweight(to_tsvector('pg_catalog.english', summary), 'B') || 
+        setweight(to_tsvector('pg_catalog.english', body), 'D')));
     SQL
     # Posts-Tags join table
     execute <<-SQL
@@ -60,7 +48,7 @@ class CreateInitialTables < ActiveRecord::Migration
         email character varying(36) not null, 
         uri character varying(36) default null, 
         body text not null, 
-        post_id integer not null references posts(id) on delete restrict, 
+        post_id integer not null references posts(id), 
         created_at timestamp without time zone not null 
       );
     SQL
@@ -71,7 +59,6 @@ class CreateInitialTables < ActiveRecord::Migration
     drop_table :comments
     drop_table :posts_tags
     drop_table :posts
-    execute "drop function if exists searchable_trigger();"
     drop_table :categories
     drop_table :tags
   end
