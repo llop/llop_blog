@@ -13,6 +13,8 @@ class BlogController < ApplicationController
     render_404
   end
   
+  force_ssl
+  
   # Protected methods
 protected
   def render_404(exception = nil)
