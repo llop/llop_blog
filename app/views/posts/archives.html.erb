@@ -1,7 +1,5 @@
-<h1>Search results</h1>
-<% if @posts.empty? %>
-No search results contained "<%= params[:search] %>"
-<% else %>
-<%= raw @posts.map { |p| render :partial => 'posts/post', :locals => { :post => p } }.join('<hr style="margin:0px 10px 10px 15px;"/>') %>
-<%= will_paginate @posts %>
-<% end %>
+<div style="padding:0px 15px 5px 15px; font-size:1em; color:#555555;">
+<span>Posted on <%= I18n.translate('date.month_names')[params[:month].to_i] %>, <%= params[:year] %></span>
+<hr style="margin-bottom:0px;"/>
+</div>
+<%= render 'posts/paginated_collection' %>

@@ -13,19 +13,19 @@
     <%= f.error_messages :header_message => 'Invalid reply', :message => nil, :header_tag => :h3 %>
     <div style="padding:3px 0px 3px 0px;">
       <div style="width:120px; float:left;"><%= f.label :name %></div>
-      <div><%= f.text_field :name %><span> (required)</span></div>
+      <div><%= f.text_field :name, :size => '48' %><span> (required)</span></div>
     </div>
     <div style="padding:3px 0px 3px 0px;">
       <div style="width:120px; float:left;"><%= f.label :email %></div>
-      <div><%= f.text_field :email %><span> (required) (Not published)</span></div>
+      <div><%= f.text_field :email, :size => '48' %><span> (required) (Not published)</span></div>
     </div>
     <div style="padding:3px 0px 3px 0px;">
       <div style="width:120px; float:left;"><%= f.label :uri %></div>
-      <div><%= f.text_field :uri %></div>
+      <div><%= f.text_field :uri, :size => '48' %></div>
     </div>
     <div style="padding:3px 0px 3px 0px;">
       <div style="width:120px; float:left;"><%= f.label "Your comment" %></div>
-      <div><%= f.text_area :body %></div>
+      <div><%= f.text_area :body, :size => '57x10' %></div>
     </div>
     <div style="padding:3px 0px 3px 0px;">
       <div style="width:120px; float:left;">&nbsp;</div>

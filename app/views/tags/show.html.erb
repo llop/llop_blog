@@ -1,3 +1,5 @@
-<h1>Posts for <%= @tag.name %></h1>
-<%= raw @posts.map { |p| render :partial => 'posts/post', :locals => { :post => p } }.join('<hr style="margin:0px 10px 10px 15px;"/>') %>
-<%= will_paginate @posts %>
+<div style="padding:0px 15px 5px 15px; font-size:1em; color:#555555;">
+<span>Posts tagged as <%= @tag.name.downcase %></span>
+<hr style="margin-bottom:0px;"/>
+</div>
+<%= render 'posts/paginated_collection' %>

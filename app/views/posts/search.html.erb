@@ -1,7 +1,7 @@
-<h1>Search results</h1>
 <% if @posts.empty? %>
-No posts on <%= params[:year] %>, <%= params[:month] %> 
+<div style="padding:60px 20px 60px 20px; font-style:italic;">
+<span>Sorry, no posts found containing '<%= params[:search] %>'</span>
+</div>
 <% else %>
-<%= render @posts %>
-<%= will_paginate @posts %>
+<%= render 'posts/paginated_collection' %>
 <% end %>

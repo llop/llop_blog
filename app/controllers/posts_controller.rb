@@ -8,6 +8,7 @@ class PostsController < BlogController
   # GET /blog/archive/2011/11
   def archives
     @posts = Post.page(params[:page]).where("extract(year from created_at) = ? and extract(month from created_at) = ?", params[:year], params[:month])
+    routing_error if @posts.empty?
   end
   
   # GET /blog/posts
