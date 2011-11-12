@@ -17,7 +17,7 @@
       <div style="float:right;" class="com_element">
       <% c = @post.comments.count %>
       <% if c == 0 %>
-        <%= link_to "No responses", "#leave_reply" %>
+        <%= link_to "Comment!", "#leave_reply" %>
       <% else %>
         <%= link_to (c.to_s + " response" + (c == 1 ? "" : "s")), "#comments" %>
       <% end %>
@@ -42,7 +42,9 @@
   <span style="font-family:courier">********************************************************</span>
 </div>
 <div style="padding:20px; padding-bottom:0px;">
-  <div style="padding-bottom:20px;"><span style="font-size:1.8em"><a name="comments">Comments</a></span></div>
+  <div style="padding-bottom:20px;"><span style="font-size:1.8em"><a name="comments">
+    <%= @post.comments.count.to_s %> comment<%= 's' unless @post.comments.count == 1 %>
+  </a></span></div>
   <%= render @post.comments %>
 </div>
 <% end %>

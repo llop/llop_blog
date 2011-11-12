@@ -1,0 +1,52 @@
+<div style="padding:0px 15px 0px 15px;">
+<% unless notice.blank? %>
+  <div style="color:#00AA00; border-style:solid; border-width:1px; margin:10px 0px 15px 0px; padding:10px 15px 10px 15px;">
+  <span style="color:black;"><%= notice %></span>
+  </div>
+<% end %>
+<table style="width:100%">
+<tr style="width:100%">
+<td style="width:50%; vertical-align:top; padding-right:15px;">
+  <div style="padding:0px 0px 15px 0px; font-size:1em; color:#555555;">
+  <span>Categories</span>
+  <hr style="margin-bottom:0px;"/>
+  </div>
+  <%= form_for @category, :url => admin_categories_path do |f| %>
+  <%= f.error_messages :header_message => nil, :message => nil, :header_tag => :h3 %>
+  <div style="padding:3px 0px 3px 0px; height:30px;">
+    <div style="float:left; padding:4px 10px 0px 0px;"><%= f.label :name %></div>
+    <div style="float:left; padding-top:2px;"><%= f.text_field :name, :size => '45' %></div>
+    <div style="float:right;"><%= f.submit "Create!", :style => "background-color:white; border-color:blue; border-width:1px; border-style:solid; padding:3px 20px 3px 20px;" %></div>
+  </div>
+  <% end %>
+  <div style="padding:20px 0px 20px 0px;">
+  <% @categories.each do |category| %>
+    <div class="menu_element">
+      <%= link_to category.name, admin_category_path(category.id) %>
+    </div>
+  <% end %>
+  </div>
+</td>
+<td style="width:50%; vertical-align:top; padding-left:15px;">
+  <div style="padding:0px 0px 15px 0px; font-size:1em; color:#555555;">
+  <span>Tags</span>
+  <hr style="margin-bottom:0px;"/>
+  </div>
+  <%= form_for @tag, :url => admin_tags_path do |f| %>
+  <%= f.error_messages :header_message => nil, :message => nil, :header_tag => :h3 %>
+  <div style="padding:3px 0px 3px 0px; height:30px;">
+    <div style="float:left; padding:4px 10px 0px 0px;"><%= f.label :name %></div>
+    <div style="float:left; padding-top:2px;"><%= f.text_field :name, :size => '45' %></div>
+    <div style="float:right;"><%= f.submit "Create!", :style => "background-color:white; border-color:blue; border-width:1px; border-style:solid; padding:3px 20px 3px 20px;" %></div>
+  </div>
+  <% end %>
+  <div style="padding:20px 0px 20px 0px;">
+  <% @tags.each do |tag| %>
+    <div class="tag_element">
+      <%= link_to tag.name, admin_tag_path(tag.id) %>
+    </div>
+  <% end %>
+  </div>
+</td>
+</tr>
+</table>

@@ -1,0 +1,7 @@
+<% if @posts.empty? %>
+<div style="padding:60px 20px 60px 20px; font-style:italic;">
+<span>Sorry, no posts found containing '<%= params[:search] %>'</span>
+</div>
+<% else %>
+<%= render 'admin_posts/paginated_collection' %>
+<% end %>

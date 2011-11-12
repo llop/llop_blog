@@ -13,7 +13,9 @@ LlopBlog::Application.configure do
 
   # Compress JavaScripts and CSS
   config.assets.compress = true
-
+  # To compile assets locally, this is for compression:
+  # config.assets.js_compressor = :closure
+  
   # Don't fallback to assets pipeline if a precompiled asset is missed
   config.assets.compile = false
 

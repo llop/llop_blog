@@ -5,8 +5,8 @@ class Comment < ActiveRecord::Base
   
   # Validations
   validates :name,  :presence => true,  :length => { :maximum => 36 }
-  validates :email, :presence => true,  :length => { :maximum => 255 },   :email => true
-  validates :uri,                       :length => { :maximum => 255 },   :uri => true
+  validates :email, :presence => true,  :length => { :maximum => 128 },   :email => true
+  validates :uri,                       :length => { :maximum => 128 },   :uri => true
   validates :body,  :presence => true,  :length => { :maximum => 1024 }
   validates :post,  :presence => true
   

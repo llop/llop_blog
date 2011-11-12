@@ -1,26 +1,12 @@
 class BlogController < ApplicationController
   
-  # rescue!
-  rescue_from ActiveRecord::RecordNotFound, :with => :render_404
-  rescue_from ActionController::RoutingError, :with => :render_404
-  
   # Filters
   before_filter :load_categories
   before_filter :load_tag_cloud
   before_filter :load_archives
   
-  def routing_error
-    render_404
-  end
-  
-  force_ssl
-  
   # Protected methods
 protected
-  def render_404(exception = nil)
-    message = '<div style="padding:60px 20px 60px 20px; font-style:italic;"><span>What the hell are you looking for?</span></div>'
-    render :inline => message, :status => 404, :layout => true
-  end
   
   def load_categories
     @categories = Category.order "name asc"

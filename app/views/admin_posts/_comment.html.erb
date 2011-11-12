@@ -1,0 +1,31 @@
+<div style="padding-bottom:20px;">
+<table style="width:100%">
+<tr>
+<td>
+<div>
+  <div style="float:left;">
+  <span>
+  <% if comment.uri %>
+    <%= link_to comment.name, comment.uri, :target => '_blank' %>
+  <% else %>
+    <%= label_tag 'name', comment.name %>
+  <% end %> says:
+  </span> 
+  </div>
+  <div style="float:right;"><%= l comment.created_at, :format => :long %></div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div>
+  <div><hr/></div>
+  <div><%= raw comment.body %></div>
+</div>
+</td>
+</tr>
+</table>
+<div style="border-color:red; border-style:solid; border-width:1px; margin:5px 0px 0px 0px; padding:5px 20px 5px 20px; width:60px; text-align:center;">
+  <span><%= link_to 'Delete', comment, :confirm => 'Are you sure?', :method => :delete %></span>
+</div>
+</div>

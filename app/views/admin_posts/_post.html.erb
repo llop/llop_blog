@@ -11,16 +11,18 @@
     </td>
     <td>
     <div style="margin:5px; margin-right:0px;">
-      <div><span style="font-size:2em"><%= link_to post.title, post_path(post.id) %></span></div>
+      <div><span style="font-size:2em"><%= post.title %></span></div>
       <hr style="margin-bottom:0px;"/>
-      <div style="float:left;" class="menu_element"><%= link_to post.category.name, category_path(post.category.id) %></div>
+      <div style="float:left;" class="menu_element"><%= post.category.name %></div>
       <div style="float:right;" class="com_element">
+      <span>
       <% c = post.comments.count %>
       <% if c == 0 %>
-        <%= link_to "Comment!", (post_path(post.id) + "#leave_reply") %>
+        <%= "No responses" %>
       <% else %>
-        <%= link_to (c.to_s + " response" + (c == 1 ? "" : "s")), (post_path(post.id) + "#comments") %>
+        <%= c.to_s + " response" + (c == 1 ? "" : "s") %>
       <% end %>
+      </span>
       </div>
     </div>
     </td>
@@ -30,10 +32,21 @@
   <div style="padding:0px 5px 0px 10px;">
     <div><p><%= raw post.summary %></p></div>
   </div>
-  <div style="padding-left:10px;">
-    <div><%= link_to "More...", post_path(post.id) %></div>
+  <div style="height:30px;">
+  <div style="margin-left:10px; float:left; padding:5px 30px 5px 30px; color:blue; border-style:solid; border-width:1px; text-align:center;">
+    <div><%= link_to 'Edit', edit_post_path(post.id), :method => :get %></div>
+  </div>
+  <div style="margin-left:10px; float:left; padding:5px 30px 5px 30px; color:#00AA00; border-style:solid; border-width:1px; text-align:center;">
+    <div><%= link_to "View", post_path(post.id), :target => '_blank' %></div>
+  </div>
   </div>
   <div style="float:right;">
-  <%= render :partial => 'tags/tags', :object => post.tags %>
+  <% unless post.tags.empty? %>
+    <% html_arr = [] %>
+    <% post.tags.each { |tag| html_arr << tag.name } %>
+    <div class="tag_element">
+    <%= raw html_arr.join ', ' %>
+    </div>
+  <% end %>
   </div>
 </div>

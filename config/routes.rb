@@ -7,14 +7,23 @@ LlopBlog::Application.routes.draw do
     resources :posts, :only => [ :index, :show ] do
       resources :comments, :only => [ :create ]
     end
-    resources :categories,  :only => [ :show ]
-    resources :tags,        :only => [ :show ]
+    resources :categories, :only => [ :show ]
+    resources :tags, :only => [ :show ]
     get 'search', :controller => 'posts'
     match 'archives/:year/:month' => 'posts#archives', :via => :get, :as => 'archives'
   end
   match 'blog' => 'posts#index', :via => :get
-
-  get "home/index"
+  
+  # Admin section
+  scope "/admin" do
+    resources :posts, :controller => 'admin_posts', :only => [ :index, :new, :create, :edit, :update ]
+    resources :comments, :controller => 'admin_comments', :only => [ :destroy ]
+    get 'search', :controller => 'admin_posts', :as => 'admin_search'
+    resources :categories, :controller => 'admin_categories', :only => [ :show, :create ], :as => 'admin_categories'
+    resources :tags, :controller => 'admin_tags', :only => [ :show, :create ], :as => 'admin_tags'
+    get 'categories_tags', :controller => 'admin_categories_tags', :as => 'categories_tags'
+  end
+  match 'admin' => 'admin_posts#index'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -65,6 +74,7 @@ LlopBlog::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
+  get "home/index"
   root :to => 'home#index'
 
   # See how all your routes lay out with "rake routes"
@@ -75,5 +85,5 @@ LlopBlog::Application.routes.draw do
   
   # Handles routing errors
   # You can find the rouge route as params[:a]
-  match '*a', :to => 'blog#routing_error'
+  match '*a', :to => 'application#routing_error'
 end

@@ -6,10 +6,20 @@ class Post < ActiveRecord::Base
   has_many :comments
   
   # Validations
-  validates :title,     :presence => true,  :length => { :maximum => 255 }
+  validates :title,     :presence => true,  :length => { :maximum => 128 }
   validates :summary,   :presence => true,  :length => { :maximum => 1024 }
   validates :body,      :presence => true
   validates :category,  :presence => true
+  
+  def tag_ids=(id_arr = [])
+    to_delete = []
+    tags.each do |tag|
+      tag_id = tag.id.to_s
+      id_arr.include?(tag_id) ? id_arr.delete(tag_id) : (to_delete << tag)
+    end
+    to_delete.each { |tag| tags.delete tag }
+    id_arr.each { |tag_id| tags << Tag.find(tag_id.to_i) }
+  end
   
   # Set per-page pagination value
   self.per_page = 5

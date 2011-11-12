@@ -1,0 +1,12 @@
+<div style="padding:0px 15px 0px 15px;">
+  <div style="text-align:center; padding-top:15px;">
+    <span style="font-family:courier">********************************************************</span>
+  </div>
+  <div style="padding:0px; font-size:1em; color:#555555; margin:15px 0px 5px 0px;">
+    <span><%= @post.comments.count.to_s %> comment<%= 's' unless @post.comments.count == 1 %></span>
+    <hr style="margin-bottom:0px;"/>
+  </div>
+  <div style="padding:20px; padding-bottom:0px;">
+    <%= render :partial => 'admin_posts/comment', :collection => @post.comments %>
+  </div>
+</div>
