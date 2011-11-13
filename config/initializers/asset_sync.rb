@@ -5,5 +5,3 @@ AssetSync.configure do |config|
   config.aws_region = 'eu-west-1'
   config.existing_remote_files = 'keep'
 end
-# Get rid of annoying file signature conflict
-ENV['RAILS_ASSET_ID'] = ''
