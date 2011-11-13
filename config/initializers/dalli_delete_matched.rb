@@ -39,7 +39,7 @@ if Rails.env.production?
   
     def _write(key, value, options = nil)
       method = options && options[:unless_exist] ? :add : :set
-      response = @data.send(method, key, value, expires_in(options), raw?(options))
+      response = @data.send(method, key, value, expires_in.to_i, raw?(options))
       return true if response.nil?
       response == Response::STORED
     rescue Dalli::DalliError => e
