@@ -1,0 +1,25 @@
+<% cache 'admin_menu' do %>
+<div style="height:30px;">
+  <%= link_to admin_posts_path do %>
+  <div class="blue_border" style="float:left; margin:0px 5px 0px 15px; padding:5px 20px 5px 20px;">
+    <span>Latest posts</span>
+  </div>
+  <% end %>
+  <%= link_to new_post_path do %>
+  <div class="blue_border" style="float:left; margin:0px 5px 0px 5px; padding:5px 20px 5px 20px;">
+    <span>Create a post</span>
+  </div>
+  <% end %>
+  <%= link_to categories_tags_path do %>
+  <div class="blue_border" style="float:left; margin:0px 5px 0px 5px; padding:5px 20px 5px 20px;">
+    <span>Categories and tags</span>
+  </div>
+  <% end %>
+  <div style="margin:5px 15px 0px 0px; float:right;">
+  <%= form_tag admin_search_path, :method => 'get' do %>
+    <%= search_field_tag :search, params[:search], :style => "width:220px;" %>
+    <%= image_submit_tag "mg.png" %>
+  <% end %>
+  </div>
+</div>
+<% end %>

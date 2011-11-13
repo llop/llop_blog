@@ -1,5 +1,8 @@
 class CommentsController < BlogController
   
+  # caches
+  cache_sweeper :comments_sweeper
+  
   # POST /comments
   def create
     @post = Post.find params[:post_id]
@@ -11,12 +14,5 @@ class CommentsController < BlogController
       render "posts/show"
     end
   end
-   
-  # def destroy
-  #   @post = Post.find(params[:post_id])
-  #   @comment = @post.comments.find(params[:id])
-  #   @comment.destroy
-  #   redirect_to post_path(@post)
-  # end
   
 end

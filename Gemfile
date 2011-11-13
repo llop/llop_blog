@@ -12,6 +12,8 @@ gem 'will_paginate'
 gem 'dynamic_form'
 # To compile assets locally, this is for compression:
 # gem 'closure-compiler'
+# gem 'dalli'
+gem 'asset_sync'
 
 # Gems used only for assets and not required
 # in production environments by default.

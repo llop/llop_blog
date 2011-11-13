@@ -1,2 +1,2 @@
 <%= raw @posts.map { |p| render :partial => 'admin_posts/post', :locals => { :post => p } }.join('<hr style="margin:0px 10px 10px 15px;"/>') %>
-<%= will_paginate @posts %>
+<div style="padding:15px 15px 15px 15px;"><%= will_paginate @posts %></div>

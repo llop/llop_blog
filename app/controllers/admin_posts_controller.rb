@@ -1,11 +1,16 @@
 class AdminPostsController < AdminController
   
+  # cache
+  caches_action :index
+  cache_sweeper :posts_sweeper
+  
   # GET /admin/search
   def search
     @posts = Post.search(params[:search], params[:page])
   end
  
   # GET /admin/posts
+  # GET /admin/posts/page/1
   def index
     @posts = Post.page(params[:page]).order('created_at desc')
   end

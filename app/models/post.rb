@@ -42,4 +42,13 @@ class Post < ActiveRecord::Base
     paginate_by_sql [ query_string, tag_id ], :page => page
   end
   
+  def self.archives_cached
+    Rails.env.development? ? archives : Rails.cache.fetch('archives_data') { archives }
+  end
+  def self.archives
+    query = "select distinct extract(year from p.created_at) as year, extract(month from p.created_at) as month, count (p.created_at) as count " + 
+            "from posts as p group by p.created_at order by year desc, month desc"
+    find_by_sql query
+  end
+    
 end

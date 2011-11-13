@@ -9,7 +9,9 @@
     <div id="header"><div class="regular_border" style="height:100px; padding-bottom:0px; margin-bottom:0px;"/></div>
 	  <div style="width:1000px; float:left;">
       <div class="regular_border">
-	      <%= render "admin_posts/menu" %>
+        <% cache('admin_menu') do %>
+	      <%= render "admin/menu" %>
+        <% end %>
       </div>
 	    <div class="regular_border">
 	      <%= yield %>

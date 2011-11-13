@@ -25,7 +25,11 @@
 </td>
 </tr>
 </table>
-<div style="border-color:red; border-style:solid; border-width:1px; margin:5px 0px 0px 0px; padding:5px 20px 5px 20px; width:60px; text-align:center;">
-  <span><%= link_to 'Delete', comment, :confirm => 'Are you sure?', :method => :delete %></span>
+<div style="width:60px;">
+<%= link_to comment, :confirm => 'Are you sure?', :method => :delete do %>
+<div class="red_border" style="margin:5px 0px 0px 0px; padding:5px 20px 5px 20px; width:60px; text-align:center;">
+  <span>Delete</span>
+</div>
+<% end %>
 </div>
 </div>

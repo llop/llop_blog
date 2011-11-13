@@ -16,10 +16,10 @@
   <div style="padding:3px 0px 3px 0px; height:30px;">
     <div style="float:left; padding:4px 10px 0px 0px;"><%= f.label :name %></div>
     <div style="float:left; padding-top:2px;"><%= f.text_field :name, :size => '45' %></div>
-    <div style="float:right;"><%= f.submit "Create!", :style => "background-color:white; border-color:blue; border-width:1px; border-style:solid; padding:3px 20px 3px 20px;" %></div>
+    <div style="float:right;"><%= f.submit "Create!", :class => "blue_border", :style => "background-color:white; padding:3px 20px 3px 20px; cursor:pointer;" %></div>
   </div>
   <% end %>
-  <div style="padding:20px 0px 20px 0px;">
+  <div style="padding:20px 0px 15px 0px;">
   <% @categories.each do |category| %>
     <div class="menu_element">
       <%= link_to category.name, admin_category_path(category.id) %>
@@ -37,10 +37,10 @@
   <div style="padding:3px 0px 3px 0px; height:30px;">
     <div style="float:left; padding:4px 10px 0px 0px;"><%= f.label :name %></div>
     <div style="float:left; padding-top:2px;"><%= f.text_field :name, :size => '45' %></div>
-    <div style="float:right;"><%= f.submit "Create!", :style => "background-color:white; border-color:blue; border-width:1px; border-style:solid; padding:3px 20px 3px 20px;" %></div>
+    <div style="float:right;"><%= f.submit "Create!", :class => "blue_border", :style => "background-color:white; padding:3px 20px 3px 20px; cursor:pointer;" %></div>
   </div>
   <% end %>
-  <div style="padding:20px 0px 20px 0px;">
+  <div style="padding:20px 0px 15px 0px;">
   <% @tags.each do |tag| %>
     <div class="tag_element">
       <%= link_to tag.name, admin_tag_path(tag.id) %>
@@ -50,3 +50,4 @@
 </td>
 </tr>
 </table>
+</div>

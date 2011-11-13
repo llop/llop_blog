@@ -1,6 +1,9 @@
 class AdminCommentsController < AdminController
-
-  # DELETE /posts/1
+  
+  # caches
+  cache_sweeper :comments_sweeper
+  
+  # DELETE /admin/posts/1
   def destroy
     @comment = Comment.find params[:id]
     @post = @comment.post 

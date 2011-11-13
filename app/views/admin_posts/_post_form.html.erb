@@ -6,7 +6,7 @@
       <span style="color:black;"><%= notice %></span>
     </div>
     <% end %>
-    <%= f.error_messages :header_message => 'Invalid post', :message => nil, :header_tag => :h3 %>
+    <%= f.error_messages :header_message => nil, :message => nil, :header_tag => :h3 %>
     <div style="padding:3px 0px 3px 0px;">
       <div style="width:120px; float:left;"><%= f.label :title %></div>
       <div><%= f.text_field :title, :size => '130' %></div>
@@ -29,7 +29,7 @@
     </div>
     <div style="padding:3px 0px 3px 0px;">
       <div style="width:120px; float:left;">&nbsp;</div>
-      <div><%= f.submit msg, :style => "background-color:white; border-color:blue; border-width:1px; border-style:solid; margin:10px 0px 5px 0px; padding:5px 20px 5px 20px;" %></div>
+      <div><%= f.submit msg, :class => "blue_border", :style => "background-color:white; margin:10px 0px 5px 0px; padding:5px 20px 5px 20px; cursor:pointer;" %></div>
     </div>
   <% end %>
 </div>

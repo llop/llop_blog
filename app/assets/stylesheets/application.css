@@ -18,12 +18,22 @@ a { text-decoration:none; color:#555555; }
 #sidebar { width:300px; float:right; }
 
 /** By class */
-.regular_border { padding:10px; margin:10px; border-style:solid; border-width:1px; }
-.sidebar_box { padding:10px; margin:10px; margin-left:0px; border-style:solid; border-width:1px; }
+.blue_border { border-color:blue; border-style:solid; border-width:1px; -moz-border-radius:0.3em; -webkit-border-radius:0.3em; border-radius:0.3em; }
+.red_border { border-color:red; border-style:solid; border-width:1px; -moz-border-radius:0.3em; -webkit-border-radius:0.3em; border-radius:0.3em; }
+.green_border { border-color:#00AA00; border-style:solid; border-width:1px; -moz-border-radius:0.3em; -webkit-border-radius:0.3em; border-radius:0.3em; }
+.regular_border { padding:10px; margin:10px; border-style:solid; border-width:1px; -moz-border-radius:0.3em; -webkit-border-radius:0.3em; border-radius:0.3em; }
+.sidebar_box { padding:10px; margin:10px; margin-left:0px; border-style:solid; border-width:1px; -moz-border-radius:0.3em; -webkit-border-radius:0.3em; border-radius:0.3em; }
 .sidebar_subbox { margin:10px; }
 .menu_element { background:url("/assets/pg.gif"); background-repeat:no-repeat; padding-left:20px; margin:2px; margin-left:0px; }
 .tag_element { background:url("/assets/tg.gif"); background-repeat:no-repeat; padding-left:20px; margin:2px; margin-left:0px; }
 .cal_element { background:url("/assets/sg.gif"); background-repeat:no-repeat; padding-left:20px; margin:2px; margin-left:0px; }
 .com_element { background:url("/assets/cg.gif"); background-repeat:no-repeat; padding-left:20px; margin:2px; margin-left:0px; }
 .cal { background:url("/assets/cal.gif"); background-repeat:no-repeat; }
-.errorExplanation { padding:0px 15px 0px 15px; margin-bottom:15px; border-style:solid; border-width:1px; border-color:red; }
+/* dynamic_form */
+.errorExplanation { padding:0px 15px 0px 15px; margin-bottom:15px; border-style:solid; border-width:1px; border-color:red; -moz-border-radius:0.3em; -webkit-border-radius:0.3em; border-radius:0.3em; }
+.field_with_errors { float:left; }
+.pagination a, .pagination em, .pagination span { border-color:blue; border-style:solid; border-width:1px; -moz-border-radius:0.3em; -webkit-border-radius:0.3em; border-radius:0.3em; padding:2px 5px 2px 5px; }
+.previous_page { background:url("/assets/bk.gif"); background-repeat:no-repeat; background-position:left; }
+.next_page { background:url("/assets/fw.gif"); background-repeat:no-repeat; background-position:right; }
+
+

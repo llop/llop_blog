@@ -1,5 +1,5 @@
 <% content_for :head do %>
-  <title>Llop's blog</title>
+  <title>Llop's blog admin</title>
   <%= stylesheet_link_tag    "application" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
@@ -7,7 +7,7 @@
 <% content_for :body do %>
   <div id="body_wrapper">
     <div id="header"><div class="regular_border" style="height:100px; padding-bottom:0px; margin-bottom:0px;"/></div>
-	  <div id="content_wrapper">
+	  <div style="width:1000px; float:left;">
 	    <div class="regular_border">
 	      <%= yield %>
       </div>
@@ -15,11 +15,6 @@
         <span>&copy; 2011 Albert Lobo Cusid&oacute;</span>
       </div>
     </div>
-	  <div id="sidebar">
-	    <% cache 'sidebar' do %>
-	    <%= render "sidebar/sidebar" %>
-      <% end %>
-	  </div>
   </div>
 <% end %>
 <%= render :template => 'layouts/application' %>

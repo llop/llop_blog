@@ -4,26 +4,45 @@ LlopBlog::Application.routes.draw do
   # Try to route only to working actions using :only constraint
   # Make urls more descriptive prefixing everything with '/blog'
   scope "/blog" do
-    resources :posts, :only => [ :index, :show ] do
+    # Posts
+    match 'posts/page/:page' => 'posts#index', :via => :get, :as => 'posts_page'
+    match 'posts' => 'posts#index', :via => :get, :as => 'posts'
+    resources :posts, :only => [ :show ] do
       resources :comments, :only => [ :create ]
     end
-    resources :categories, :only => [ :show ]
-    resources :tags, :only => [ :show ]
     get 'search', :controller => 'posts'
+    # Categories
+    match 'categories/:id/page/:page' => 'categories#show', :via => :get, :as => 'category_page'
+    match 'categories/:id' => 'categories#show', :via => :get, :as => 'category'
+    # Tags
+    match 'tags/:id/page/:page' => 'tags#show', :via => :get, :as => 'tag_page'
+    match 'tags/:id' => 'tags#show', :via => :get, :as => 'tag'
+    # archives
+    match 'archives/:year/:month/page/:page' => 'posts#archives', :via => :get, :as => 'archives_page'
     match 'archives/:year/:month' => 'posts#archives', :via => :get, :as => 'archives'
   end
   match 'blog' => 'posts#index', :via => :get
   
   # Admin section
   scope "/admin" do
-    resources :posts, :controller => 'admin_posts', :only => [ :index, :new, :create, :edit, :update ]
+    # Posts
+    match 'posts/page/:page' => 'admin_posts#index', :via => :get, :as => 'admin_posts_page'
+    match 'posts' => 'admin_posts#index', :via => :get, :as => 'admin_posts'
+    resources :posts, :controller => 'admin_posts', :only => [ :new, :create, :edit, :update ]
     resources :comments, :controller => 'admin_comments', :only => [ :destroy ]
     get 'search', :controller => 'admin_posts', :as => 'admin_search'
-    resources :categories, :controller => 'admin_categories', :only => [ :show, :create ], :as => 'admin_categories'
-    resources :tags, :controller => 'admin_tags', :only => [ :show, :create ], :as => 'admin_tags'
+    # Categories
+    match 'categories/:id/page/:page' => 'admin_categories#show', :via => :get, :as => 'admin_category_page'
+    match 'categories/:id' => 'admin_categories#show', :via => :get, :as => 'admin_category'
+    resources :categories, :controller => 'admin_categories', :only => [ :create ], :as => 'admin_categories'
+    # Tags
+    match 'tags/:id/page/:page' => 'admin_tags#show', :via => :get, :as => 'admin_tag_page'
+    match 'tags/:id' => 'admin_tags#show', :via => :get, :as => 'admin_tag'
+    resources :tags, :controller => 'admin_tags', :only => [ :create ], :as => 'admin_tags'
+    # Categories and tags get created from the same place
     get 'categories_tags', :controller => 'admin_categories_tags', :as => 'categories_tags'
   end
-  match 'admin' => 'admin_posts#index'
+  match 'admin' => 'admin_posts#index', :via => :get
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
