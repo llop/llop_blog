@@ -7,7 +7,7 @@ if Rails.env.production?
     def write_entry(key, entry, options)
       keys = get_keys
       unless keys.include?(key)
-        keys << name
+        keys << key
         return false unless old_write_entry(MEM_CACHED_KEYS, keys.to_yaml, options)
       end
       old_write_entry(key, entry, options)
