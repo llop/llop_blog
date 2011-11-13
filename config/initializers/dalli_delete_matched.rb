@@ -1,50 +1,55 @@
 if Rails.env.production?
   ActiveSupport::Cache::DalliStore.class_eval do
-              
-    def write(name, value, options = nil)
-      super
-      key_list = get_key_list
-      unless key_list.include?(name)
-        key_list << name
-        return false unless _write("memcached_store_key_list", key_list.to_yaml, options)
+    
+    MEM_CACHED_KEYS = "memcached_keys"
+    
+    alias_method :old_write_entry, :write_entry
+    def write_entry(key, entry, options)
+      keys = get_keys
+      unless keys.include?(key)
+        keys << name
+        return false unless old_write_entry(MEM_CACHED_KEYS, keys.to_yaml, options)
       end
-      _write(name, value, options)
+      old_write_entry(key, entry, options)
     end
-        
-    def delete_type(type, options = nil)
-      type = type.to_s if type.is_a?(Symbol)
-      matcher = Regexp.new("^#{type}")
-      keys_to_remove = []
-      key_list = get_key_list
-      key_list.each do |key|
-        if key.match(matcher)
-          # puts "key matched!: #{key.inspect}"
-          return false unless delete(key, options)
-          keys_to_remove << key
+    
+    alias_method :old_delete_entry, :delete_entry
+    def delete_entry(key, options)
+      ret = old_delete_entry(key, options)
+      return false unless ret
+      keys = get_keys
+      if keys.include?(key)
+        keys -= [ key ]
+        old_write_entry(MEM_CACHED_KEYS, keys.to_yaml, options)
+      end
+      ret
+    end
+    
+    def delete_matched(matcher, options = nil)
+      loop = true
+      deleted_keys = []
+      keys = get_keys
+      keys.each do |key|
+        if loop && key.match(matcher)
+          loop = old_delete_entry(key, options)
+          deleted_keys << key
         end
       end
-      key_list -= keys_to_remove
-      _write("memcached_store_key_list", key_list.to_yaml, options)
+      if loop
+        len = keys.length
+        keys -= deleted_keys
+        old_write_entry(MEM_CACHED_KEYS, keys.to_yaml, options) if keys.length < len
+      end
+      loop
     end
   
   private
-  
-    def get_key_list
+    def get_keys
       begin
         YAML.load(read('memcached_store_key_list'))
       rescue TypeError
         []
       end
-    end
-  
-    def _write(key, value, options = nil)
-      method = options && options[:unless_exist] ? :add : :set
-      response = @data.send(method, key, value, expires_in.to_i, raw?(options))
-      return true if response.nil?
-      response == Response::STORED
-    rescue Dalli::DalliError => e
-      logger.error("DalliError (#{e}): #{e.message}")
-      false
     end
     
   end
