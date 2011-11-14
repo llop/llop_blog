@@ -2,6 +2,10 @@
 <html>
 	<head>
   <%= yield :head %>
+  <% cache('google_analytics') do %>
+  <%= render :partial => 'blog/google_analytics' %>
+  <link rel="shortcut icon" type='image/x-icon' href="<%= asset_path 'favicon.gif' %>" />
+  <% end %>
   </head>
   <body>
   <%= yield :body %>

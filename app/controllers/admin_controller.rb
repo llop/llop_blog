@@ -5,6 +5,6 @@ class AdminController < ApplicationController
   # Http basic authentication
   ENV['MD_USER'] ||= 'llop'
   ENV['MD_PASS'] ||= 'sepense'
-  http_basic_authenticate_with :name => ENV['MD_USER'], :password => ENV['MD_PASS']
+  http_basic_authenticate_with :name => ENV['MD_USER'], :password => ENV['MD_PASS'], :realm => 'Molecular density'
   
 end
