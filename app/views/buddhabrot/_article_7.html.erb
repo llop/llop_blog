@@ -1,0 +1,109 @@
+<div id="title">Buddhabrot 4D</div>
+<div id="navigation_div" style="margin-top:10px;">&nbsp;
+<span style="float:left; display:block; padding-left:5px;"><%= link_to '< Accelerate BuddhaZoom', buddha_article_path(6), :style => 'text-decoration:none; color: #F90;' %></span>
+<span style="float:right; display:block; padding-right:5px;"><%= link_to 'Render variants >', buddha_article_path(8), :style => 'text-decoration:none; color: #F90;' %></span>
+</div>
+<div id="post">
+<p>Again, the Mandelbrot set's extraordinary properties allow us to raise to the next artistic level.</p>
+<div id="p_title">Key observation</div>
+<p>The cool thing is that the Mandelbrot can be interpreted as a four-dimensional object. Let me clarify: in the function Z<sub>n</sub> = Z<sub>n-1</sub><sup>2</sup> + C two complex numbers are involved, Z and C, and each one has two components, real and imaginary -so on every iteration we're playing with 4 variables, which can be understood as spacial dimensions. Painting Z on the plane produces the Buddhabrot, and painting C, the Mandelbrot, but they are both part of the same 4D data set.</p>
+<p>For a three-dimensional object, we can name the dimensions depth, width and height, or X, Y, and Z. For this 4D object, we'll name them in the following manner: Z-real (Zr), Z-imaginary (Zi), C-real (Cr), y C-imaginary (Ci).</p>
+<div id="p_title">Visualizing the 4 dimensions</div>
+<p>To try and picture the 4D object in your mind is close to impossible, but luckily, a computer has no problem doing that for us. But how does it do it?</p>
+<p>Let's recall how to represent a 3D object on a plane -2 dimensions, X and Y-: we associate X with width, Y with height, and ignore depth. if we want different angles, we just change the dimension associated to X and Y -for example, for a profile view, X represents depth, and Y, height; for a half turned view, X will be width rotated 45&ordm; to depth, and Y, height. This way we can get any perspective of a 3D object.</p>
+<p>Ok then, so in order to go from 4 to 3D the process is analogous: we simply ignore one of the 4 dimensions, and consider only the other three. This will result in a 3D object that can be represented on the plane with the usual procedure. Just like there's 3 capital planes for a 3D object (X, Y, y Z) -((X,Y), (X,Y), e (Y,Z))-, a 4D object (Zr, Zi, Cr, Ci) has 4 three-D capital volumes ((Zr,Zi,Cr), (Zr,Zi,Ci), (Cr,Ci,Zr), y (Cr,Ci,Zi)). For these capital volumes, we have only to associate each 3D dimension -X, Y, y Z- with one of the 4D object's dimensions -Zr, Zi, Cr, and Ci. Then again, just like a 3D object has an infinite number of planes, we can get an infinite number of 3D objects from a 4D one; for that, we have to associate a dimension of the 3D object with one of the 4D object's rotated a certain angle towards another one. It may be hard to imagine, but in a 4D object every dimension is at 90&ordm; from the other 3; so, if we paint the (Zr,Zi) plane, Cr and Ci are perpendicular to that plane.</p>
+<p>If you want to go into more detail, click <a href="http://eusebeia.dyndns.org/4d/vis/vis.html" target="_blank">here</a> -this site gives good explanations on how to visualize 4D.</p>
+<div id="p_title">Buddhabrot in an hypercube</div>
+<p>Also known as teseract, the 4D cube is an appropriate recipient for the Buddhabrot. In the next image you can see how it looks. A comment on the legend: although it looks like there's truncated pyramids around the central cube, these are really perfect cubes, they've just been deformed -it's a visual trick to indicate on which side cubes are joined together-; additionally, the fact that the cubes are not in contact is another trick to keep the image clean -they are actually glued together on one plane. If you noticed, there's 2 equal 3D objects of each kind, except for the central one. Then where's the missing one? Well, it's &quot;outside&quot;, in contact with the 6 external faces. Again, I didn't paint it to keep the image clean.</p>
+<div align="center">
+<div id="img_table" style="width: 200px; margin-bottom: 10px">
+  <%= link_to asset_path('HiperCuboBuddhaBrot(5).jpg') do %>
+  <img src="<%= asset_path 'HiperCuboBuddhaBrot(5)_Thmb.jpg' %>" alt="" width="200" height="257" border="0" />
+  <% end %>
+</div>
+</div>
+<div id="p_title">Rendering 4D onto 2D</div>
+<p>The technique I've used to paint the Buddhabrot from different perspectives can be summarized in 2 steps:</p>
+<ul>
+	<li id="li_padded"><span id="p_title">4D to 3D:</span> First of all, we have to decide which 3D object we want to see. Consequently, we have to declare X, Y, and Z. If we want points between two of the Buddhabrot's dimensions to be in these coordinates, we'll also have to define the angle.</li>
+  <li id="li_padded"><span id="p_title">3D to 2D:</span> Once defined the 3D object's coordinates, we can easily proceed to 2D -we just have to place the point of view. For that, let's imagine the Buddhabrot is inside a sphere -that belongs to a hypersphere, but a sphere nonetheless. To define where the &quot;observer&quot; is, we'll use an angle to indicate the latitude, and another for longitude -this procedure would be also useful to render virtual images of the Earth, where it is necessary to &quot;flatten&quot; the visible part of the planet on the plane <span class="Estilo3">( :,D)</span>. The generic formula to get the coordinates is this:</li>
+</ul>
+<pre>              coordX = -x * Sin(long) + y * Cos(long)
+              coordY = (x * Cos(long) + y * Sin(long)) * Cos(lat) - z * Sin(lat)</pre>
+<p>As always, a practical example is much more enlightening; the following code will paint a high-angle shot, half turned, of the BuddhaBrot 3D (Zr,Zi,Cr), rotated 45&ordm; towards (Cr,Ci,Zi):</p>
+<div id="code_div">
+<pre><span id="keyword">    float</span> factor = ladoImg / 4f;<span id="keyword">
+
+    float</span> x, y, z;
+    <span id="comment">// If the observer is looking at a high-angle shot, half turned,
+    // latitude and longitude are both 45&ordm;.
+    // We need the sin and cos of both angles.</span>
+    <span id="keyword">float</span> latitud, longitud;
+    latitud = longitud = (<span id="keyword">float</span>)(Math.PI / 4);
+    <span id="keyword">float</span> sinA1 = (<span id="keyword">float</span>)Math.sin(latitud);
+    <span id="keyword">float</span> sinA2 = (<span id="keyword">float</span>)Math.sin(latitud);
+    <span id="keyword">float</span> cosA1 = (<span id="keyword">float</span>)Math.cos(longitud);
+    <span id="keyword">float</span> cosA2 = (<span id="keyword">float</span>)Math.cos(longitud);
+    <span id="comment">// 45&ordm; rotation on each axis for the 4D rotation.</span>
+
+<span id="keyword">    float</span> angRotX, angRotY, angRotZ;
+    angRotX = angRotY = angRotZ = (<span id="keyword">float</span>)Math.sin(Math.PI / 4);
+<span id="comment">    // For the Buddhabrot, you can use the regions optimization;
+    // I haven't included them here to save some space.</span>
+    <span id="keyword">for</span> (Cr = -2; Cr &lt; 2; Cr += increm) {
+      maxCi = (<span id="keyword">float</span>)Math.sqrt(4 - Cr * Cr);
+      <span id="keyword">for</span> (Ci = 0; Ci &lt; maxCi; Ci += increm) {        
+        ZrAux = Zi = n = 0;
+      <span id="keyword">  while</span> (n &lt; maxN) {
+          Zr = ZrAux * ZrAux - Zi * Zi + Cr;
+          trayectoria[n][1] = Zi = 2 * ZrAux * Zi + Ci;
+          trayectoria[n++][0] = ZrAux = Zr;
+        <span id="keyword">  if</span> (n == limiteN) {
+            x = trayectoria[limiteN - 1][0];
+            y = trayectoria[limiteN - 1][1];
+          <span id="keyword">  for</span> (j = limiteN - 2; j &gt;= 0; j--) 
+              <span id="keyword">if</span> (x == trayectoria[j][0] &amp;&amp; y == trayectoria[j][1]) j = -1;
+          <span id="keyword">  if</span> (j == -2) { n = maxN; <span id="keyword">continue</span>; }
+          }
+        <span id="keyword">  if</span> (Zr * Zr + Zi * Zi &gt; 4) {<span id="keyword">
+
+            for</span> (n--, i = 0; i &lt; n; i++) {
+              x = trayectoria[i][0] + (Cr - trayectoria[i][0]) * angRotX;
+              y = trayectoria[i][1] + (Ci - trayectoria[i][1]) * angRotY;
+              z = Cr + (trayectoria[i][1] - Cr) * angRotZ;
+              coordX = 
+                (<span id="keyword">int</span>)(((-y * sinA2 + x * cosA2) + 2) * factor);
+              coordY = 
+                (<span id="keyword">int</span>)((((y * cosA2 + x * sinA2) * cosA1 - z * sinA1) + 2) * factor);
+              <span id="keyword">if</span> (coordX &gt;= 0 &amp;&amp; coordX &lt; ladoImg &amp;&amp; coordY &gt;= 0 &amp;&amp; coordY &lt; ladoImg) 
+                pixelsTemp[coordX][coordY]++;
+              z = Cr + (-trayectoria[i][1] - Cr) * angRotZ;
+              coordX = 
+                (<span id="keyword">int</span>)(((y * sinA2 + x * cosA2) + 2) * factor);
+              coordY = 
+                (<span id="keyword">int</span>)((((-y * cosA2 + x * sinA2) * cosA1 - z * sinA1) + 2) * factor);
+              <span id="keyword">if</span> (coordX &gt;= 0 &amp;&amp; coordX &lt; ladoImg &amp;&amp; coordY &gt;= 0 &amp;&amp; coordY &lt; ladoImg) 
+                pixelsTemp[coordX][coordY]++;
+            }
+            <span id="keyword">break</span>;
+          }
+        }  
+      }
+    }</pre>
+</div>
+<div id="p_title">4D animation</div>
+<p>To close this chapter, I've home-brewed an animation that I hope will illustrate the buddhabrot's endless complexity and infinite beauty.</p>
+<p>To create this last animation, I've used &quot;BuddhaFiles&quot; (see the end of <%= link_to 'chapter 5', buddha_article_path(5) %>), which are spot on to render a shitload of images in one go (:'D). Despite all that, I've needed 3 weeks to piece it all together!</p>
+<p>I've also hung it on <a href="http://www.youtube.com/index" target="_blank">You Tube</a> -click <a href="http://www.youtube.com/watch?v=5ej3dj4x64k" target="_blank">here</a>-, and on <a href="http://www.emule-project.net/home/perl/general.cgi?l=17" target="_blank">eMule</a> -<a href="ed2k://|file|BuddhaNimacion(XVid+MP3).avi|23255324|0243A842F7D96F454B932FF0E952B30C|h=H2BR5A3OXEA42VNUAG76KTP3GEBCRCP2|/|sources,62.57.2.65:7654|/">BuddhaNimacion(XVid+MP3).avi</a>.</p>
+<div align="center">
+<div id="img_table" style="width: 200px; margin-bottom: 10px">
+  <%= link_to asset_path('BuddhaNimacion(XVid+MP3).avi') do %><a href="imgs/">
+  <img src="<%= asset_path 'BuddhAnimacion_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+</div>
+</div>
+</div>
+<div id="navigation_div" style="margin-top:10px;">&nbsp;
+<span style="float:left; display:block; padding-left:5px;"><%= link_to '< Accelerate BuddhaZoom', buddha_article_path(6), :style => 'text-decoration:none; color: #F90;' %></span>
+<span style="float:right; display:block; padding-right:5px;"><%= link_to 'Render variants >', buddha_article_path(8), :style => 'text-decoration:none; color: #F90;' %></span>
+</div>

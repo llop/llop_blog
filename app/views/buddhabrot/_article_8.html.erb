@@ -1,0 +1,407 @@
+<div id="title">Render variants</div>
+<div id="navigation_div">&nbsp;<span style="float:left; display:block; padding-left:5px;"><%= link_to '< Buddhabrot 4D', buddha_article_path(7), :style => 'text-decoration:none; color: #F90;' %></span></div>
+<div id="post">
+<p>Besides the Buddhabrot technique, there's other render techniques for the Mandelbrot that involve the iterates. Three of them have especially caught my attention:</p>
+<span id="p_title">Buddhagram</span>
+<p>Another technique proposed by <a href="http://www.superliminal.com/melinda/index.htm" target="_blank">Melinda Green</a>. It breaks down to merging the Mandelbrot with the Julia and the Buddhabrot, an interesting approach. In the Mandelbrot, Cs on the plane are colored when Z<sub>0</sub> is 0, and in the Julia Z<sub>0</sub>s are colored for a constant C. The idea is to paint Cs' iterates (Buddhabrot) not just when Z<sub>0</sub> = 0, but make Z<sub>0</sub> a random number; in plain english, that means each painted trajectory belongs to a different Julia.</p>
+<p>The name 'Buddhagram' comes from 'Buddhabrot' and 'hologram'; in Green's words, &quot;This extension (of the Buddhabrot technique) is called a 'hologram' because any part of such an image is potentially influenced by all parts of the 4D domain.&quot;. Click <a href="http://www.superliminal.com/fractals/bgram/ZrZiOut.htm" target="_blank">here</a> to go to the site Green has hung about her Buddhagram; she explains the technique more accurately.</p>
+<p>To implement the technique using my schema, you must take into account that the region code optimization is not useful, since now values inside M may tend to infinity (Z<sub>0</sub> won't always be 0). I've implemented it this way:</p>
+<div id="code_div">
+<pre><span id="keyword">    for</span> (Cr = -2; Cr &lt; 2; Cr += increm) <span id="keyword">for</span> (Ci = 0; Ci &lt; 2; Ci += increm) {        
+      ZrAux = (<span id="keyword">float</span>)(Math.random() * 4 - 2);
+      Zi = (<span id="keyword">float</span>)(Math.random() * 4 - 2);
+      n = 0;
+      <span id="keyword">while</span> (n &lt; maxN) {
+        ...
+      }  
+    }</pre>
+</div>
+<p>Logically, this technique can be used on any perspective of the object:</p>
+<div align="center" style="margin-bottom: 20px">
+<table style="margin: 0px; padding: 0px;" cellpadding="0px" cellspacing="0px">
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGram(Zr,Zi)(2).jpg') do %>
+  <img src="<%= asset_path 'BudaGram(Zr,Zi)(2)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Zr, Zi plane</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGram(Zr,Cr)(2).jpg') do %>
+  <img src="<%= asset_path 'BudaGram(Zr,Cr)(2)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Zr, Cr plane</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGram(Zr,Ci)(2).jpg') do %>
+	<img src="<%= asset_path 'BudaGram(Zr,Ci)(2)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Zr, Ci plane</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGram(Cr,Ci)(2).jpg') do %>
+	<img src="<%= asset_path 'BudaGram(Cr,Ci)(2)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Cr, Ci plane</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGram(Cr,Zi)(2).jpg') do %>
+	<img src="<%= asset_path 'BudaGram(Cr,Zi)(2)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Cr, Zi plane</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGram(Zi,Ci)(2).jpg') do %>
+  <img src="<%= asset_path 'BudaGram(Zi,Ci)(2)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Zi, Ci plane</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<span id="p_title">Buddhagram variants</span>
+<p>The following images result from painting several Buddhabrots -each one with a distinct and unique Z<sub>0</sub>- on the same &quot;canvas&quot;. To get an idea of what I mean, here's an analogy between this and a scanner: this 4D object has been put through a <a href="http://en.wikipedia.org/wiki/Computed_tomography" target="_blank">CAT</a> machine, and a series of evenly spaced slices have come out -each Buddhabrot image has a different Z<sub>0</sub>, whose module is never grater than 1. To get the final image, all those slices have been printed on the same film. If you look closely at planes (Zr,Cr) and (Zi,Ci), you can see how some of these slices' profiles cut diagonally across the image.</p>
+<div align="center">
+<table style="margin: 0px; padding: 0px;" cellpadding="0px" cellspacing="0px">
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGramLam(Zr,Zi).jpg') do %>
+  <img src="<%= asset_path 'BudaGramLam(Zr,Zi)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Zr, Zi plane</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGramLam(Zr,Cr).jpg') do %>
+  <img src="<%= asset_path 'BudaGramLam(Zr,Cr)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Zr, Cr plane</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGramLam(Zr,Ci).jpg') do %>
+  <img src="<%= asset_path 'BudaGramLam(Zr,Ci)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Zr, Ci plane</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGramLam(Cr,Ci).jpg') do %>
+  <img src="<%= asset_path 'BudaGramLam(Cr,Ci)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Cr, Ci plane</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGramLam(Cr,Zi).jpg') do %>
+  <img src="<%= asset_path 'BudaGramLam(Cr,Zi)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Cr, Zi plane</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGramLam(Zi,Ci).jpg') do %>
+  <img src="<%= asset_path 'BudaGramLam(Zi,Ci)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Zi, Ci plane</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<p>On these drawings, a larger section of the 4D data set is represented than with the Buddhabrot technique, and it's in a more organized manner than the Buddhagram. Despite all that, these drawings are no more spectacular than the good ole Buddhabrot; however, with these Buddhagram variations I've yielded at the very least much pintoresque images.</p>
+<p>It occurred to me that if the idea is that &quot;any part of such an image is potentially influenced by all parts of the 4D domain&quot;, Z<sub>0</sub> doesn't necessarily have to be a random number -it could also be related in some way to C. Trying out stuff, some pretty neat images have popped out. On the <%= link_to 'Buddhabrot images and animations gallery', buddha_gallery_path %> you can see a few more.</p>
+<div align="center">
+<table style="margin: 0px; padding: 0px;" cellpadding="0px" cellspacing="0px">
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGram(Zr_SinCi,Zi_SinCr).jpg') do %>
+  <img src="<%= asset_path 'BudaGram(Zr_SinCi,Zi_SinCr)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Zr<sub>0</sub> = sin Ci, Zi<sub>0</sub> = sin Cr</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGram(Zr_SinCr,Zi_CosCi).jpg') do %>
+  <img src="<%= asset_path 'BudaGram(Zr_SinCr,Zi_CosCi)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Zr<sub>0</sub> = sin Cr, Zi<sub>0</sub> = cos Ci</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGram(Zr_CosCr,Zi_CosCi).jpg') do %>
+  <img src="<%= asset_path 'BudaGram(Zr_CosCr,Zi_CosCi)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Zr<sub>0</sub> = cos Cr, Zi<sub>0</sub> = cos Ci</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGram(Zr_CosCr,Zi_SinCi).jpg') do %>
+  <img src="<%= asset_path 'BudaGram(Zr_CosCr,Zi_SinCi)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Zr<sub>0</sub> = cos Cr, Zi<sub>0</sub> = sin Ci</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGram(Z_Sin(complex(Ci,Cr))).jpg') do %>
+  <img src="<%= asset_path 'BudaGram(Z_Sin(complex(Ci,Cr)))_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Z<sub>0</sub> = sin complex(Ci, Cr <em>i</em>)</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaGram(Zr_SinCr,Zi_SinCi).jpg') do %>
+  <img src="<%= asset_path 'BudaGram(Zr_SinCr,Zi_SinCi)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Zr<sub>0</sub> = sin Cr, Zi<sub>0</sub> = sin Ci</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<p>I've also rigged up a couple of animations of a plane sweep for each one of Z<sub>0</sub>'s components. They start out at the traditional Buddhabrot (Z<sub>0</sub> = 0), but from there onwards, Zr<sub>0</sub>, Zi<sub>0</sub>, or both, grow until nothing is visible.</p>
+<div align="center" style="margin-bottom: 20px">
+<table style="margin: 0px; padding: 0px;" cellpadding="0px" cellspacing="0px">
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BuddhaGranim(1)(Zi_0-2)(Divx).avi') do %>
+  <img src="<%= asset_path 'BuddhaGranimacion(1)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Zr<sub>0</sub> = 0<br/>Zi<sub>0</sub> = Grows from 0</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BuddhaGranim(3)(Zr_0-2)(Divx).avi') do %>
+  <img src="<%= asset_path 'BuddhaGranimacion(3)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Zr<sub>0</sub> = Grows from 0<br/>Zi<sub>0</sub> = 0</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BuddhaGranim(2)(Zr,Zi_0-2)(Divx).avi') do %>
+  <img src="<%= asset_path 'BuddhaGranimacion(2)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Zr<sub>0</sub> = Grows from 0<br/>Zi<sub>0</sub> = Grows from 0</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<span id="p_title">Negative Buddhabrot</span>
+<p>If instead of painting Cs outside M -that is, the Mandelbrot-, we paint those belonging to M, we get what could be understood as its &quot;negative&quot;: the Mandelbrot figure appears white, and the exterior area is black.</p>
+<p>Now we adapt this approach to the Buddhabrot technique, and the result on the 6 capital planes is this:</p>
+<div align="center">
+<table style="margin: 0px; padding: 0px;" cellpadding="0px" cellspacing="0px">
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaNeg(Zr,Zi).jpg') do %>
+  <img src="<%= asset_path 'BudaNeg(Zr,Zi)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Zr, Zi plane</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaNeg(Zr,Cr).jpg') do %>
+  <img src="<%= asset_path 'BudaNeg(Zr,Cr)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Zr, Cr plane</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaNeg(Zr,%20Ci).jpg') do %>
+  <img src="<%= asset_path 'BudaNeg(Zr,%20Ci)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Zr, Ci plane</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaNeg(Cr,Ci).jpg') do %>
+  <img src="<%= asset_path 'BudaNeg(Cr,Ci)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Cr, Ci plane</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaNeg(Cr,Zi).jpg') do %>
+  <img src="<%= asset_path 'BudaNeg(Cr,Zi)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Cr, Zi plane</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaNeg(Zi,Ci).jpg') do %>
+  <img src="<%= asset_path 'BudaNeg(Zi,Ci)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Zi, Ci plane</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<p>The source is as follows:</p>
+<div id="code_div" style="margin-bottom: 20px">
+<pre><span id="keyword">    for</span> (Cr = -2; Cr &lt; 2; Cr += increm) {
+      maxCi = (<span id="keyword">float</span>)Math.sqrt(4 - Cr * Cr);
+      <span id="keyword">for</span> (Ci = 0; Ci &lt; maxCi; Ci += increm) {        
+        ZrAux = Zi = n = 0;
+      <span id="keyword">  while</span> (n &lt; maxN) {
+          Zr = ZrAux * ZrAux - Zi * Zi + Cr;
+          trayectoria[n][1] = Zi = 2 * ZrAux * Zi + Ci;
+          trayectoria[n++][0] = ZrAux = Zr;
+          <span id="keyword">if</span> (n == limiteN) {
+            x = trayectoria[limiteN - 1][0];
+            y = trayectoria[limiteN - 1][1];
+          <span id="keyword">  for</span> (j = limiteN - 2; j &gt;= 0; j--) 
+              <span id="keyword">if</span> (x == trayectoria[j][0] &amp;&amp; y == trayectoria[j][1]) j = -1;
+          <span id="keyword">  if</span> (j == -2) <span id="keyword">break</span>;
+          }
+        <span id="keyword">  if</span> (Zr * Zr + Zi * Zi &gt; 4) <span id="keyword">break</span>;
+        }  
+      <span id="keyword">  if</span> (n == limiteN || n == maxN) <span id="keyword">for</span> (n--, i = 0; i &lt; n; i++) {
+          coordX = (<span id="keyword">int</span>)((trayectoria[i][0] + 2) * factor);
+          coordY = (<span id="keyword">int</span>)((trayectoria[i][1] + 2) * factor);
+          pixels[coordX][coordY]++;
+          pixels[coordX][ladoImgAux - coordY]++;
+        }
+      }
+    }</pre>
+</div>
+<span id="p_title">Primitive Buddhabrot</span>
+<p>In 1988, a scientist named <a href="http://linas.org/index.html" target="_blank">Linas Vepstas</a> tried out different Mandelbrot renders; amongst them was what I call the &quot;primitive Buddhabrot&quot;: the technique consisted on painting all trajectories -regardless of C being in or outside of M. The result, logically, is the same as merging the Buddhabrot with its negative. A few years later, in 1993, Green came up with the Buddhabrot technique, and hung it on Usenet for everyone to see.</p>
+<p>Vepstas, among many other things, has created a truckload of fractal images, so it's worth it to take a look at his <a href="http://linas.org/art-gallery/" target="_blank">galleries</a>; the one most related to the Buddhabrot is called &quot;<a href="http://linas.org/art-gallery/mandel/mandel.html" target="_blank">The interior Mandelbrot room</a>&quot;.</p>
+<p>The code for this render is:</p>
+<div id="code_div">
+<pre><span id="keyword">    float</span> inc;<span id="keyword">
+
+    for</span> (Cr = -2; Cr &lt; 2; Cr += increm) {
+      maxCi = (<span id="keyword">float</span>)Math.sqrt(4 - Cr * Cr);
+      <span id="keyword">for</span> (Ci = 0; Ci &lt; maxCi; Ci += increm) {        
+        ZrAux = Zi = n = 0;
+      <span id="keyword">  while</span> (n &lt; maxN) {
+          Zr = ZrAux * ZrAux - Zi * Zi + Cr;
+          trayectoria[n][1] = Zi = 2 * ZrAux * Zi + Ci;
+          trayectoria[n++][0] = ZrAux = Zr;
+        <span id="keyword">  if</span> (n == limiteN) {
+            x = trayectoria[limiteN - 1][0];
+            y = trayectoria[limiteN - 1][1];
+          <span id="keyword">  for</span> (j = limiteN - 2; j &gt;= 0; j--) 
+              <span id="keyword">if</span> (x == trayectoria[j][0] &amp;&amp; y == trayectoria[j][1]) j = -1;
+          <span id="keyword">  if</span> (j == -2) <span id="keyword">break</span>;
+          }
+        <span id="keyword">  if</span> (Zr * Zr + Zi * Zi &gt; 4) <span id="keyword">break</span>;
+        }  
+        <span id="comment">// The Buddhabrot is more relevant than the negative.</span>
+
+        <span id="keyword">if</span> (n == limiteN || n == maxN) inc = .01f;
+        <span id="keyword">else</span>                           inc = 1;
+      <span id="keyword">  </span><span id="keyword">for</span> (n--, i = 0; i &lt; n; i++) {
+          coordX = (<span id="keyword">int</span>)((trayectoria[i][0] + 2) * factor);
+          coordY = (<span id="keyword">int</span>)((trayectoria[i][1] + 2) * factor);
+          pixels[coordX][coordY] += inc;
+          pixels[coordX][ladoImgAux - coordY] += inc;
+        }
+      }
+    }</pre>
+</div>
+<p>And the images for the 6 capital planes:</p>
+<div align="center">
+<table style="margin: 0px; padding: 0px;" cellpadding="0px" cellspacing="0px">
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaPrim(Zr,Zi).jpg') do %>
+  <img src="<%= asset_path 'BudaPrim(Zr,Zi)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Zr, Zi plane</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaPrim(Zr,Cr).jpg') do %>
+	<img src="<%= asset_path 'BudaPrim(Zr,Cr)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Zr, Cr plane</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaPrim(Zr,Ci).jpg') do %>
+  <img src="<%= asset_path 'BudaPrim(Zr,Ci)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Zr, Ci plane</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaPrim(Cr,Ci).jpg') do %>
+  <img src="<%= asset_path 'BudaPrim(Cr,Ci)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Cr, Ci plane</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+	<%= link_to asset_path('BudaPrim(Cr,Zi).jpg') do %>
+  <img src="<%= asset_path 'BudaPrim(Cr,Zi)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Cr, Zi plane</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaPrim(Zi,Ci).jpg') do %>
+	<img src="<%= asset_path 'BudaPrim(Zi,Ci)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Zi, Ci plane</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<p>Well that's all there is to it for the article. I hope you have at least enjoyed the spectacular images and animations; they're all collected at the <%= link_to 'gallery', buddha_gallery_path %>, plus a few extra ones. Oh, and don't forget to check out the applets -<%= link_to 'one to rotate the Buddhabrot through the 4 dimensions', buddha_applet_path(1) %>, and <%= link_to 'another one to get zoomed images fast', buddha_applet_path(2) %>.</p>
+<p>To wrap it up, thanks to those who have contributed to the investigation of the Mandelbrot set and the Buddhabrot: Beno&icirc;t Mandelbrot, Linas Vepstas, Lori Gardi, Robert P. Munafo, etc. -their work has been my source of inspiration. <em>Special thanks to</em>: my dad, who's tipped me off on some of the trig formulae for the animations and the 4D applet; and Melinda Green, who's given me some good ideas for the site.</p>
+</div>
+<div id="navigation_div">&nbsp;<span style="float:left; display:block; padding-left:5px;"><%= link_to '< Buddhabrot 4D', buddha_article_path(7), :style => 'text-decoration:none; color: #F90;' %></span></div>

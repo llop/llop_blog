@@ -1,0 +1,2 @@
+module BuddhabrotHelper
+end

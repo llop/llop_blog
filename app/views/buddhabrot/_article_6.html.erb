@@ -1,0 +1,238 @@
+<div id="title">Accelerate BuddhaZoom</div>
+<div id="navigation_div" style="margin-top:10px;">&nbsp;
+<span style="float:left; display:block; padding-left:5px;"><%= link_to '< Optimize the code', buddha_article_path(5), :style => 'text-decoration:none; color: #F90;' %></span>
+<span style="float:right; display:block; padding-right:5px;"><%= link_to 'Buddhabrot 4D >', buddha_article_path(7), :style => 'text-decoration:none; color: #F90;' %></span>
+</div>
+<div id="post">
+<p><em><strong>Note:</strong></em> I've developed a <%= link_to 'technique' , buddha_appendix_path(1) %> and a quick <%= link_to 'zooming applet', buddha_applet_path(2) %> since I wrote this section, so part of the info presented here is now not that valuable.</p>
+<p>Now we've got a fairly quick code, but zooming is still a drag. What can we do to get results faster?</p>
+<div id="p_title">Trajectories</div>
+<p>Again, we have to stop and think a little. I said before that, when zooming, you have to sweep the whole plane anyway because the trajectory of a given C is chaotic and unpredictable. Not so! Chaotic, maybe, but not unpredictable -and that's the key to get fast zooming.</p>
+<p>Based on observation, the first thing I noticed is that every minibrot tosses its trajectories in a way that'a analogous to the Buddhabrot's. In consequence, if we want to enlarge a minibrot, we only have to sweep the plane region that contains it -just like the Buddhabrot is contained in a radius 2 circle.</p>
+<p>If you look closely, the Buddhabrot has more minibrots than the Mandelbrot. That's because every minibrot projects itself on several parts of the plane. For instance, the minibrot on the image to the left projects itself on three different places, two of which are marked on the other image.</p>
+<div align="center">
+<div id="img_table" style="margin: 0px; width: 650px">
+  <img src="<%= asset_path 'ProyecMiniBrot.jpg' %>" alt="" width="650" height="400" border="0" />
+	<div id="img_table_title" align="center">Two projections of a minibrot</div>
+</div>
+</div>
+<p>Since I'm not a mathematician, I couldn't give a precise formula to narrow down the Cs to check when zooming on the Buddhabrot. But what I can do is to propose some guidelines based on the plane regions describen on the <%= link_to 'previous page', buddha_article_path(5) %><a href="BuddhaBrotP5.htm"></a>. The following images show the trajectories that each region projects.</p>
+<div align="center">
+<table style="margin: 0px; padding: 0px;" cellpadding="0px" cellspacing="0px">
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('RegionBuddha1.jpg') do %>
+  <img src="<%= asset_path 'RegionBuddha1_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Region 1</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('RegionBuddha2.jpg') do %>
+  <img src="<%= asset_path 'RegionBuddha2_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Region 2</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('RegionBuddha3.jpg') do %>
+  <img src="<%= asset_path 'RegionBuddha3_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Region 3</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('RegionBuddha4.jpg') do %>
+  <img src="<%= asset_path 'RegionBuddha4_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Region 4</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('RegionBuddha5.jpg') do %>
+  <img src="<%= asset_path 'RegionBuddha5_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Region 5</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('RegionBuddha6.jpg') do %>
+	<img src="<%= asset_path 'RegionBuddha6_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Region 6</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('RegionBuddha7.jpg') do %>
+  <img src="<%= asset_path 'RegionBuddha7_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Region 7</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('RegionBuddha8.jpg') do %>
+  <img src="<%= asset_path 'RegionBuddha8_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Region 8</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('RegionBuddha9.jpg') do %>
+  <img src="<%= asset_path 'RegionBuddha9_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Region 9</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<p>The idea is very simple -even crummy-: think which zone you want to enlarge, see what regions project something onto it, and discard the rest.</p>
+<div align="center">
+<table style="margin: 0px; padding: 0px;" cellpadding="0px" cellspacing="0px">
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BuddhaBrot(Zr,Zi)a(Cr,Ci)(2).avi') do %>
+  <img src="<%= asset_path 'TransicionBuddhaBrot_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Mandel-BuddhaBrot transition</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BuddhaBarrido(Divx).avi') do %>
+	<img src="<%= asset_path 'BarridoBuddha_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Buddhabrot sweep</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<p>I's quite clear that visual references -for lack of a good mathematic solution- have been fundamental. Take a look at these animations: on the first one, you can see how trajectories unfold from their point of origin, illustrating the transition from Mandelbrot to Buddhabrot; on the second, a 0.1 high bar crosses the plane perpendicular to the real axis, revealing the trajectories of the Cs it comes across.</p>
+<p>Regarding the code, we have to make a couple of changes to the general pattern because now we're just sweeping half the plane. As for the regions selection, you'll have to do it copy-pasting the relevant bits. Remember that the deeper you zoom, the greter maxN will have to be, because the closer to the border a C (outside M) is, the more iterations we'll need to identify it.</p>
+<div id="code_div">
+<pre><span id="keyword">private float</span>[][] getPixelsZoom(<span id="keyword">int</span> lado, <span id="keyword">int</span> maxN, <span id="keyword">
+                                float</span> xMin, <span id="keyword">float</span> xMax, <span id="keyword">float</span> yMin, <span id="keyword">float</span> yMax) {
+    <span id="comment">// Initialize variables</span>
+
+    ...<span id="keyword">
+    float</span> factor = ladoImgAux / (xMax - xMin);
+    
+<span id="comment">    // Region x</span>
+    ...
+    <span id="keyword">    for</span> (n--, i = 0; i &lt; n; i++) {
+
+<span id="keyword">            if</span> (trayectoria[i][0] &lt; yMin || trayectoria[i][0] &gt; yMax) <span id="keyword">continue</span>;
+            <span id="keyword">if</span> (trayectoria[i][1] &gt;= xMin &amp;&amp; trayectoria[i][1] &lt;= xMax) {
+                coordX = (<span id="keyword">int</span>)((trayectoria[i][0] - yMin) * factor);
+                coordY = (<span id="keyword">int</span>)((trayectoria[i][1] - xMin) * factor);
+                pixels[coordX][coordY]++;
+            }
+            <span id="keyword">if</span> (-trayectoria[i][1] &gt;= xMin &amp;&amp; -trayectoria[i][1] &lt;= xMax) {
+                coordX = (<span id="keyword">int</span>)((trayectoria[i][0] - yMin) * factor);
+                coordY = (<span id="keyword">int</span>)((-trayectoria[i][1] - xMin) * factor);
+                pixels[coordX][coordY]++;
+            }
+        }
+    ...
+    <span id="keyword">return</span> pixels;
+}</pre>
+</div>
+<p>Some sample enlargements:</p>
+<div align="center">
+<div id="img_table" style="width: 200px">
+  <%= link_to asset_path('BudaZoom(C(0,-1.4),L.003).jpg') do %>
+  <img src="<%= asset_path 'BudaZoom(C(0,-1.4),L.003)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">Center at (0, -1.4)<br/>Side = .003</div>
+</div>
+</div>
+<p>Zoom on the third ball on the buddha's head.</p>
+<p>On this zone, trajectories don't wander far from their point of origin, and there's also no interference with trajectories coming from other parts of the plane. So for this image I've only had to examine twice as much area as the enlarged part.</p>
+<div align="center">
+<table style="margin: 0px; padding: 0px;" cellpadding="0px" cellspacing="0px">
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaZoomA1(C(.7075,-1.2025),L.05).jpg') do %>
+  <img src="<%= asset_path 'BudaZoomA1(C(.7075,-1.2025),L.05)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Center at (.7075,-1.2025)<br/>Side = .05</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaZoomA2(C(.70845,-1.21775),L.0008).jpg') do %>
+  <img src="<%= asset_path 'BudaZoomA2(C(.70845,-1.21775),L.0008)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Center (.70845,-1.21775)<br/>Side = .0008</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaZoomA3(C(.70835,-1.217963),L.000016).jpg') do %>
+  <img src="<%= asset_path 'BudaZoomA3(C(.70835,-1.217963),L.000016)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Center (.70835,-1.217963)<br/>Side = .000016</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaZoomA4(C(.70834436,-1.2179607),L.00000024).jpg') do %>
+  <img src="<%= asset_path 'BudaZoomA4(C(.70834436,-1.2179607%7D,L.00000024)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">C (.70834436,-1.2179607)<br/>Side = .00000024</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<p>This sequence represents a fairly deep zoom on the flying minibrots above the main figure's shoulder. The original coloring for each image has been manipulated in a different way.</p>
+<p>As I said before, a minibrot projects its very own trajectories. So to create these images, I've only had to scan the part of the plane that holds the minibrot in question.</p>
+<p>&quot;Yeah, but I've seen the Mandelbrot and on the enlarged area there is no minibrot&quot;, a good observer will point out. True, but the thing is that those trajectories belong to a specific minibrot. &quot;Right, but which one is it?&quot;. Well, you have to look for it, but it's a snap if you look at the animations above.</p>
+<p>For example, for the first minibrot's zoom (on the previous sequence), I've found the original minibrot located on a square region with side .033, and center at (1.035, -.16). This minibrot doesn't only toss its orbits on the quoted region, it does so on three additional areas of the plane -giving place to what I call &quot;ghost minibrots&quot; r &quot;ghostbrots&quot;-; this is one of them, of course, portrayed in the image.</p>
+<p>The next image is another &quot;ghostbrot&quot; projected by the original minibrot from the last paragraph. What's remarkable here is that this is the ghostbrot centered at the origin of coordinates; obviously, I've filtered trajectories not projected by the minibrot so as to see the ghostbrot crystal clear. Next to it, an enlargement of the same area, only this time no trajectories have been filtered out so that you can see the difference: the trajectories from the budha's head are dominant because they outnumber the minibrot's.</p>
+<div align="center">
+<table style="margin: 0px; padding: 0px;" cellpadding="0px" cellspacing="0px">
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaZoom(C(0,0),L.3).jpg') do %>
+  <img src="<%= asset_path 'BudaZoom(C(0,0),L.3)Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Center at (0,0) Side = .3<br/>Minibrot trajectories only</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaZoom(C(0,0),L.3)(2).jpg') do %>
+  <img src="<%= asset_path 'BudaZoom(C(0,0),L.3)(2)_Thmb.jpg' %>" alt="" width="200" height="200" border="0" />
+  <% end %>
+ 	<div id="img_table_title" align="center">Center (0,0) Side = .3<br/>All trajectories</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<p>Alright, so after all this code optimizing and speeding up zooms, I hope waiting ages for a Buddhazoom becomes freakin' history. Now onto the fun part: to crete beautiful images. Jump to the next page if you want to see the most unusual views of the Buddhabrot.</p>
+</div>
+<div id="navigation_div" style="margin-top:10px;">&nbsp;
+<span style="float:left; display:block; padding-left:5px;"><%= link_to '< Optimize the code', buddha_article_path(5), :style => 'text-decoration:none; color: #F90;' %></span>
+<span style="float:right; display:block; padding-right:5px;"><%= link_to 'Buddhabrot 4D >', buddha_article_path(7), :style => 'text-decoration:none; color: #F90;' %></span>
+</div>

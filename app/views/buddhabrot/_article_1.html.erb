@@ -1,0 +1,40 @@
+<div id="title">Meet the Buddhabrot technique</div>
+<div id="navigation_div">&nbsp;<span style="float:right; display:block; padding-right:5px;"><%= link_to 'Implement the Buddhabrot technique in Java >', buddha_article_path(2), :style => 'text-decoration:none; color: #F90;' %></span></div>
+<div id="post">
+<div style="float: left; margin-top:10px; margin-right: 10px">
+<div id="img_table">
+  <%= link_to asset_path('Mandelbrot.jpg') do %>
+  <img src="<%= asset_path 'Mandelbrot_Thmb.jpg' %>" alt="Mandelbrot" width="247" height="280" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Mandelbrot</div>
+</div>
+<div id="img_table">
+  <%= link_to asset_path('BuddhaBrotNebula.jpg') do %>
+  <img src="<%= asset_path 'BuddhaBrotNebula_Thmb.jpg' %>" alt="Buddhabrot" width="250" height="250" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">Buddhabrot</div>
+</div>
+</div>
+<p><em><strong>Note</strong>: Hit the links for more thorough explanations -many come from <a href="http://en.wikipedia.org/wiki/Main_Page" target="_blank">Wikipedia</a>; given the complex nature of the subject at hand, it's best to be already clued in in order to get the most out of this article.</em></p>
+<div id="p_title">Fractal</div>
+<p>Considering possible screen-savers, I started looking into fractals -a nice topic. At <a id="tst" href="http://cabin.users.geeky.net/Fractal.php" target="_blank">http://cabin.users.geeky.net/Fractal.php</a> I saw the <a href="http://en.wikipedia.org/wiki/Buddhabrot" target="_blank">Buddhabrot</a> for the first time; it was an animation that seemed to color random pixels, but... After a while, the figure on the picture appeared! You see, it doesn't matter how you start painting the image: you'll always get a very similar end result.</p>
+<p>&quot;Ok&quot;, I thought;, &quot;now I just have to adapt the code&quot;.For that, I've unavoidably had to get familiar with a few math concepts -after all, this drawing is a graphic representation of the <a href="http://en.wikipedia.org/wiki/Mandelbrot_set" target="_blank">Mandelbrot set</a>. But before we go into more detail, a brief history review.</p>
+<div id="p_title">The Buddhabrot technique</div>
+<p>Created by <a href="http://www.superliminal.com/melinda/index.htm" target="_blank">Melinda Green</a>, and later baptized by <a href="http://www.imaging.robarts.ca/%7Elgardi/" target="_blank">Lori Gardi</a>, this technique is a special render of the classic Mandelbrot. The reason for the name's because it resembles a meditating buddha, with its third eye and metaphysic energy trails.</p> 
+<p>All of this is very nice, but what gives place to the magic? What numbers belong to the <a href="http://en.wikipedia.org/wiki/Beno%C3%AEt_Mandelbrot" target="_blank">Mandelbrot</a> set?</p>
+<p>Let's see the Mandelbrot function: Z<sub>n</sub> = Z<sub>n-1</sub><sup>2</sup> + C.</p>
+<p>Being <i>Z</i><sub>0</sub>= 0, and C any <a href="http://en.wikipedia.org/wiki/Complex_number" target="_blank">complex number</a>, the sequence of Zs is calculated. If Z does not tend to infinity, C belongs to the set.</p>
+<div id="p_title">Rendering the Mandelbrot:</div>
+<p>
+<ul>
+	<li id="li_padded">We start off a complex plane in which the real axis ranges from -2 to 2, and so does the imaginary. We check a good number of Cs, evenly distributed across the plane.</li>
+	<li id="li_padded">Additionally, we've got a pixel matrix that maps onto the aforementioned complex plane. So then, if a C does not belong to the set, we light up the corresponding pixel.</li>
+  <li id="li_padded">In the end, an image is drawn with the pixel matrix -gray-scale or color, depending on how elaborate a product we're looking for.</li>
+</ul>
+</p>
+<div id="p_title">Rendering the Buddhabrot:</div>
+<p><ul><li id="li_padded">Same as the Mandelbrot, only this time for every C outside the set we hit the pixels corresponding to the iterates -that is, the Zs.</li></ul></p>
+<p>Alright, that is the theory. If you want to see a more detailed explanation for my implementation, jump to the next page.</p>
+</div>
+<div id="navigation_div">&nbsp;<span style="float:right; display:block; padding-right:5px;"><%= link_to 'Implement the Buddhabrot technique in Java >', buddha_article_path(2), :style => 'text-decoration:none; color: #F90;' %></span></div>
+

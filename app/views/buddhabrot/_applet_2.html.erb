@@ -1,0 +1,104 @@
+<div id="title">Buddhabrot zooming applet</div>
+<div id="navigation_div">&nbsp;<span style="float:left; display:block; padding-left:5px;"><%= link_to '< Buddhabrot 4D', buddha_applet_path(1), :style => 'text-decoration:none; color: #F90;' %></span></div>
+<div id="post">
+<p>Get ready to rumble!!!</p>
+<div align="center">
+<div id="img_table" style="width: 655px">
+<object classid="clsid:8AD9C840-044E-11D1-B3E9-00805F499D93" codebase="http://java.sun.com/update/1.6.0/jinstall-6u13-windows-i586.cab" width="655" height="620" id="BuddhabrotZoomer">
+	<param name="name" value="Llop'sBuddhabrotZoomer" >
+  <param name="code" value="BuddhaLlopZoomer.BuddhaLlopZoomerApplet.class" >
+  <param name="archive" value="<%= asset_path 'BuddhaBrotLlopZoomer_v1.0.jar' %>">
+  <param name="type" value="application/x-java-applet;version=1.6">
+  <comment>
+    <embed
+      name="Llop'sBuddhabrotZoomer"
+      type="application/x-java-applet;version=1.6"
+      code="BuddhaLlopZoomer.BuddhaLlopZoomerApplet.class" 
+      archive="<%= asset_path 'BuddhaBrotLlopZoomer_v1.0.jar' %>"
+      pluginspage="http://java.sun.com/javase/downloads/ea.jsp"
+      width="655" height="620">
+      <noembed>No Java Support.</noembed>
+    </embed>
+  </comment>
+</object>
+</div>
+</div>
+<p>This applet allows you to zoom in on any part of the Buddhabrot. I suggest you read the <%= link_to 'Issues', (buddha_appendix_path(1) + '#Issues'), :target => '_blank' %> section in '<%= link_to 'Appendix 1: Zooming', buddha_appendix_path(1), :target => '_blank' %>' before trying anything.</p>
+<p>I can't stress enough how important the minimum and maximum N values for the colors are (though only for the rendering part of the process). Little changes can make a big difference. Compare these two images and see for yourself:</p>
+<div align="center">
+<table style="margin: 0px; padding: 0px;" cellpadding="0px" cellspacing="0px">
+<tr>
+<td colspan="2">
+<div id="img_table" align="center">
+<div style="color: #F90; text-align: left; padding: 10px">
+	<b>Scan grid width:</b> <span style="color: #FFF">601</span><br/>
+  <b>Detail:</b> <span style="color: #FFF">Very low</span><br/>
+  <b>Center:</b> <span style="color: #FFF">(-1.755, 0.0i)</span><br/>
+  <b>Width:</b> <span style="color: #FFF">0.075 (~53.3 X)</span><br/>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('Buddhabrot00013.jpg') do %>
+  <img src="<%= asset_path 'Buddhabrot00013_Thmb.jpg' %>" alt="" width="250" height="250" border="0" />
+  <% end %>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('Buddhabrot00014.jpg') do %>
+  <img src="<%= asset_path 'Buddhabrot00014_Thmb.jpg' %>" alt="" width="250" height="250" border="0" />
+  <% end %>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div id="img_table">
+<div style="color: #F90; text-align: left; padding: 10px">
+  <b>MinN-MaxN red:</b> <span style="color: #FFF">10 - 1000</span><br/>
+  <b>MinN-MaxN green:</b> <span style="color: #FFF">50 - 5000</span><br/>
+  <b>MinN-MaxN blue:</b> <span style="color: #FFF">100 - 10000</span>
+</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+<div style="color: #F90; text-align: left; padding: 10px">
+  <b>MinN-MaxN red:</b> <span style="color: #FFF">5 - 1000</span><br/>
+  <b>MinN-MaxN green:</b> <span style="color: #FFF">10 - 3500</span><br/>
+  <b>MinN-MaxN blue:</b> <span style="color: #FFF">15 - 6000</span>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<p>The good thing is that you just change the N values, the next render will skip the plane analysis so time is saved. Take a look at some of my <%= link_to 'sample images', (buddha_appendix_path(1) + '#Examples'), :target => '_blank' %> for examples of proper parameters.</p>
+<p>Keep in mind that the minimum width of the magnified area is 0.000000001 (that's 4 billion X).</p>
+<p>
+<ul>
+	<li id="li_padded"><span style="color: #F90; font-weight: bold">Analysis:</span> Here's where you can specify how precise the search for centerpoints is going to be. The default values will work for most zooms (see '<%= link_to 'Issues', (buddha_appendix_path(1) + '#Issues'), :target => '_blank' %>').<br/>
+    <ul>
+      <li id="li_padded"><span style="color: #F90; font-style: italic">Scan grid width:</span> The higher the value, the finer the grid scan. A value of 3001 will catch most any feature, but be careful because the applet could run out of memory.</li>
+      <li id="li_padded"><span style="color: #F90; font-style: italic">Detail:</span> Determines how precisely the grid will be scanned. Higher detail also means more time spent in the process.</li>
+	  </ul>
+  </li>
+	<li id="li_padded"><span style="color: #F90; font-weight: bold">Render:</span> Parameters for the render.<br/>
+	  <ul>
+      <li id="li_padded"><span style="color: #F90; font-style: italic">Center:</span> The centerpoint of your zoom. You specify the real component under Cr, and the imaginary under Ci.</li>
+      <li id="li_padded"><span style="color: #F90; font-style: italic">Width:</span> The width of your zoom -also the height, as we'll be drawing in a square.</li>
+      <li id="li_padded"><span style="color: #F90; font-style: italic">Minimum and maximum N values for each of the color channels:</span> I cannot stress how important these parameters are. They'll tell the difference between a clear, sharp image, and a fuzzy one.</li>
+      <li id="li_padded"><span style="color: #F90; font-style: italic">Priority:</span> The priority of the zooming process. A higher value will hug your CPU, whereas a lower one will allow you to do other stuff on the computer.</li>
+      <li id="li_padded"><span style="color: #F90; font-style: italic">Zoom:</span> Press this button to start the zooming.</li>
+	    <li id="li_padded"><span style="color: #F90; font-style: italic">Cancel:</span> This button cancels the process. The render will continue until you press it.</li>
+	  </ul>
+  </li>
+</ul>
+</p>
+<p>You can see the <%= link_to 'source here', asset_path('BuddhaBrotLlopZoomer_v1.0Source.rar') %>. If you know a bit of Java, you can probably rig something up to render bigger images and save them to disk -just don't forget to mention where the method came from!</p>
+</div>
+<div id="navigation_div">&nbsp;<span style="float:left; display:block; padding-left:5px;"><%= link_to '< Buddhabrot 4D', buddha_applet_path(1), :style => 'text-decoration:none; color: #F90;' %></span></div>

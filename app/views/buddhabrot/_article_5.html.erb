@@ -1,0 +1,321 @@
+<div id="title">Optimize the code</div>
+<div id="navigation_div" style="margin-top:10px;">&nbsp;
+<span style="float:left; display:block; padding-left:5px;"><%= link_to '< BuddhaZoom', buddha_article_path(4), :style => 'text-decoration:none; color: #F90;' %></span>
+<span style="float:right; display:block; padding-right:5px;"><%= link_to 'Accelerate BuddhaZoom >', buddha_article_path(6), :style => 'text-decoration:none; color: #F90;' %></span>
+</div>
+<div id="post">
+<p>If you've tried to run any of the examples so far, you'll have noticed painting a Buddhabrot is very costly in terms of CPU usage, and it takes very long. We can't avoid CPU usage -those calculations are going to get done anyway-, but we can significantly decrese execution time <span class="Estilo4">( :,D)</span>.</p>
+<p>Okay, there's two different kinds of optimizations here:</p>
+<ol>
+	<li id="li_padded">A conceptual one; it breaks down to examining M's properties, and shape the code accordingly. A site that describes in deep detail M and its characteristics is <a href="http://www.mrob.com/pub/muency.html" target="_blank">Mu-Ency</a>; it rules!</li>
+	<li id="li_padded">And the other less intelligent one would be to produce a code that does the same stuff, but faster.</li>
+</ol>
+<div id="p_title">Identify and solve the problem</div>
+<p>The key question is: &quot;where is it we are wasting time?&quot; And the obvious answer is: &quot;finding Cs that belong to M&quot;. Think about it for a moment: for most Cs outside M we're just calculating a few Zs (more and more as we approach the border of M); but for Cs on the inside we've got to iterate to <code>maxN</code> -and they don't paint squat...</p>
+<p>Now we know we have to weed out as many Cs as we can. Let's get on with the first optimization -it can be achieved in at least two ways:</p>
+<ul>
+	<li id="li_padded"><span id="p_title">A:</span> Ignore Cs in regions we are positive they belong to M.</li>
+	<li id="li_padded"><span id="p_title">B:</span> Look for repeating Z values in a trajectory so we can discard C. If Z repeats at less than 2 units from the origin of coordinates, it means that trajectory is looping, and so C belongs to M.</li>
+</ul>
+<p>The cool thing is that both approaches can be used complementarily. The first one can be harcoded, but for the second we have to take M's measurements.</p>
+<div style="float: left; margin-right: 10px;">
+<div id="img_table">
+  <img src="<%= asset_path 'Mandelbrot2.jpg' %>" alt="" width="401" height="401" border="0" />
+  <div id="img_table_title" align="center">Mandelbrot</div>
+</div>
+<div id="img_table">
+  <img src="<%= asset_path 'Regiones.gif' %>" alt="" width="401" height="401" border="0" />
+	<div id="img_table_title" align="center">Mandelbrot regions selection</div>
+</div>
+<div id="img_table">
+  <div align="center"><img src="<%= asset_path 'Cardioide.gif' %>" alt="" width="249" height="287" border="0" /></div>
+  <div id="img_table_title" align="center">Cardioid</div>
+</div>
+</div>
+<div id="p_title">Optimization A</div>
+<p>At first glance, the image looks like a <a href="http://en.wikipedia.org/wiki/Cardioid" target="_blank">cardioid</a> shape with uncountable circumferences attached to it. Reading up mathematic studies, we verify it is <strong>really</strong> a cardioid with circumferences around.</p>
+<p>We can use these geometric shapes to get a simplified version of the Mandelbrot. And that is precisely what I wasted my time on, borrowing data from here and there, but especially from <a href="http://www.mrob.com/pub/muency.html" target="_blank">Mu-Ency</a>; the result is the picture below.</p>
+<p>Black regions hold Cs to discard. I discarded the central cardioid, and the four largest circumferences. Colored regions contain, of course, the Cs to check. Every color is a region that will be separately analyzed, because calculating the geometric figures borders' positions require different parameters.</p>
+<p>Let's make something clear: as I understand, the only perfect circumference in M is the buddha's 'head' (center at (-1, 0 <em>i</em>)). Those circles stuck to the cardioid are known as Mu atoms. To make life easier, in <strong>regions 2</strong>, <strong>5</strong>, and <strong>6</strong>, I've discarded a circle inside the corresponding Mu atom -remember this if you keep reading: the measurements I give here do not represent the exact outline of the atoms.</p>
+<p><strong>Regions 1</strong> and <strong>9</strong> don't have many points in M compared to the rest; so we can bulk-check all Cs in there.</p>
+<p>We discard the 'bun' on the buddha's head for <strong>region 2</strong>, that is, the circumference centered at (-1.30925, 0 <em>i</em>) and radius 0.05875; we ignore another circumference for <strong>region 3</strong> the 'head', which is centered at (-1, 0 <em>i</em>) and has a radius of 0.25.</p>
+<p>For the remaining 5 regions, we have to know where the cardioid is. We can describe it saying that its fixed circumference has a radius of 0.25 and is centered at the origin of coordinates.</p>
+<p>In <strong>regions 4</strong>, <strong>7</strong> and <strong>8</strong>, we just ignore the cardioid, but for <strong>region 6</strong> we have to know where the buddha's 'hands' are: these circumferences have radius 0.094 and center at (-0.125, -0.74401 <em>i</em>) and (-0.125, 0.74401 <em>i</em>). We use these circumferences again to limit <strong>region 5</strong>.</p>
+<p>At this point, you have to know a couple of trig formulae to find points on the circumferences'  and the cardioid's borders. We have the X coordinate (C real), and we want to know Y (C img). For circumferences, we can use good ole <a href="http://en.wikipedia.org/wiki/Pythagorean_theorem" target="_blank">Pythagoras</a>:</p>
+<pre>            c1 = sqrt (h<sup>2</sup> - c2<sup>2</sup>).</pre>
+<p>But the cardioid is a whole different story: we are facing a fourth-degree equation <span class="Estilo5 Estilo3">(&gt;,O)</span>!! -for a given X, we can have up to 4 Ys. Luckily, the problem is actually easier tha it looks. look at the cardioid drawing. When X is between 0 and 2, there can only be 2 Ys, and one is the negative of the other. So there aren't two solutions but just 1. And it can be calculated in the following manner:</p>
+<pre>            sinAngle = ((sqrt (1 + 4 * X * a) - 1) / 2
+            Y = a * (1 + sinAngle) * sqrt (1 - sinAngle<sup>2</sup>)</pre>
+<p>When X is between 0 and -0.25, the only thing we change is the calculation of <em>sinAngle</em>, buecause now we are expecting two solutions:</p>
+<pre>            sinAngle = ((+/- sqrt (1 + 4 * X * a) - 1) / 2</pre>
+<p>Depending on which <em>sinAngle</em> we use, we'll get the Y closer or farther from 0. Now, if we just change the sign for the 2 Ys we find the other 2 solutions. Freakin' easy, right?</p>
+<p>After coding this approach for the cardioid and running a couple of tests, though, i've come to realize there's an even faster way to solve the problem, even though it's no more than an approximation. Given an angle, any one, we can find the point on the border with this formula:</p>
+<pre>            X = a * (1 - sinAngle) * sinAngle
+            Y = a * (1 - sinAngle) * cosAngle</pre>
+<p>The idea is to calculate successive points by increasing the angle, until we find one close enough to the one we'd find  with the other method, and use it. It seems that in this case, brute force is more efficient.</p>
+<p>Oh yeah, before I forget: just like we ignored a few circumferences in M, we should also discard points more than 2 units away from the origin of coords.</p>
+<p>And the final trasure -something so obvious many have overlooked it-: the Mandelbrot (and the Buddhabrot) is symetric on the real axis, so it's enough to check half the Cs, and paint trajectories on both sides of the image <span class="Estilo4">( :,D)</span>.</p>
+<p>Time to put theory in practice and type the code. There's still room for improvements, that's why some parts have ellipsis; we'll replace the later.</p>
+<div id="code_div">
+<pre><span id="keyword">private float</span>[][] getPixels(<span id="keyword">int</span> maxN, <span id="keyword">float</span> increm, <span id="keyword">int</span> ladoImg) {
+    <span id="keyword">double</span> rC;
+    <span id="keyword">double</span> angulo = 3 * Math.PI / 2;
+    <span id="keyword">double</span> incremAngulo = 2 * Math.PI / 145000;
+    <span id="keyword">double</span> medioIncrem = increm / 2;
+    <span id="keyword">float</span> Cr, CrTemp, Ci, maxCi, x, y;
+    <span id="keyword">int</span> ladoImgAux = ladoImg - 1;
+    <span id="keyword">float</span> factor = ladoImgAux / 4f;
+    <span id="keyword">float</span>[][] pixels = <span id="keyword">new</span> <span id="keyword">float</span>[ladoImg][ladoImg];
+    <span id="keyword">int</span> limiteN;
+
+
+<span id="comment">    // Region 1</span>
+    <span id="keyword">for</span> (Cr = -2; Cr &lt; -1.368f; Cr += increm) {
+      maxCi = (<span id="keyword">float</span>)Math.sqrt(4 - Cr * Cr);
+      <span id="keyword">for</span> (Ci = 0; Ci &lt; maxCi; Ci += increm) {
+        ...
+      }
+    }
+
+    <span id="comment">// Region 2</span>
+
+    rC = 0.05875 * 0.05875;
+    <span id="keyword">for</span> (Cr = -1.368f; Cr &lt; -1.2505; Cr += increm) {
+      Ci = (<span id="keyword">float</span>)(Math.sqrt(rC - (Cr + 1.30925) * (Cr + 1.30925)));
+      maxCi = (<span id="keyword">float</span>)(Math.sqrt(4 - Cr * Cr));
+      <span id="keyword">for</span>(; Ci &lt; maxCi; Ci += increm) {
+        ...
+      }
+    }
+
+<span id="comment">    // Region 3</span>
+
+    rC = 0.25 * 0.25;
+    <span id="keyword">for</span> (Cr = -1.2505; Cr &lt; -0.75; Cr += increm) {
+      <span id="keyword">if</span> (Cr &lt; -1.25) Ci = 0;
+      <span id="keyword">else</span>            Ci = (<span id="keyword">float</span>)(Math.sqrt(rC - (Cr + 1) * (Cr + 1)));
+      maxCi = (<span id="keyword">float</span>)(Math.sqrt(4 - Cr * Cr));
+      <span id="keyword">for</span>(; Ci &lt; maxCi; Ci += increm) {
+        ...
+      }
+    }
+
+    <span id="comment">// Region 4</span>
+
+    <span id="keyword">for</span> (CrTemp = -0.75f; Cr &lt; -.219f; angulo += incremAngulo) {
+      Cr = (<span id="keyword">float</span>)((.5 * (1 - Math.sin(angulo)) * Math.sin(angulo)) + .25);
+      <span id="keyword">if</span> (Cr &gt; CrTemp - medioIncrem &amp;&amp; Cr &lt; CrTemp + medioIncrem) {
+        Ci = (<span id="keyword">float</span>)(.5 * (1 - Math.sin(angulo)) * Math.cos(angulo));
+        maxCi = (<span id="keyword">float</span>)(Math.sqrt(4 - Cr * Cr));
+        <span id="keyword">for</span>(; Ci &lt; maxCi; Ci += increm) {
+          ...
+        }
+        CrTemp += increm;
+      }
+    }
+
+    <span id="comment">// Region 5
+    </span>rC = .094 * .094;
+    <span id="keyword">for</span> (Cr = -.219f; Cr &lt; -.031; Cr += increm) {
+      Ci = (<span id="keyword">float</span>)(Math.sqrt(rC - (Cr + .125) * (Cr + .125)) + .74401);
+      maxCi = (<span id="keyword">float</span>)(Math.sqrt(4 - Cr * Cr));
+      <span id="keyword">for</span>(; Ci &lt; maxCi; Ci += increm) {
+        ...
+      }
+    }
+
+    <span id="comment">// Region 6</span>
+
+    rC = .094 * .094;
+    <span id="keyword">for</span> (Cr = CrTemp = -.219f; Cr &lt; -.031; angulo += incremAngulo) {
+      Cr = (<span id="keyword">float</span>)((.5 * (1 - Math.sin(angulo)) * Math.sin(angulo)) + .25);
+      <span id="keyword">if</span> (Cr &gt; CrTemp - medioIncrem &amp;&amp; Cr &lt; CrTemp + medioIncrem) {
+        Ci = (<span id="keyword">float</span>)(.5 * (1 - Math.sin(angulo)) * Math.cos(angulo));
+        maxCi = (<span id="keyword">float</span>)(-Math.sqrt(rC - (Cr + .125) * (Cr + .125)) + .74401);
+        <span id="keyword">for</span>(; Ci &lt;= maxCi; Ci += increm) {
+          ...
+        }
+        CrTemp += increm;
+      }
+    }
+    
+    <span id="comment">// Region 7</span>
+
+    <span id="keyword">for</span> (CrTemp = -0.031; Cr &lt; .375 - increm; angulo += incremAngulo) {
+      Cr = (<span id="keyword">float</span>)((.5 * (1 - Math.sin(angulo)) * Math.sin(angulo)) + .25);
+      <span id="keyword">if</span> (Cr &gt; CrTemp - medioIncrem &amp;&amp; Cr &lt; CrTemp + medioIncrem) {
+        Ci = (<span id="keyword">float</span>)(.5 * (1 - Math.sin(angulo)) * Math.cos(angulo));
+        maxCi = (<span id="keyword">float</span>)(Math.sqrt(4 - Cr * Cr));
+        <span id="keyword">for</span>(; Ci &lt; maxCi; Ci += increm) {
+          ....
+        }
+        CrTemp += increm;
+      }
+    }
+    
+    <span id="comment">// Region 8
+    </span><span id="keyword">for</span> (CrTemp = .375f; Cr &gt;= .25; angulo += incremAngulo) {
+      Cr = (<span id="keyword">float</span>)((.5 * (1 - Math.sin(angulo)) * Math.sin(angulo)) + .25);
+      <span id="keyword">if</span> (Cr &gt; CrTemp - medioIncrem &amp;&amp; Cr &lt; CrTemp + medioIncrem) {
+        Ci = (<span id="keyword">float</span>)(.5 * (1 - Math.sin(angulo)) * Math.cos(angulo));
+        <span id="keyword">for</span>(; Ci &gt;= 0; Ci -= increm) {
+          ...
+        }
+        CrTemp -= increm;
+      }
+    }
+    
+    <span id="comment">// Region 9
+    </span><span id="keyword">for</span> (Cr = .375f; Cr &lt; 2; Cr += increm) {
+      maxCi = (<span id="keyword">float</span>)(Math.sqrt(4 - Cr * Cr));
+      <span id="keyword">for</span> (Ci = 0; Ci &lt; maxCi; Ci += increm) {
+        ...
+      }
+    }
+
+    <span id="keyword">return</span> pixels;
+  }</pre>
+</div>
+<p>As you can see, implementing this wasn't so tough; we could even add more regions to discard more 'buds' (Mu atoms). And if you're really suave, you can even weed out flying minibrots.</p>
+<div id="p_title">Optimization B</div>
+<p>If we spot a repeated Z in a trajectory, we know it's looping, and will repeat <em>ad infinitum</em>; thus, C belongs to M. I've implemented this looking for equal points in the trajectory at a given moment.</p>
+<p>Ok, we only have left to discuss the most straight-forward type of optimization -accelerate the code without changing the approach. Coming up is the code that was missing above (where the ellipsis are). To make this brief, I've also included the previous 'optimization B'.</p>
+<div id="code_div">
+<pre>        ZrAux = Zi = n = 0;
+        <span id="keyword">while</span> (n &lt; maxN) {
+          Zr = ZrAux * ZrAux - Zi * Zi + Cr;
+          trayectoria[n][1] = Zi = 2 * ZrAux * Zi + Ci;
+          trayectoria[n++][0] = ZrAux = Zr;
+          <span id="comment">// Optimization B</span>
+
+          <span id="keyword">if</span> (n == limiteN) {
+            x = trayectoria[limiteN - 1][0];
+            y = trayectoria[limiteN - 1][1];
+            <span id="keyword">for</span> (j = limiteN - 2; j &gt;= 0; j--) 
+              <span id="keyword">if</span> (x == trayectoria[j][0] &amp;&amp; y == trayectoria[j][1]) j = -1;
+            <span id="keyword">if</span> (j == -2) <span id="keyword">break</span>;
+          }
+          <span id="keyword">if</span> (Zr * Zr + Zi * Zi &gt; 4) {
+            <span id="keyword">for</span> (n--, i = 0; i &lt; n; i++) {
+              coordX = (<span id="keyword">int</span>)((trayectoria[i][0] + 2) * factor);
+              coordY = (<span id="keyword">int</span>)((trayectoria[i][1] + 2) * factor);
+              pixels[coordX][coordY]++;
+              pixels[coordX][ladoImgAux - coordY]++;
+            }
+            <span id="keyword">break</span>;
+          }
+        }</pre>
+</div>
+<p>Let's break this down. If we compare this code to previously shown snippets, differences are obvious:</p>
+<ul>
+	<li id="li_padded">Fry <code>ZiAux</code> variable. We can live without it; alternatively, we could fry <code>ZrAux</code> -depends on which Z component is calculated first.</li>
+  <li id="li_padded">Several inline value assignations.</li>
+	<li id="li_padded">No conveniency method invoking to calculate Z. The less method calls, the better!</li>
+	<li id="li_padded">On painting the trajectory, ignore the last point; Since we'll always be painting pixels inside the image, we save a lot of checks. As a side effect, the Buddhabrot will appear inside a circumference, and the image corners will be black.</li>
+	<li id="li_padded">Oh, and we paint pixels on both sides of the image.</li>
+</ul>
+<p>Regarding optimization B, it's pretty simple; we take the last computed point, and look for an equal one throughout the trajectory. The <code>j</code> value indicates if a match was found. When do we start the search to get the best results? To put it in another way, what value do we have to give <code>limiteN</code>? Well, it depends again on the calculated Zs and the Cs examined. On an unzoomed image, up until 5000 <code>maxN</code> (maybe more, I don't know), and looking at 400 Cs per pixel, <code>limiteN</code> is fine at half <code>maxN</code>; I know that much. And when <code>maxN</code> equals 50000, <code>limiteN</code> is beter off at 3000.</p>
+<div id="p_title">Mass approach for animations: BuddhaFile </div>
+<p>When I started with the animations, I realized that, yeah, the code may be quite optimized, but to paint many frames it's still damn slow. This called for a more practical approach. Then I thought if we saved Cs to a file we wouldn't have to go through the whole selection process -just read the important values from the disk.</p>
+<p>What's the best structure for this kind of files? I talked about saving Cs, but we're also interested in the number of iterations Z will take to escape (n) in order to skip the check for each loop. In the end, the file will hold a series of blocks with this content:</p>
+<ul>
+	<li id="li_padded">C-real, </li>
+  <li id="li_padded">C-imaginary, and </li>
+	<li id="li_padded">n.</li>
+	</ul>
+<p>To create these files, the method should look a lot like the '<code>getPixels()</code>' above -use it to fill in the ellipsis.</p>
+<div id="code_div">
+<pre><span id="keyword">import</span> java.io.*;
+  ...       
+  <span id="keyword">public void</span> creaBuddhArchivo(String nombreArchivo, <span id="keyword">int</span> maxN, <span id="keyword">float</span> increm) {
+    <span id="comment"><i>// Initialize variables</i></span>
+    ...
+    ObjectOutputStream flujoSalida = <span id="keyword">null</span>;
+    <span id="keyword">try</span> {
+      FileOutputStream flujo = <span id="keyword">new</span> FileOutputStream(nombreArchivo);   
+      flujoSalida            = <span id="keyword">new</span> ObjectOutputStream(flujo); 
+    } <span id="keyword">catch</span> (StreamCorruptedException ex) { ex.printStackTrace(); 
+    } <span id="keyword">catch</span> (IOException ex)              { ex.printStackTrace(); 
+    } <span id="keyword">catch</span> (SecurityException ex)        { ex.printStackTrace(); 
+    } <span id="keyword">catch</span> (NullPointerException ex)     { ex.printStackTrace(); }
+    
+    <span id="comment">// Region x</span>
+
+    ...      
+       <span id="keyword">while</span> (n &lt; maxN) {
+          ...
+          <span id="keyword">if</span> (Zr * Zr + Zi * Zi &gt; 4) {
+            <span id="keyword">try</span> {
+              flujoSalida.writeFloat(Cr);<br>              flujoSalida.writeFloat(Ci);<br>              flujoSalida.writeInt(--n);
+            } <span id="keyword">catch</span> (IOException ex) { ex.printStackTrace(); }<span id="keyword">
+
+            break</span>;
+          }
+        }
+    ...
+    <span id="keyword">try</span> { flujoSalida.close(); } <span id="keyword">catch</span> (IOException ex) { ex.printStackTrace(); }
+  }</pre>
+</div>
+<p>And when we want to paint the Buddhabrot, use this other method:</p>
+<div id="code_div">
+<pre>  <span id="keyword">private float</span>[][] getPixelsBuddhArchivo(String nombreArchivo, <span id="keyword">int</span> ladoImg) {
+    <span id="keyword">int</span> i, n, coordX, coordY, ladoAux = ladoImg - 1;
+    <span id="keyword">float</span> factor = ladoAux / 4f, Cr, Ci, Zr, Zi, ZrAux;
+    <span id="keyword">float</span>[][] pixels = <span id="keyword">new float</span>[ladoImg][ladoImg];
+
+    <span id="keyword">int</span> buffered, tamBuf = 1000;
+    <span id="keyword">float</span>[][] Cs = <span id="keyword">new float</span>[tamBuf][2];
+    <span id="keyword">int</span>[] maxNs  = <span id="keyword">new int</span>[tamBuf];
+
+    ObjectInputStream flujoEntrada = <span id="keyword">null</span>;
+    <span id="keyword">try</span> {
+      FileInputStream flujo = <span id="keyword">new</span> FileInputStream(nombreArchivo);   
+      flujoEntrada          = <span id="keyword">new</span> ObjectInputStream(flujo); 
+    } <span id="keyword">catch</span> (StreamCorruptedException ex) { ex.printStackTrace(); 
+    } <span id="keyword">catch</span> (IOException ex)              { ex.printStackTrace(); 
+    } <span id="keyword">catch</span> (SecurityException ex)        { ex.printStackTrace(); 
+    } <span id="keyword">catch</span> (NullPointerException ex)     { ex.printStackTrace(); }
+    
+    <span id="keyword">do</span> {
+      buffered = buffer(Cs, maxNs, flujoEntrada);
+      <span id="keyword">for</span> (i = 0; i &lt; buffered; i++) {
+        Cr = Cs[i][0];
+        Ci = Cs[i][1];
+        ZrAux = Zi = n = 0;
+        <span id="keyword">while</span> (n++ &lt; maxNs[i]) {
+          Zr = ZrAux * ZrAux - Zi * Zi + Cr;
+          Zi = 2 * ZrAux * Zi + Ci;
+          ZrAux = Zr;
+          coordX = (<span id="keyword">int</span>)((Zr + 2) * factor);
+          coordY = (<span id="keyword">int</span>)((Zi + 2) * factor);
+          pixels[coordX][coordY]++;
+          pixels[coordX][ladoAux - coordY]++;
+        }
+      }
+    } <span id="keyword">while</span> (buffered == tamBuf);
+    <span id="keyword">try</span> { flujoEntrada.close(); } <span id="keyword">catch</span> (IOException ex) { ex.printStackTrace(); }
+    <span id="keyword">return</span> pixels;
+  } 
+
+  <span id="keyword">private int</span> buffer(<span id="keyword">float</span>[][] Cs, <span id="keyword">int</span>[] maxNs, ObjectInputStream flujoEntrada) {
+    <span id="keyword">int</span> pivote = 0;
+    <span id="keyword">int</span> tamanoBuffer = Cs.length;
+    <span id="keyword">try</span> {
+      <span id="keyword">while</span> (pivote &lt; tamanoBuffer) {
+        Cs[pivote][0]   = flujoEntrada.readFloat();
+        Cs[pivote][1]   = flujoEntrada.readFloat();
+        maxNs[pivote++] = flujoEntrada.readInt();
+      }
+    } <span id="keyword">catch</span> (EOFException ex) { ex.printStackTrace(); 
+    } <span id="keyword">catch</span> (IOException ex)  { ex.printStackTrace(); }
+    <span id="keyword">return</span> pivote;
+  }</pre>
+</div>
+<p>In brief, '<code>getPixelsBuddhArchivo()</code>' loads a buffer with a few Cs (1000 in the example) along with their corresponding Ns, and then paints. When the buffer is consumed, it gets reloaded and paints a bit more; this goes on until the whole BuddhaFile has been read.</p>
+<p>It's a good idea to create a BuddhaFile with half the plane since we'll be painting the same on both sides of the image -this way we speed up the process, and don't fill the disk with redundant data.</p>
+<p>The next step is to produce several images in one go, instead of reading the whole file once per frame; but I'll leave this to whoever feels like implementing this their own way.</p>
+</div>
+<div id="navigation_div" style="margin-top:10px;">&nbsp;
+<span style="float:left; display:block; padding-left:5px;"><%= link_to '< BuddhaZoom', buddha_article_path(4), :style => 'text-decoration:none; color: #F90;' %></span>
+<span style="float:right; display:block; padding-right:5px;"><%= link_to 'Accelerate BuddhaZoom >', buddha_article_path(6), :style => 'text-decoration:none; color: #F90;' %></span>
+</div>

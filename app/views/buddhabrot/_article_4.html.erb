@@ -1,0 +1,91 @@
+<div id="title">BuddhaZoom</div>
+<div id="navigation_div" style="margin-top:10px;">&nbsp;
+<span style="float:left; display:block; padding-left:5px;"><%= link_to '< Play with vars', buddha_article_path(3), :style => 'text-decoration:none; color: #F90;' %></span>
+<span style="float:right; display:block; padding-right:5px;"><%= link_to 'Optimize the code >', buddha_article_path(5), :style => 'text-decoration:none; color: #F90;' %></span>
+</div>
+<div id="post">
+<p><em><strong>Note:</strong></em> I've developed a <%= link_to 'technique', buddha_appendix_path(1) %> and a quick <%= link_to 'zooming applet', buddha_applet_path(2) %> since I wrote this section, so part of the info presented here is now not that valuable.</p>
+<div id="p_title">The technique to enlarge a region</div>
+<p>In order to zoom on the Mandelbrot fractal, it's enough to examine only Cs inside the enlarged region.</p>
+<p>However, this technique is no use for the Buddhabrot, because we're painting Zs for a given C, which means that we should calculate all trajectories anyway. Not only that, but we'll also have to check more Cs so as not to lose &quot;resolution&quot;. We should then define the region to magnify, and count only Zs that fall inside.</p>
+<p>On the coding level, we need to know where that regino is on the complex plane. On the following snippet, i've implemented an example from <a href="http://www.superliminal.com/melinda/index.htm" target="_blank">Melinda Green</a>'s <a href="http://www.superliminal.com/fractals/bbrot/bbrot.htm" target="_blank">The Buddhabrot Technique</a>. It's a zoom on the &quot;third eye&quot; on the buddha's forehead.</p>
+<div id="code_div">
+<pre><span id="keyword"><span id="comment">    // Vars to limit the magnified region on the complex plane.</span>
+    float</span> xMin    = -1.2125f;
+
+<span id="keyword">    float</span> xMax    = -1.0875f;
+<span id="keyword">    float</span> yMin    = -0.0625f;
+<span id="keyword">    float</span> yMax    = 0.0625f;
+<span id="keyword">    float</span> factor  = (lado - 1) / (xMax - xMin);
+<span id="keyword">    for</span> (Cr = -2; Cr &lt; 2; Cr += increm) <span id="keyword">for</span> (Ci = -2; Ci &lt; 2; Ci += increm) {
+        ...
+        <span id="keyword">if</span> (n &lt; maxN) 
+            <span id="keyword">for</span> (i = 0; i &lt; n; i++) {
+                <span id="keyword">if</span> (trayectoria[i][0] &lt; xMin || trayectoria[i][0] &gt; xMax ||
+                    trayectoria[i][1] &lt; yMin || trayectoria[i][1] &gt; yMax) 
+                    <span id="keyword">continue</span>;
+                coordX = (<span id="keyword">int</span>)((trayectoria[i][0] - xMin) * factor);
+                coordY = (<span id="keyword">int</span>)((trayectoria[i][1] - yMin) * factor);
+                pixels[coordX][coordY]++;
+            }
+    }</pre>
+</div>
+<p>Additionally, <code>increm</code> must decrease proportionally to the &quot;magnifications&quot;, or else we'll get a scarcely detailed image.</p>
+<p>It might be worth it to mention how I determined <code>increm</code> on the examples so far (no zoom):</p>
+<ul>
+<li id="li_padded">Based on the final image's size; so far it was a 1000x1000 pixels picture.</li>
+<li id="li_padded">I said before that checking 100 Cs per pixel yielded smooth images; then for (1000x1000) a million pixels, we've checked a grand total of 100 million Cs!</li>
+<li id="li_padded">Being the complex plane in question a square, we can tell how many Cs to inspect per axis calculating the square root of the total of Cs per pixel (sqrt 100 = 10), and multiplying that value by the image's side (10 * 1000): 10000 Cs per axis.</li>
+<li id="li_padded">Now we just have to divide the side of the complex plane by the Cs per axis: <code>increm = 4 / 10000 = 0.0004</code>.</li>
+</ul>
+<p>On the example, the magnified region is a side 0.125 square (<code>xMax</code> - <code>xMin</code> = <code>yMax</code> - <code>yMin</code>); if we calculate the zoom (4 / 0.125), we get 32x. Still with a 1000x1000 image, we multiply the magnifications by the total number of Cs on both axis (320000 * 320000): we'll have to check 1.024x10<sup>11</sup> Cs on the plane!! <span class="Estilo4 Estilo3">):,O</span> That results in <code>increm = 4 / 320000 = 0.0000125</code>.</p>
+<p>Let me make this clear: this formula is just my subjective criteria, maybe some people will check more Cs, and others will make do with less -it's an aesthetic question. In fact, the BuddhaBrot technique's creator doesn't &quot;sweep&quot; the complex plane as I do. What she does is choose random Cs, and when she thinks it's enough, save the image. Personally, I think on the final result it is  hard to tell the difference, only her technique is far slower just because generating a random number takes more time than a sum.</p>
+<p>That said, <strong>don't even think about trying the above example</strong>: you have the computer hugged days or weeks, depending on your machine. It's more than a hundrer billion Cs to inspect, and a very significant part of them wil iterate the Mandelbrot function to <code>maxN</code>! It's mental!! We can't have that... Skip to next page if you want to know how to optimize this -inefficient- code: this zoom can get done in a few hours instead of a few days!</p>
+<div align="center">
+<table style="margin: 0px; padding: 0px;" cellpadding="0px" cellspacing="0px">
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaZoomOjo3maxN500.jpg') do %>
+  <img src="<%= asset_path 'BudaZoomOjo3maxN500_Thmb.jpg' %>" alt="" width="180" height="180" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">maxN = 500</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaZoomOjo3maxN5000.jpg') do %>
+	<img src="<%= asset_path 'BudaZoomOjo3maxN5000_Thmb.jpg' %>" alt="" width="180" height="180" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">maxN = 5000</div>
+</div>
+</td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaZoomOjo3maxN50000.jpg') do %>
+  <img src="<%= asset_path 'BudaZoomOjo3maxN50000_Thmb.jpg' %>" alt="" width="180" height="180" border="0" />
+  <% end %>
+	<div id="img_table_title" align="center">maxN = 50000</div>
+</div>
+</td>
+</tr>
+<tr>
+<td></td>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BudaZoomOjo3Col.jpg') do %>
+	<img src="<%= asset_path 'BudaZoomOjo3Col_Thmb.jpg' %>" alt="" width="180" height="180" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">BuddhaZoom third eye</div>
+</div>
+</td>
+<td></td>
+</tr>
+</table>
+</div>
+<p>These pictures are the magnified region in the example. Each gray-scale image takes a color channel, and merging them produces the last one.</p>
+</div>
+<div id="navigation_div" style="margin-top:10px;">&nbsp;
+<span style="float:left; display:block; padding-left:5px;"><%= link_to '< Play with vars', buddha_article_path(3), :style => 'text-decoration:none; color: #F90;' %></span>
+<span style="float:right; display:block; padding-right:5px;"><%= link_to 'Optimize the code >', buddha_article_path(5), :style => 'text-decoration:none; color: #F90;' %></span>
+</div>

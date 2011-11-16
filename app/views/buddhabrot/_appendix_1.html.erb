@@ -1,0 +1,173 @@
+<div id="title">Appendix 1: Zooming(1)</div>
+<div id="navigation_div">&nbsp;<span style="float:right; display:block; padding-right:5px;"><%= link_to 'Interior and exterior distance bounds for the Mandelbrot >', buddha_appendix_path(2), :style => 'text-decoration:none; color: #F90;' %></span></div>
+<div id="post">
+<p>Yes, yet another page on zooming. Truth is, the methods I described on chapters 4 &amp; 6 relied on observation, so they could in no way be considered precise. But I've come up with a technique that produces images so fast you won't believe your eyes!!! If you want to skip the explanations and check it out straight away, go see my <%= link_to 'zooming applet', buddha_applet_path(2) %> and try the default example.</p>
+<p>I know <a href="http://www.steckles.com/buddha/" target="_blank">Alex Boswell</a> presented a zooming technique. It is also really fast, so it is only fair that I should mention it. It relies on the <a href="http://en.wikipedia.org/wiki/Metropolis-Hastings_algorithm" target="_blank">Metropolis-Hastings algorithm</a>; here's a brief summary of his approach:</p>
+<p><ul><li id="li_padded">Sample random points, and check if they paint anything on the magnified region. If so, sample nearby points; otherwise, sample other random points.</li></ul></p>
+<p>If you go deeper in the subject, you'll find it's a bit more complicated -points have an &quot;importance&quot; based on their escape value and rendered iterates, etc.-, but you get the idea.</p>
+<div id="p_title">The llop zooming method</div>
+<p>My method relies on some specific mathematic properties of M, so in order to fully understand the following explanations, you might need a bit of background. I'm not sure I mentioned it before, but there's no better place for that than <a href="http://www.mrob.com/pub/muency.html" target="_blank">Mu-Ency</a>, Rob Munafo's Mandelbrot set Ecyclopedia.</p>
+<p>The difficulty in zooming in on the BBrot lies in finding the correct regions -regions that contain many points that toss a significant part of their iterates in the magnified area.</p>
+<p>Probably because the BBrot technique paints points outside M (the Mandelbrot set), zooming methods have traditionally evaluated these. Well, as it turned out, points inside M can tell us more about where the aforementioned regions are.</p>
+<p>See, the most important points to draw are those close to the borders of M, so it is inevitable that the magnified area will also contain iterates of points in <a href="http://www.mrob.com/pub/muency/muatom.html" target="_blank">mu atoms</a>. If you turn that around, the following deduction can be made: the most important mu atoms will be surrounded by points inevitably drawn on the magnified area. Remember -this is the basic principle behind my approach.</p>
+<p>Now it's time to implement the theory, and see how well it works. Here's how I did it:</p>
+<p>There are 2 main parts in the process: <em>plane analysis</em> and <em>rendering</em>.</p>
+<p><span style="color: #F90; font-weight: bold">Analyzing the plane</span>: The whole plane is grid scanned, recording the <a href="http://www.mrob.com/pub/muency/period.html" target="_blank">period</a> of points inside M. Then, using <a href="http://en.wikipedia.org/wiki/Newton%27s_method" target="_blank">Newton's method</a>, we can locate of all the found mu atoms' <a href="http://www.mrob.com/pub/muency/nucleus.html" target="_blank">nuclei</a>. We try iterating these, and if one of the Zs is close enough to the magnified area, we save its value. After some necessary filtering, we recursively scan smaller areas around these centerpoints, until we reach the size of the magnified region. The centerpoints found in this last pass determine which areas are going to be scanned for the render.</p>
+<p><span style="color: #F90; font-weight: bold">Rendering</span>: We start off with a series of regions (whose centers are the points found in the plane analysis). There may be a lot of these, so to speed things up, we draw a map of each region. Maps are done using <a href="http://www.mrob.com/pub/muency/successiverefinement.html" target="_blank">successive refinement</a> and <a href="http://www.mrob.com/pub/muency/distanceestimator.html" target="_blank">distance estimation</a>; additionally, mapped points must draw in the magnified area. Finally, random points from all maps are plotted into the image. The smaller the <a href="http://www.mrob.com/pub/muency/levelsets.html" target="_blank">dwell band</a> spacing is, the more points will be plotted from that area.</p>
+<p>Ok, this is it for the simple explanation <span class="Estilo1">(;,))</span>. If you want to see how I coded that, feel free to check my zooming applet's <%= link_to 'source code', asset_path('BuddhaBrotLlopZoomer_v1.0Source.rar') %>.</p>
+<a name="Issues"></a>
+<div id="p_title">Issues</div>
+<p>There are a couple of issues worth discussing in my approach. The first and most obvious is that if the magnified area's mu atoms are very small compared to others close to them, they may not be detected. For example, some of the following features may be hard to spot:</p>
+<p>
+<ul>
+  <li id="li_padded">Embedded Julia sets.</li>
+  <li id="li_padded">Minibrots in embedded Julia sets.</li>
+  <li id="li_padded">Minibrots along the spike. </li>
+</ul>
+</p>
+<p>The solution is easy -to do a finer grid scan. The limit is given by the computer's RAM. Another trouble spot is zooming in on the origin of coordinates (0.0, 0.0 i) -the deeper you go, the more mu atoms will be mapped for the render, so the applet could run out of memory. Again, it's down to the computer's RAM.</p>
+<p>Concerning the rendering process, the most important parameters are the maximum and minimum values of N (the <a href="http://www.mrob.com/pub/muency/dwell.html" target="_blank">dwell</a>) for the color channels (red, green, and blue).</p>
+<div id="p_title">To do</div>
+<p>My zooming applet paints the BBrot, but you can see that with a few changes to the renderer's code, you could make a negative BBrot zoomer.</p>
+<p>A Buddhagram zoomer can also be made using this pattern, but I reckon it'll take a bit more of clever thinking.</p>
+<a name="Examples"></a>
+<div id="p_title">Examples</div>
+<p>Here's some example images produced with my applet. All parameters are specified, in case you want to try something similar:</p>
+<div align="center">
+<table style="margin: 0px; padding: 0px;" cellpadding="0px" cellspacing="0px">
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('BBrotZoom00015.jpg') do %>
+  <img src="<%= asset_path 'BBrotZoom00015_Thmb.jpg' %>" alt="" width="250" height="250" border="0" />
+  <% end %>
+</div>
+</td>
+<td> 
+<div id="img_table" style="height: 252px">
+<div style="color: #F90; text-align: left; padding: 10px; position: relative; top: 65px">
+	<b>Scan grid width:</b> <span style="color: #FFF">601</span><br/>
+  <b>Detail:</b> <span style="color: #FFF">Very low</span><br/>
+  <b>Center:</b> <span style="color: #FFF">(1.35, 0i)</span><br/>
+  <b>Width:</b> <span style="color: #FFF">0.125 (32 X)</span><br/>
+  <b>MinN-MaxN red:</b> <span style="color: #FFF">5 - 1000</span><br/>
+  <b>MinN-MaxN green:</b> <span style="color: #FFF">10 - 3500</span><br/>
+  <b>MinN-MaxN blue:</b> <span style="color: #FFF">15 - 6000</span>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('Buddhabrot00016.jpg') do %>
+  <img src="<%= asset_path 'Buddhabrot00016_Thmb.jpg' %>" alt="" width="250" height="250" border="0" />
+  <% end %>
+</div>
+</td>
+<td>
+<div id="img_table" style="height: 252px">
+<div style="color: #F90; text-align: left; padding: 10px; position: relative; top: 65px">
+  <b>Scan grid width:</b> <span style="color: #FFF">601</span><br/>
+  <b>Detail:</b> <span style="color: #FFF">Very low</span><br/>
+  <b>Center:</b> <span style="color: #FFF">(-0.158428, 1.03335i)</span><br/>
+  <b>Width:</b> <span style="color: #FFF">0.030476 (~131.25 X)</span><br/>
+  <b>MinN-MaxN red:</b> <span style="color: #FFF">30 - 12000</span><br/>
+  <b>MinN-MaxN green:</b> <span style="color: #FFF">20 - 7000</span><br/>
+  <b>MinN-MaxN blue:</b> <span style="color: #FFF">10 - 2000</span>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('Buddhabrot00020.jpg') do %>
+  <img src="<%= asset_path 'Buddhabrot00020_Thmb.jpg' %>" alt="" width="250" height="250" border="0" />
+  <% end %>
+</div>
+</td>
+<td>
+<div id="img_table" style="height: 252px">
+<div style="color: #F90; text-align: left; padding: 10px; position: relative; top: 65px">
+  <b>Scan grid width:</b> <span style="color: #FFF">601</span><br/>
+  <b>Detail:</b> <span style="color: #FFF">Very low</span><br/>
+  <b>Center:</b> <span style="color: #FFF">(-1.477333, 0.0i)</span><br/>
+  <b>Width:</b> <span style="color: #FFF">0.018443 (~216.9 X)</span><br/>
+  <b>MinN-MaxN red:</b> <span style="color: #FFF">0 - 15000</span><br/>
+  <b>MinN-MaxN green:</b> <span style="color: #FFF">0 - 10000</span><br/>
+  <b>MinN-MaxN blue:</b> <span style="color: #FFF">0 - 5000</span>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('Buddhabrot00041.jpg') do %>
+  <img src="<%= asset_path 'Buddhabrot00041_Thmb.jpg' %>" alt="" width="250" height="250" border="0" />
+  <% end %>
+</div>
+</td>
+<td>
+<div id="img_table" style="height: 252px">
+<div style="color: #F90; text-align: left; padding: 10px; position: relative; top: 65px">
+  <b>Scan grid width:</b> <span style="color: #FFF">601</span><br/>
+  <b>Detail:</b> <span style="color: #FFF">Very low</span><br/>
+  <b>Center:</b> <span style="color: #FFF">(-1.25586, 0.38095 i)</span><br/>
+  <b>Width:</b> <span style="color: #FFF">0.01054 (~379.5 X)</span><br/>
+  <b>MinN-MaxN red:</b> <span style="color: #FFF">0 - 10000</span><br/>
+  <b>MinN-MaxN green:</b> <span style="color: #FFF">0 - 1000</span><br/>
+  <b>MinN-MaxN blue:</b> <span style="color: #FFF">0 - 500</span>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('Buddhabrot00027.jpg') do %>
+  <img src="<%= asset_path 'Buddhabrot00027_Thmb.jpg' %>" alt="" width="250" height="250" border="0" />
+  <% end %>
+</div>
+</td>
+<td>
+<div id="img_table" style="height: 252px">
+<div style="color: #F90; text-align: left; padding: 10px; position: relative; top: 65px">
+  <b>Scan grid width:</b> <span style="color: #FFF">1501</span><br/>
+  <b>Detail:</b> <span style="color: #FFF">Very low</span><br/>
+  <b>Center:</b> <span style="color: #FFF">(0.0728025227119999, -1.1048127150340001i)</span><br/>
+  <b>Width:</b> <span style="color: #FFF">0.032 (125 X)</span><br/>
+  <b>MinN-MaxN red:</b> <span style="color: #FFF">20 - 10000</span><br/>
+  <b>MinN-MaxN green:</b> <span style="color: #FFF">20 - 15000</span><br/>
+  <b>MinN-MaxN blue:</b> <span style="color: #FFF">20 - 20000</span>
+</div>
+</div>
+</td>
+</tr>
+<tr>
+<td>
+<div id="img_table">
+  <%= link_to asset_path('Buddhabrot00012.jpg') do %>
+  <img src="<%= asset_path 'Buddhabrot00012_thmb.jpg' %>" alt="" width="250" height="250" border="0" />
+  <% end %>
+</div>
+</td>
+<td>
+<div id="img_table" style="height: 252px">
+<div style="color: #F90; text-align: left; padding: 10px; position: relative; top: 65px">
+  <b>Scan grid width:</b> <span style="color: #FFF">601</span><br/>
+  <b>Detail:</b> <span style="color: #FFF">Very low</span><br/>
+  <b>Center:</b> <span style="color: #FFF">(-0.1915867, 0.8151886i)</span><br/>
+  <b>Width:</b> <span style="color: #FFF">0.0001165 (~34335 X)</span><br/>
+  <b>MinN-MaxN red:</b> <span style="color: #FFF">200 - 10000</span><br/>
+  <b>MinN-MaxN green:</b> <span style="color: #FFF">500 - 25000</span><br/>
+  <b>MinN-MaxN blue:</b> <span style="color: #FFF">1000 - 50000</span>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div id="navigation_div">&nbsp;<span style="float:right; display:block; padding-right:5px;"><%= link_to 'Interior and exterior distance bounds for the Mandelbrot >', buddha_appendix_path(2), :style => 'text-decoration:none; color: #F90;' %></span></div>

@@ -1,0 +1,102 @@
+<% content_for :head do %>
+  <title>Molecular density buddhabrot</title>
+  <%= stylesheet_link_tag 'buddhatemplate' %>
+  <%= javascript_include_tag 'application' %>
+<% end %>
+<% content_for :body do %>
+<!-- Javascript stuff -->
+<script type="text/javascript">
+  <!--
+    $(document).ready(function() { 
+      a = '@'; b = 'albertlobo1981'; c = b + a + 'gmail.com';
+      $('#hahaha').html('Write your comments and suggestions to <a href="mailto:' + c + '">' + c + '</a>');
+    });
+	-->
+</script>
+<!-- Title -->
+<div id="title_div" align="center">
+<table cellpadding="0px" cellspacing="0px"><tr>
+<td>
+  <%= link_to root_path do %>
+  <img src="<%= asset_path 'molecular_title.gif' %>" alt="Buddhabrot" border="0"/>
+  <% end %>
+</td>
+<td><img src="<%= asset_path 'BuddhaTitulo.jpg' %>" alt="Buddhabrot" border="0"/></td>
+</tr></table>
+</div>
+        
+<div id="main" align="center">
+<div id="main_inner" align="center">
+            	    
+<!-- Menu -->
+<div id="menu_div">
+<div id="articulo_wrapper">
+<div id="articulo" onclick="$('#articulo_menu').slideToggle(250);">Article</div>
+<div id="articulo_menu" style="display: none">
+<div id="articulo_menu_inner">
+  <div id="menu_item"><%= link_to 'Meet the Buddhabrot technique', buddha_article_path(1), :class => "m_l" %></div>
+  <div id="menu_item"><%= link_to 'Implement the Buddhabrot technique in Java', buddha_article_path(2), :class => "m_l" %></div>
+  <div id="menu_item"><%= link_to 'Play with vars', buddha_article_path(3), :class => "m_l" %></div>
+  <div id="menu_item"><%= link_to 'BuddhaZoom', buddha_article_path(4), :class => "m_l" %></div>
+  <div id="menu_item"><%= link_to 'Optimize the code', buddha_article_path(5), :class => "m_l" %></div>
+  <div id="menu_item"><%= link_to 'Accelerate BuddhaZoom', buddha_article_path(6), :class => "m_l" %></div>
+  <div id="menu_item"><%= link_to 'Buddhabrot 4D', buddha_article_path(7), :class => "m_l" %></div>
+  <div id="menu_item"><%= link_to 'Render variants', buddha_article_path(8), :class => "m_l" %></div>
+</div>
+</div>
+</div>
+<div id="appendix_wrapper">
+<div id="appendix" onclick="$('#appendix_menu').slideToggle(250);">Appendix</div>
+<div id="appendix_menu" style="display: none">
+<div id="appendix_menu_inner">
+  <div id="menu_item"><%= link_to 'Zooming (1)', buddha_appendix_path(1), :class => "m_l" %></div>
+  <div id="menu_item"><%= link_to 'Interior and exterior distance bounds for the Mandelbrot', buddha_appendix_path(2), :class => "m_l" %></div>
+</div>
+</div>
+</div>
+<div id="applets_wrapper">
+<div id="applets" onclick="$('#applets_menu').slideToggle(250);">Applets</div>
+<div id="applets_menu" style="display: none">
+<div id="applets_menu_inner">
+  <div id="menu_item"><%= link_to 'Buddhabrot 4D', buddha_applet_path(1), :class => "m_l" %></div>
+  <div id="menu_item"><%= link_to 'Buddhabrot zoomer', buddha_applet_path(2), :class => "m_l" %></div>
+</div>
+</div>
+</div>
+<div id="galeria_wrapper">
+<div id="galeria"><%= link_to 'Gallery', buddha_gallery_path, :style => "text-decoration: none; color:#F90" %></div>
+</div>
+<div id="sitios_relacionados_wrapper">
+<div id="sitios_relacionados">Related sites</div>
+<div id="sitios_relacionados_menu">
+<div id="sitios_relacionados_menu_inner">
+  <div id="menu_item"><a id="menu_link" href="http://www.superliminal.com/fractals/bbrot/bbrot.htm" target="_blank">The Buddhabrot technique by Melinda Green</a></div>
+	<div id="menu_item"><a id="menu_link" href="http://www.imaging.robarts.ca/%7Elgardi/" target="_blank">FractalBuddha by Lori Gardi</a></div>
+  <div id="menu_item"><a id="menu_link" href="http://linas.org/index.html" target="_blank">The home page of Linas Vepstas</a></div>
+	<div id="menu_item"><a id="menu_link" href="http://en.wikipedia.org/wiki/Buddhabrot" target="_blank">Wikipedia Buddhabrot</a></div>
+	<div id="menu_item"><a id="menu_link" href="http://local.wasp.uwa.edu.au/%7Epbourke/fractals/buddhabrot/" target="_blank">Buddhabrot by Paul Bourke</a></div>
+	<div id="menu_item"><a id="menu_link" href="http://shiny3d.de/mandelbrot-dazibao/Main/Main.htm" target="_blank">The Mandelbrot Dazibao - The Buddhabrot</a></div>
+  <div id="menu_item"><a id="menu_link" href="http://www.mrob.com/pub/muency.html" target="_blank">Mu-Ency - Rob Munafo's Encyclopedia of the Mandelbrot set</a></div>
+	<div id="menu_item"><a id="menu_link" href="http://www.steckles.com/buddha/" target="_blank">The Metropolis-Hastings algorithm - Alex Boswell's Metrobrot at Steckles.com</a></div>
+</div>
+</div>
+</div>
+</div>
+                
+<!-- Content -->
+<div id="content_div">
+<div id="content_wrapper">
+  <%= yield %>
+</div>
+</div>
+                
+<!-- Comments and suggestions -->
+<div id="comments_suggestions_div">
+<div id="hahaha" style="float:left;">&nbsp;</div>
+<div style="float:left;">Copyright &copy; Albert Lobo Cusid&oacute; 2006-2011</div>
+</div>
+
+</div>
+</div>
+<% end %>
+<%= render :template => 'layouts/application' %>

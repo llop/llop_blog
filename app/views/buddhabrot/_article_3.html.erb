@@ -1,0 +1,100 @@
+<div id="title">Play with vars</div>
+<div id="navigation_div" style="margin-top:10px;">&nbsp;
+<span style="float:left; display:block; padding-left:5px;"><%= link_to '< Implement the Buddhabrot technique in Java', buddha_article_path(2), :style => 'text-decoration:none; color: #F90;' %></span>
+<span style="float:right; display:block; padding-right:5px;"><%= link_to 'BuddhaZoom >', buddha_article_path(4), :style => 'text-decoration:none; color: #F90;' %></span>
+</div>
+<div id="post">
+<p>What are the important variables? Obviously, Z and C. Then, what would happen if we changed the number of Zs calculated for a C? And what about increasing the number of Cs to check before painting the image?</p>
+<p>it's important to realize that what we're trying here is to create images of great aesthetic beauty. We've seen this &quot;mathematica object&quot; cannot be faithfully represented; what we want is a series of spectacular pictures, leaving its exactitude to the artist's taste:</p>
+<div id="p_title">Modifying Cs</div>
+<div id="img_table" style="float: left; margin-right: 10px">
+  <%= link_to asset_path('BuddhaBrotNumCs(500x500)(Divx).avi') do %>
+  <img src="<%= asset_path 'AnimNumCs_Thmb.jpg' %>" alt="" width="150" height="150" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">numCs animation</div>
+</div>
+<p>The number of Cs checked could be associated with the image resolution. Inspecting few Cs would result in a picture representing few points outside M.</p>
+<p>As far as I know, checking 100 Cs per pixel produces quite a smooth finish. In the example code, 10000 Cs are inspected per axis, since it's a 1000x1000 image; hence, we're looking at 10<sup>8</sup> Cs on the complex plane.</p>
+<p>To illustrate what happens as we check more Cs, I've prepared this animation (left). We start checking 1 C per pixel, and finish with 10000. By the way, <code>maxN</code> is set to 1000.</p>
+<div id="p_title">Modifying Zs</div>
+<div id="img_table" style="float: left; margin-right: 10px">
+  <%= link_to asset_path('BuddhaBrotMaxN1-25000(500x500)(Divx).avi') do %>
+  <img src="<%= asset_path 'AnimMaxN_Thmb.jpg' %>" alt="" width="150" height="150" border="0" />
+  <% end %>
+  <div id="img_table_title" align="center">maxN animation</div>
+</div>
+<p>Whereas increasing the number of Cs produces pictures essentially very similar, changing the number of Zs has a significant impact on the image we'll be looking at. Just take a look at this animation, where <code>maxN</code> goes from 1 to 10000 (where we checked 100 Cs per pixel).</p>
+<p>Impressive, right? Is that really the same &quot;object&quot;? The explanation is this: if <code>maxN</code> is very small, many Cs ouside M get confused with part of the set, and their trajectories never get painted. For example, if we paint a Buddhabrot with <code>maxN</code> = 1, we'll get a black circle -since Z<sub>1</sub> equals C, and C is always inside the examined complex plane, all Cs within radius 2 from the origin of coordinates are taken as part of M, and nothing gets painted.</p>
+<p>On the other extreme, when <code>maxN</code> is huge, certaing initially blurry shapes -the buddha's 'shoulders'- or plain invisible -the flying 'mini-Buddhabrots'- become apparent.</p>
+<p>Fact: the closer a C outside M is to the border, the larger <code>maxN</code> will have to be not to confuse it with part of the set. Consequently, it would be a good idea to increase <code>maxN</code> as we examine more and more Cs on the plane.</p>
+<div id="p_title">Coloring the Buddhabrot</div>
+<p>This process is analogous to coloring telescopic images. For these, light is not registeres with regular cameras, instead, emissions from different kinds of atoms are captured with electronic detectors, thus producing gray-scale images. Then they assign a different color channel to different takes, merge them on the same picture, <em>et voil&agrave;</em>, they've got color.</p>
+<p>As Green suggests, we can take advantage of the fact that different <code>maxN</code> give place to different &quot;versions&quot; of the same objectto color the Buddhabrot. We have to create 3 images -one for each color channel- with different <code>maxN</code>, and merge them.</p>
+<p>The code should look like this:</p>
+<div id="code_div">
+<pre><span id="keyword">import</span> java.awt.image.*;
+
+<span id="keyword">public static</span> BufferedImage generaBuddhaBrot() {
+<span id="keyword">    int</span> i, j, rojo, verde, azul, maxRojo = 50, maxVerde = 500, maxAzul = 5000; 
+<span id="keyword">    int</span> lado = 1000; 
+    <span id="keyword">float</span> increm = 4 / 10000f;
+
+<span id="keyword">    int</span>[] pixels = <span id="keyword">new</span> <span id="keyword">int</span>[lado * lado];
+    BufferedImage imagen;
+
+    <span id="comment">// We generate an image for each color channel using different 'maxN'.</span>
+    <span id="keyword">float</span>[][] pixelsRojos  = getPixels(maxRojo, increm, lado);
+<span id="keyword">    float</span>[][] pixelsVerdes = getPixels(maxVerde, increm, lado);
+<span id="keyword">    float</span>[][] pixelsAzules = getPixels(maxAzul, increm, lado);
+
+    <span id="comment">// We merge the three color channels on one image.</span>
+
+    <span id="keyword">float</span> factorRojo  = 255f / encuentraMax(pixelsRojos);
+    <span id="keyword">float</span> factorVerde = 255f / encuentraMax(pixelsVerdes);
+    <span id="keyword">float</span> factorAzul  = 255f / encuentraMax(pixelsAzules);
+<span id="keyword">    for</span> (i = 0; i &lt; ancho; i++)<span id="keyword"> for</span> (j = 0; j &lt; alto; j++) {
+        rojo  = (<span id="keyword">int</span>)(pixelsRojos[i][j] * factorRojo);
+        verde = (<span id="keyword">int</span>)(pixelsVerdes[i][j] * factorVerde);
+        azul  = (<span id="keyword">int</span>)(pixelsAzules[i][j] * factorAzul);
+        pixels[i * ancho + j] = rojo &lt;&lt; 16 | verde &lt;&lt; 8 | azul;
+    }
+    imagen = <span id="keyword">new</span> BufferedImage(lado, lado, BufferedImage.TYPE_INT_RGB);
+    imagen.setRGB(0, 0, lado, lado, pixels, 0, lado);
+    <span id="keyword">return</span> imagen; 
+}
+
+
+<span id="keyword">private static float</span>[][] getPixels(<span id="keyword">int</span> maxN, <span id="keyword">float</span> increm, <span id="keyword">int</span> lado) {
+    <span id="keyword">int</span> i, n, coordX, coordY;
+<span id="keyword">    float</span> Cr, Ci, Zr, Zi, ZrAux, ZiAux;
+    <span id="keyword">float</span>[][] trayectoria = <span id="keyword">new</span> <span id="keyword">float</span>[maxN][2];
+    <span id="keyword">float</span>[][] pixels = <span id="keyword">new</span> <span id="keyword">float</span>[lado][lado];
+
+<span id="keyword">    for</span> (Cr = -2; Cr &lt; 2; Cr += increm) <span id="keyword">for</span> (Ci = -2; Ci &lt; 2; Ci += increm) {
+        ZrAux = ZiAux = 0;
+        <span id="keyword">for</span> (n = 0; n &lt; maxN; n++) {
+            Zr = calculaReal(ZrAux, ZiAux, Cr);
+            Zi = calculaImaginaria(ZrAux, ZiAux, Ci);
+            trayectoria[n][0] = ZrAux = Zr;
+            trayectoria[n][1] = ZiAux = Zi;
+            <span id="keyword">if </span>(Zr * Zr + Zi * Zi &gt; 4) <span id="keyword">break</span>;
+        }
+        <span id="keyword">if</span> (n &lt; maxN) <span id="keyword">
+
+            for</span> (i = 0; i &lt; n; i++) {
+                coordX = (<span id="keyword">int</span>)(((trayectoria[i][0] + 2) / 4) * ancho);
+                coordY = (<span id="keyword">int</span>)(((trayectoria[i][1] + 2) / 4) * alto);
+                <span id="keyword">if</span> (coordX &lt; 0 || coordX &gt;= ancho || coordY &lt; 0 || coordY &gt;= alto)
+                    <span id="keyword">continue</span>; 
+                pixels[coordX][coordY]++;
+            }
+    }
+    <span id="keyword">return</span> pixels; 
+}</pre>
+</div>
+<p>The pixels array now gets filled in a conveniency method, <code>getPixels(<span id="keyword">int</span> maxN, <span id="keyword">float</span> increm, <span id="keyword">int</span> lado)</code>, that takes arguments to modify the number of Zs and Cs checked, and the dimensions of the image to generate.</p>
+</div>
+<div id="navigation_div" style="margin-top:10px;">&nbsp;
+<span style="float:left; display:block; padding-left:5px;"><%= link_to '< Implement the Buddhabrot technique in Java', buddha_article_path(2), :style => 'text-decoration:none; color: #F90;' %></span>
+<span style="float:right; display:block; padding-right:5px;"><%= link_to 'BuddhaZoom >', buddha_article_path(4), :style => 'text-decoration:none; color: #F90;' %></span>
+</div>

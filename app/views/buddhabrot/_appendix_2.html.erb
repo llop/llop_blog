@@ -1,0 +1,224 @@
+<div id="title">Interior and exterior distance bounds for the Mandelbrot</div>
+<div id="navigation_div">&nbsp;<span style="float:left; display:block; padding-left:5px;"><%= link_to '< Appendix 1: Zooming(1)', buddha_appendix_path(1), :style => 'text-decoration:none; color: #F90;' %></span></div>
+<div id="post">
+<p>My BBrot zooming technique involves estimating the distance from a point C to the nearest point on the boundary of the Mandelbrot set. Since these distance bounding methods are fairly complicated and non-intuitive, I found it appropriate to dedicate this appendix to them. Also, very few explanations are available on the internet (especially for the interior bound); as expected, MuEncy comments on both bounding methods, and even gives souce for the exterior bounder.</p>
+<p>Offline, you can look up a book named &quot;The science of fractal images&quot;, by Heinz-Otto Peitgen &amp; Dietmar Saupe editors. This book is worth its weigh in gold -out-of-print, I reckon-. Why doesn't anyone upload it as an e-Book?</p>
+<div id="p_title">Interior distance bounding</div>
+<p>The first thing you have to remember is that the resulting distances should not be considered precise. They are only bounds; the closest point on the M border is never found. Well, that's because of the nature of the algorithm.</p>
+<p>What we'll be doing, plain and simple, is looking for disks completely contained in M. Maybe a bigger disk would still be inside M, but that doesn't matter, because we're just calculating bounds. The algorithm relies on a theorem by Hubbard &amp; Douady (who demonstrated that M is connected by mapping M onto the unit disk), combined with the Koebe 1/4 theorem.</p>
+<p>The process, if I gathered correctly, is as follows:</p>
+<p>
+<ul>
+  <li id="li_padded">Map C onto the unit disk using Hubbard &amp; Douady's method.</li>
+  <li id="li_padded">Get the inverse of the map using the M&ouml;bius transformation.</li>
+  <li id="li_padded">Using Hubbard &amp; Douady's method again, we &quot;unmap&quot; from the inverse map to get a complex value. Its magnitude, <em>d</em>, will be used to compute a lower bound.</li>
+  <li id="li_padded">The Koebe 1/4 theorem applies, by construction; hence, all points within a radius of <em>d</em>/4 from C are sure to be in M.</li>
+</ul>
+</p>
+<p>In practice, not only do we need C to be inside M, but we also require C's periodic cycle. That is increasingly harder to detect as C approaches the M border. The following Java snippet is an example of how to find the cycle.</p>
+<div id="code_div">
+<pre>  <span id="comment">/**
+   * Finds the periodic cycle for a given C, provided C is in M, 
+   * and the number of iterates to check is sufficient.
+   * @param Cr double - Real component of C.
+   * @param Ci double - Imaginary component of C.
+   * @param maxN int  - Maximum number of iterates to check.
+   * @return double[][] - The periodic cycle. The period equals 
+   * 'getPeriodicCycle(Cr,Ci,maxN).length'. Returns null if C 
+   * is outside M, and an empty array if the periodic cycle was not found.
+   */</span>
+  <span id="keyword">public</span> <span id="keyword">double</span>[][] getPeriodicCycle(<span id="keyword">double</span> Cr, <span id="keyword">double</span> Ci, <span id="keyword">int</span> maxN) {
+    <span id="keyword">double</span> Zr, Zi, ZrT, c1, c2;
+    <span id="keyword">double</span>[] iterR = <span id="keyword">new</span> <span id="keyword">double</span>[maxN];
+    <span id="keyword">double</span>[] iterI = <span id="keyword">new</span> <span id="keyword">double</span>[maxN];
+    <span id="keyword">int</span> i, j, n, maxNT;
+
+    <span id="comment"><i>// We'll do various checks to detect more obvious cycles faster.</i></span>
+
+    <span id="keyword">int</span>[] nsToChk = <span id="keyword">new</span> <span id="keyword">int</span>[] { 0, 0, 0, 0, maxN };
+    <span id="keyword">for</span> (i = 3; i &gt; -1; i--) nsToChk[i] = nsToChk[i + 1] / 2;
+
+    <span id="comment"><i>// Start iterating.</i></span>
+    <span id="keyword">for</span> (n = 1, iterR[0] = Zr = iterI[0] = Zi = i = 0; i &lt; 5; i++) {
+      maxNT = nsToChk[i];
+      <span id="keyword">while</span> (n &lt; maxNT) {
+        iterR[n]   = ZrT = Zr * Zr - Zi * Zi + Cr;
+        iterI[n++] = Zi  = 2.0 * Zr * Zi + Ci;
+        Zr         = ZrT;
+
+        <span id="comment"><i>// If C is outside M, return null.</i></span>
+
+        <span id="keyword">if</span> (Zr * Zr + Zi * Zi &gt; 4) <span id="keyword">return</span> null;
+      }
+
+      <span id="comment"><i>// This is the periodicity check.</i></span>
+      <span id="keyword">for</span> (j = n - 2; j &gt; -1; j--) {
+        c1 = Zr - iterR[j];
+        c2 = Zi - iterI[j];
+        <span id="keyword">if</span> (c1 * c1 + c2 * c2 &lt; 1E-30) {
+          <span id="comment"><i>// Okay, close enough.</i></span>
+
+          <span id="keyword">int</span> period       = n - j - 1;
+          <span id="keyword">double</span>[][] cycle = <span id="keyword">new</span> <span id="keyword">double</span>[period][2];
+          <span id="keyword">int</span> offset       = ((n / period) - 1) * period;
+          <span id="keyword">for</span> (<span id="keyword">int</span> k = 0; k &lt; period; k++, offset++) {
+            cycle[k][0] = iterR[offset];
+            cycle[k][1] = iterI[offset];
+          }
+          <span id="keyword">return</span> cycle;
+        }
+      }
+    }
+
+    <span id="comment">// Iterates didn't escape, but period never became apparent 
+    // -return empty array.</span>
+
+    <span id="keyword">return</span> <span id="keyword">new</span> <span id="keyword">double</span>[0][0];
+  }</pre>
+</div>
+							<p>
+                            	Once we have the periodic cycle, the distance estimation is pretty straight-forward -see the Java source below:
+                            </p>
+							<div id="code_div">
+
+                            	<pre>  <span id="comment">/**
+   * Calculates a lower bound for the distance between C 
+   * and the closest point in the border of M.
+   * @param cycle double[][] - C's periodic cycle.
+   * @return double - The interior distance estimation.
+   */</span>
+  <span id="keyword">public</span> <span id="keyword">double</span> getInteriorLowerBound(<span id="keyword">double</span>[][] cycle) {
+    <span id="comment">// Real and imaginary components for complex numbers D1, D2, D3, and D4;</span>
+    <span id="comment">// and temporary variables to store the complex numbers in recursion.</span>
+
+    <span id="keyword">double</span> Zr, Zi, D1r, D1i, D2r, D2i, D3r, D3i, D4r, D4i;
+    <span id="keyword">double</span> D1rT, D1iT, D2rT, D2iT, D3rT, D3iT, D4rT, D4iT;
+    <span id="keyword">int</span> i, period = cycle.length;
+
+    <span id="comment">// Initial values:  D1 = 1;  D2 = 0;  D3 = 0;  D4 = 0;</span>
+    D1r = 1;
+    D1i = D2r = D2i = D3r = D3i = D4r = D4i = 0;
+
+    <span id="comment">// Start iterating.</span>
+    <span id="keyword">for</span> (i = 0; i &lt; period; i++) {
+      <span id="comment">// No need to iterate Z; values are already in 'cycle'.</span>
+
+      Zr = cycle[i][0];
+      Zi = cycle[i][1];
+
+      <span id="comment">// D1 = 2 * Z * D1;</span>
+      D1rT = 2 * (Zr * D1r - Zi * D1i);
+      D1iT = 2 * (Zi * D1r + Zr * D1i);
+
+      <span id="comment">// D2 = 2 * Z * D2 + 1;</span>
+      D2rT = 2 * (Zr * D2r - Zi * D2i) + 1;
+      D2iT = 2 * (Zi * D2r + Zr * D2i);
+
+      <span id="comment">// D3 = 2 * (D1^2 + Z * D3);</span>
+      D3rT = 2 * ((Zr * D3r - Zi * D3i) + (D1r * D1r - D1i * D1i));
+      D3iT = 2 * ((Zr * D3i + Zi * D3r) + (2 * D1r * D1i));
+
+      <span id="comment">// D4 = 2 * (D1 * D2 + Z * D4);</span>
+      D4rT = 2 * ((Zr * D4r - Zi * D4i) + (D1r * D2r - D1i * D2i));
+      D4iT = 2 * ((Zr * D4i + Zi * D4r) + (D1r * D2i + D1i * D2r));
+
+      <span id="comment">// Update variables.</span>
+
+      D1r = D1rT;  D1i = D1iT;
+      D2r = D2rT;  D2i = D2iT;
+      D3r = D3rT;  D3i = D3iT;
+      D4r = D4rT;  D4i = D4iT;
+    }
+
+    <span id="comment">// A = 1 - |D1|^2;</span>
+    <span id="keyword">double</span> A = 1 - (D1r * D1r + D1i * D1i);
+    <span id="comment">// B = |D4 + D3 * (D2 / (1 - D1))|;</span>
+    <span id="keyword">double</span> B = (1 - D1r) * (1 - D1r) + D1i * D1i;
+    D1rT = (D2r * (1 - D1r) - D2i * D1i) / B;
+    D1iT = (D2i * (1 - D1r) + D2r * D1i) / B;
+    D2rT = D4r + (D3r * D1rT - D3i * D1iT);
+    D2iT = D4i + (D3i * D1rT + D3r * D1iT);
+    B    = StrictMath.sqrt(D2rT * D2rT + D2iT * D2iT);
+
+    <span id="comment">// Return lower bound -that is, 1/4 the estimated bound.</span>
+    <span id="keyword">return</span> A / (4.0 * B);
+  }</pre>
+</div>
+<div id="p_title">Exterior distance bounding</div>
+<p>Computing a lower bound for the distance between a point C outside M and M is even more simple. As in the interior bounding, we rely on theorems by Hubbard &amp; Douady, and Koebe. The actual algorithm is based on the ideas of J. Milnor and W. Thurston, expanded by A. Wilkes &amp; J. Hubbard. Beware, though, the algorithm works well for Cs reasonably close to M.</p>
+<p>This is the Java source:</p>
+<div id="code_div">
+<pre>  <span id="comment">/**
+   * Calculates a lower bound for the distance between C and the closest 
+   * point in the border of M, if C is outside M.
+   * @param Cr double - Real component of C.
+   * @param Ci double - Imaginary component of C.
+   * @param maxN int  - Maximum number of times the Mandelbrot function will be iterated.
+   * @return double   - The approximate distance between C and the closest
+   * point in M. If C is in M, -1 will be returned.
+   */></span>
+  <span id="keyword">public</span> <span id="keyword">double</span> getExteriorLowerBound(<span id="keyword">double</span> Cr, <span id="keyword">double</span> Ci, <span id="keyword">int</span> maxN) {
+    <span id="keyword">double</span> Zr, Zi, ZrT, ZiT, c1, c2;
+    <span id="keyword">double</span>[] iterR = <span id="keyword">new</span> <span id="keyword">double</span>[maxN];
+    <span id="keyword">double</span>[] iterI = <span id="keyword">new</span> <span id="keyword">double</span>[maxN];
+    <span id="keyword">int</span> i, j, n, maxNT;
+
+    <span id="comment">// We'll do various checks to detect periods faster.</span>
+
+    <span id="keyword">int</span>[] nsToChk = <span id="keyword">new</span> <span id="keyword">int</span>[] { 0, 0, 0, 0, maxN };
+    <span id="keyword">for</span> (i = 3; i &gt; -1; i--) nsToChk[i] = nsToChk[i + 1] / 2;
+
+    <span id="comment">// Start iterating.</span>
+    <span id="keyword">for</span> (n = 1, iterR[0] = Zr = iterI[0] = Zi = i = 0; i &lt; 5; i++) {
+      maxNT = nsToChk[i];
+      <span id="keyword">while</span> (n &lt; maxNT) {
+        iterR[n]   = ZrT = Zr * Zr - Zi * Zi + Cr;
+        iterI[n++] = Zi  = 2.0 * Zr * Zi + Ci;
+        Zr         = ZrT;
+
+        <span id="comment">// If C is outside M, do distance estimation.</span>
+
+        <span id="keyword">if</span> (Zr * Zr + Zi * Zi &gt; 4) {
+          <span id="keyword">double</span> dZr, dZi, dZrT;
+          <span id="keyword">int</span> nT = n - 1;
+
+          <span id="comment">// Recursively calculate first derivative:  D = 2 * Z * D + 1;</span>
+          <span id="keyword">for</span> (dZr = dZi = i = 0; i &lt; nT; i++) {
+            ZrT  = iterR[i];
+            ZiT  = iterI[i];
+            dZrT = 2.0 * (ZrT * dZr - ZiT * dZi) + 1;
+            dZi  = 2.0 * (ZrT * dZi + ZiT * dZr);
+            dZr  = dZrT;
+          }
+
+          <span id="comment">// Lower bound:  (2 * log |Z| * (|Z| / |D|)) / 4;</span>
+
+          c1 = StrictMath.sqrt(Zr * Zr + Zi * Zi);
+          c2 = StrictMath.sqrt(dZr * dZr + dZi * dZi);
+          <span id="keyword">return</span> (StrictMath.log(Zr * Zr + Zi * Zi) * c1 / c2) / 4.0;
+        }
+      }
+
+      <span id="comment">// Periodicity check.</span>
+      <span id="keyword">for</span> (j = n - 2; j &gt; -1; j--) {
+        c1 = Zr - iterR[j];
+        c2 = Zi - iterI[j];
+        <span id="keyword">if</span> (c1 * c1 + c2 * c2 &lt; 1E-30) <span id="keyword">return</span> -1.0;
+      }
+    }
+
+    <span id="keyword">return</span> -1.0;
+  }</pre>
+</div>
+<p>Both interior and exterior bounding can be combined to produce images such as this:</p>
+<div align="center">
+<div id="img_table" style="width: 250px">
+  <%= link_to asset_path('MandelDistEst.jpg') do %>
+  <img src="<%= asset_path 'MandelDistEst_Thmb.jpg' %>" alt="" width="250" height="250" border="0" />
+  <% end %>
+</div>
+</div>
+<p>For lack of a better color palette, I used gray-scale.</p>
+<p>Points outside M get brighter as they approach the border. Points in M get darker towards the border.</p>
+</div>
+<div id="navigation_div">&nbsp;<span style="float:left; display:block; padding-left:5px;"><%= link_to '< Appendix 1: Zooming(1)', buddha_appendix_path(1), :style => 'text-decoration:none; color: #F90;' %></span></div>

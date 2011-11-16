@@ -1,0 +1,106 @@
+<div id="title">Implement the Buddhabrot technique in Java</div>
+<div id="navigation_div" style="margin-top:10px;">&nbsp;
+<span style="float:left; display:block; padding-left:5px;"><%= link_to '< Meet the Buddhabrot technique', buddha_article_path(1), :style => 'text-decoration:none; color: #F90;' %></span>
+<span style="float:right; display:block; padding-right:5px;"><%= link_to 'Play with vars >', buddha_article_path(3), :style => 'text-decoration:none; color: #F90;' %></span>
+</div>
+<div id="post">
+<div id="p_title">Discover the catch</div>
+<p>Coming up, a description of the simplest way to implement the technique, in Java.</p>
+<p>The first thing we need is the function that returns the famous image. To get a more organized code, we declare the variables at the beginning:</p>
+<div id="code_div">
+<pre><span id="keyword">import</span> java.awt.image.*;
+...
+<span id="keyword">public static</span> BufferedImage generaBuddhaBrot() {
+<span id="keyword">    float</span> Cr, Ci, Zr, Zi, ZrAux, ZiAux, increm = 4 / 10000f;
+
+<span id="keyword">    int</span> i, j, n, maxN = 200; 
+<span id="keyword">    float</span>[][] trayectoria = <span id="keyword">new</span> <span id="keyword">float</span>[maxN][2];
+<span id="keyword">    int</span> coordX, coordY, lado = 1000, color;
+<span id="keyword">    float</span>[][] pixelsTemp = <span id="keyword">new</span> <span id="keyword">float</span>[lado][lado];
+
+<span id="keyword">    int</span>[] pixels = <span id="keyword">new</span> <span id="keyword">int</span>[lado * lado];
+    BufferedImage imagen;</pre>
+</div>
+<p align="left">Let's remember the Mandelbrot function: Z<sub>n</sub> = Z<sub>n-1</sub><sup>2</sup> + C</p>
+<p>Z and C are complex numbers so they have a real and an imaginary part. We represent them with the <code>Zr</code>, <code>Zi</code>, <code>Cr</code> and <code>Ci</code> variables. <code>ZrAux</code> and <code>ZiAux</code> are just conveniency vars to keep Z<sub>n-1</sub>.</p>
+<p><code>i</code>, <code>j</code>, and <code>iter</code> are counter vars for the loops. <code>trayectoria</code> contains the Zs that iterating the Mandelbrot function produces.</p>
+<p>The remaining vars are there to manage the image -we'll see what each one is for later on.</p>
+<p>We have to check a series of Cs on the complex plane, so we'll go through the real axis and the imaginary, both from -2 to 2, at <code>increm</code> intervals. In the example, we're looking at 10000 points on each axis (the 4 dividend corresponds to the axis' length+), which means we're checking 10<sup>8</sup> Cs on the plane, to see if they belong to the Mandelbrot set (M from now on) or otherwise.</p>
+<p>We know a C is outside M if Z, iterating through the aforementioned formula, tends to infinity. And here's where we discover the great catch in this business: to be completely sure C is not part of M, we should calculate Z for n = infinite -and such a thing cannot be done with a computer.</p>
+<p>Let's see what has to be done to outwit this problem.</p>
+<div id="code_div">
+<pre><span id="keyword">    for</span> (Cr = -2; Cr &lt; 2; Cr += increm) <span id="keyword">for</span> (Ci = -2; Ci &lt; 2; Ci += increm) {
+        ZrAux = ZiAux = 0;    <span id="comment">// Z sub 0</span>                   
+        <span id="keyword">for</span> (n = 0; n &lt; maxN; n++) {
+            Zr = calculaReal(ZrAux, ZiAux, Cr);
+            Zi = calculaImaginaria(ZrAux, ZiAux, Ci);
+            trayectoria[n][0] = ZrAux = Zr;
+            trayectoria[n][1] = ZiAux = Zi;
+            <span id="keyword">if </span>(Zr * Zr + Zi * Zi &gt; 4) <span id="keyword">break</span>;
+        }</pre>
+</div>
+<p>Instead of calculating successive Zs to infinity <span class="Estilo4">( :,D)</span>, we iterate up to <code>maxN</code>. We know a Z more than 2 units away from the origin of coordinates (Z<sub>0</sub>) -or what is the same, Z's square module is larger than 4-, tends to infinity, and C has escaped from M.</p>
+<p>So far everything looks just fine, but the problem when limiting <code>n</code> is that we can take points outside M as if they really belonged to the set. We can thus deduce that -assuming <code>n</code> cannot be infinite- no image we could possibly render will ever be accurate; the perfect graphic representation of the Buddhabrot (or the Mandelbrot). However, there's nothing to worry, because we can get images so detailed the human eye wouldn't be able to tell them from the ideal one.</p>
+<p>The <code>trayectoria</code> array keeps track of Zs: let's not forget that what we want is to paint the trajectories of Cs outside M.</p>
+<p>These are the functions to calculate Z<sub>n</sub>'s real and imaginary parts; arguments are Z<sub>n-1</sub> and C:</p>
+<div id="code_div">
+<pre><span id="keyword">private float</span> calculaReal(<span id="keyword">float</span> Zr, <span id="keyword">float</span> Zi, <span id="keyword">float</span> Cr) { 
+    <span id="keyword">return</span> Zr * Zr - Zi * Zi + Cr; 
+}
+
+<span id="keyword">private float</span> calculaImaginaria(<span id="keyword">float</span> Zr, <span id="keyword">float</span> Zi, <span id="keyword">float</span> Ci)  { 
+    <span id="keyword">return</span> 2 * Zr * Zi + Ci; 
+}</pre>
+</div>
+<p>When we break the loop and C escapes M, we have to &quot;paint&quot; the pixels corresponding to each one of the points in the trajectory. Let's imagine the (initialy black) image's pixels as a grid we can superimpose on the complex plane. Every time a Z falls inside one of the cells, we brighten it up a little more.</p>
+<p>What <code>pixelsTemp</code> really does is to count the density of Zs that fall in a determined region (which corresponds to a pixel).</p>
+<div id="code_div">
+<pre>        <span id="keyword">if</span> (n &lt; maxN) <span id="keyword">
+            for</span> (i = 0; i &lt; n; i++) {
+                coordX = (<span id="keyword">int</span>)(((trayectoria[i][0] + 2) / 4) * lado);
+                coordY = (<span id="keyword">int</span>)(((trayectoria[i][1] + 2) / 4) * lado);
+                <span id="keyword">if</span> (coordX &lt; 0 || coordX &gt;= lado || coordY &lt; 0 || coordY &gt;= lado)
+                    <span id="keyword">continue</span>; 
+                pixelsTemp[coordX][coordY]++;
+            }
+    }</pre>
+</div>
+<p>As we can see, <code>coordX</code> and <code>coordY </code> represent the coordinates of the affected pixel.</p>
+<p>Now we just have to turn the density array -<code>pixelsTemp</code>- into an image.</p>
+<p>We're going to create an sRGB image, which means its primary colors are red, green, and blue; each <a href="http://download.oracle.com/javase/6/docs/api/java/awt/Color.html" target="_blank">color</a> is represented with a value between 0 and 255, from brightest to darkest. There's also an additional channel, the alpha, that regulates the image's transparency. We can represent a color with an <code><span id="keyword">int</span></code> value, constructed with another 4 <code><span id="keyword">int</span></code> (alpha, red, green, blue) through <a href="http://java.sun.com/docs/books/tutorial/java/nutsandbolts/op3.html" target="_blank">bit operators</a>.</p>
+<div id="code_div">
+<pre>    maxColor = encuentraMax(pixelsTemp);
+<span id="keyword">    float</span> factorColor  = 255f / maxColor;
+    <span id="keyword">for</span> (i = 0; i &lt; lado; i++)<span id="keyword"> for</span> (j = 0; j &lt; lado; j++) {
+        color = (<span id="keyword">int</span>)(pixelsTemp[i][j] * factorColor);
+        pixels[i * lado + j] = color &lt;&lt; 16 | color &lt;&lt; 8 | color;
+    }
+    imagen = <span id="keyword">new</span> BufferedImage(lado, lado, BufferedImage.TYPE_INT_RGB);
+    imagen.setRGB(0, 0, lado, lado, pixels, 0, lado);
+    <span id="keyword">return</span> imagen; 
+}</pre>
+</div>
+<p>Since we want a gray-scale image, we're setting the same value for the red, green, and blue channels. <code>pixels</code> holds the colors to feed to <code>imagen</code> for it to show the Buddhabrot.</p>
+<p>By the way, in order to &quot;scale down&quot; densities to integer values between 0 and 255, and then &quot;translate&quot; them to a color, we need to know the maximum density. We can do that using this simple method:</p>
+<div id="code_div">
+<pre><span id="keyword">private float</span> encuentraMax(<span id="keyword">float</span>[][] arr) {
+    <span id="keyword">float</span> max = 0;
+    <span id="keyword">for</span> (<span id="keyword">int</span> j, i = 0; i &lt; arr.length; i++) <span id="keyword">for</span> (j = 0; j &lt; arr[i].length; j++)
+        <span id="keyword">if</span> (arr[i][j] &gt; max) max = arr[i][j];
+    <span id="keyword">return</span> max;
+}</pre>
+</div>
+<p>If you want to save the image to disk, you can use the following code:</p>
+<div id="code_div">
+<pre><span id="keyword">import</span> javax.imageio.*;
+...
+<span id="keyword">try</span> {
+    BufferedImage imagen = generaImagen();
+    ImageIO.write(imagen, <span id="string">&quot;PNG&quot;</span>, <span id="keyword">new</span> File(<span id="string">&quot;C:\\BuddhaBrot.png&quot;</span>));
+} <span id="keyword">catch</span> (Exception excepcion) { excepcion.printStackTrace(); }</pre>
+</div>
+</div>
+<div id="navigation_div" style="margin-top:10px;">&nbsp;
+<span style="float:left; display:block; padding-left:5px;"><%= link_to '< Meet the Buddhabrot technique', buddha_article_path(1), :style => 'text-decoration:none; color: #F90;' %></span>
+<span style="float:right; display:block; padding-right:5px;"><%= link_to 'Play with vars >', buddha_article_path(3), :style => 'text-decoration:none; color: #F90;' %></span>
+</div>

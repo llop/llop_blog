@@ -43,7 +43,15 @@ LlopBlog::Application.routes.draw do
     get 'categories_tags', :controller => 'admin_categories_tags', :as => 'categories_tags'
   end
   match 'admin' => 'admin_posts#index', :via => :get
-
+  
+  # Buddhabrot section
+  scope '/buddhabrot' do
+    match 'article/:id' => 'buddhabrot#article', :via => :get, :as => 'buddha_article'
+    match 'appendix/:id' => 'buddhabrot#appendix', :via => :get, :as => 'buddha_appendix'
+    match 'applet/:id' => 'buddhabrot#applet', :via => :get, :as => 'buddha_applet'
+    match 'gallery' => 'buddhabrot#gallery', :via => :get, :as => 'buddha_gallery'
+  end
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
