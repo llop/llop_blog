@@ -28,12 +28,14 @@ if Rails.env.production?
     end
     
     def delete_matched(matcher, options = nil)
+      puts 'DELETE MATCHED'
       loop = true
       deleted_keys = []
       keys = get_keys
       keys.each do |key|
+        puts ('trying deleting matched ' + key)
         if loop && key.match(matcher)
-          puts ('deleting matched ' + key)
+          puts ('deleted ' + key)
           loop = old_delete_entry(key, options)
           deleted_keys << key
         end
