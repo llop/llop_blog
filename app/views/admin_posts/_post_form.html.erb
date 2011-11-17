@@ -2,8 +2,8 @@
   <% act, msg = params[:action] == "new" || params[:action] == "create" ? [ :create, "Create post" ] : [ :update, "Update post" ] %>
   <%= form_for @post, :url => { :action => act, :controller => :admin_posts }  do |f| %>
     <% unless notice.blank? %>
-    <div style="color:#00AA00; border-style:solid; border-width:1px; margin:10px 0px 15px 0px; padding:15px;">
-      <span style="color:black;"><%= notice %></span>
+    <div class="green_border" style="margin:10px 0px 15px 0px; padding:15px;">
+      <span><%= notice %></span>
     </div>
     <% end %>
     <%= f.error_messages :header_message => nil, :message => nil, :header_tag => :h3 %>
