@@ -22,15 +22,15 @@ private
   end
   
   def expire_bulk(post)
-    expire_fragment %r{admin/categories/#{post.category_id}*}
-    expire_fragment %r{blog/categories/#{post.category_id}*}
+    expire_fragment %r{admin/categories/#{post.category_id}}
+    expire_fragment %r{blog/categories/#{post.category_id}}
     post.tags.each do |tag| 
-      expire_fragment %r{admin/tags/#{tag.id}*}
-      expire_fragment %r{blog/tags/#{tag.id}*}
+      expire_fragment %r{admin/tags/#{tag.id}}
+      expire_fragment %r{blog/tags/#{tag.id}}
     end
-    expire_fragment %r{admin/posts*}
-    expire_fragment %r{blog/posts*}
-    expire_fragment %r{blog/archive/#{post.created_at.year}/#{post.created_at.month}*}
+    expire_fragment %r{admin/posts}
+    expire_fragment %r{blog/posts}
+    expire_fragment %r{blog/archives/#{post.created_at.year}/#{post.created_at.month}}
     expire_cache_for post
   end
 
