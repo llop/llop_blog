@@ -30,7 +30,6 @@ if Rails.env.production?
       deleted_keys = []
       keys = get_keys
       keys.each do |key|
-        puts ('key name ' + key)
         if loop && key.match(matcher)
           loop = old_delete_entry(key, options)
           deleted_keys << key
@@ -49,7 +48,7 @@ if Rails.env.production?
       begin
         YAML.load read(MEM_CACHED_KEYS)
       rescue TypeError
-        [ MEM_CACHED_KEYS ]
+        []
       end
     end
     
