@@ -6,6 +6,6 @@ Sprockets::Helpers::RailsHelper::AssetPaths.class_eval do
     if compile_assets && digest_assets && asset = asset_environment[logical_path]
       return asset.digest_path
     end
-    return logical_path  # Just return the freakin path!
+    return logical_path  # Just return the freakin path! Why explode?!
   end
 end
