@@ -5,14 +5,17 @@ class PostsSweeper < ActionController::Caching::Sweeper
   
   # Add callbacks
   def after_create(post)
+    puts ('expire sweep ' + post.id.to_s)
     expire_cache_for(post)
   end
   
   def after_update(post)
+    puts ('update sweep ' + post.id.to_s)
     expire_update_or_destroy(post)
   end
   
   def after_destroy(post)
+    puts ('destroy sweep ' + post.id.to_s)
     expire_update_or_destroy(post)
   end
 
