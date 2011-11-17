@@ -5,7 +5,7 @@ if Rails.env.production?
     
     alias_method :old_write_entry, :write_entry
     def write_entry(key, entry, options)
-      keys = get_keys
+      keys = get_memcached_keys
       unless keys.include?(key)
         keys << key
         return false unless old_write_entry(MEMCACHED_KEYS, keys.to_yaml, {})
@@ -17,7 +17,7 @@ if Rails.env.production?
     def delete_entry(key, options)
       ret = old_delete_entry(key, options)
       return false unless ret
-      keys = get_keys
+      keys = get_memcached_keys
       if keys.include?(key)
         keys -= [ key ]
         old_write_entry(MEMCACHED_KEYS, keys.to_yaml, {})
