@@ -30,6 +30,7 @@ if Rails.env.production?
       deleted_keys = []
       keys = get_keys
       keys.each do |key|
+        puts ('key name ' + key)
         if loop && key.match(matcher)
           loop = old_delete_entry(key, options)
           deleted_keys << key
@@ -38,7 +39,7 @@ if Rails.env.production?
       if loop
         len = keys.length
         keys -= deleted_keys
-        old_write_entry(MEM_CACHED_KEYS, keys.to_yaml, options) if keys.length < len
+        old_write_entry(MEM_CACHED_KEYS, keys.to_yaml, options || []) if keys.length < len
       end
       loop
     end
