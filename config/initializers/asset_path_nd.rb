@@ -1,4 +1,4 @@
-Sprockets::Helpers::RailsHelper.module_eval do
+Sprockets::Helpers::RailsHelper::AssetPaths.class_eval do
   def digest_for(logical_path)
     if digest_assets && asset_digests && (digest = asset_digests[logical_path])
       return digest
