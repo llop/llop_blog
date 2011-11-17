@@ -1,14 +1,14 @@
 if Rails.env.production?
   ActiveSupport::Cache::DalliStore.class_eval do
     
-    MEM_CACHED_KEYS = "memcached_keys"
+    MEMCACHED_KEYS = "memcached_keys"
     
     alias_method :old_write_entry, :write_entry
     def write_entry(key, entry, options)
       keys = get_keys
       unless keys.include?(key)
         keys << key
-        return false unless old_write_entry(MEM_CACHED_KEYS, keys.to_yaml, options)
+        return false unless old_write_entry(MEMCACHED_KEYS, keys.to_yaml, {})
       end
       old_write_entry(key, entry, options)
     end
@@ -20,33 +20,30 @@ if Rails.env.production?
       keys = get_keys
       if keys.include?(key)
         keys -= [ key ]
-        old_write_entry(MEM_CACHED_KEYS, keys.to_yaml, options)
+        old_write_entry(MEMCACHED_KEYS, keys.to_yaml, {})
       end
       ret
     end
     
     def delete_matched(matcher, options = nil)
-      loop = true
+      ret = true
       deleted_keys = []
-      keys = get_keys
+      keys = get_memcached_keys
       keys.each do |key|
-        if loop && key.match(matcher)
-          loop = old_delete_entry(key, options)
-          deleted_keys << key
+        if ret && key.match(matcher)
+          deleted_keys << key if (ret = old_delete_entry(key, options))
         end
       end
-      if loop
-        len = keys.length
-        keys -= deleted_keys
-        old_write_entry(MEM_CACHED_KEYS, keys.to_yaml, options || {}) if keys.length < len
-      end
-      loop
+      len = keys.length
+      keys -= deleted_keys
+      old_write_entry(MEMCACHED_KEYS, keys.to_yaml, {}) if keys.length < len
+      ret
     end
   
   private
-    def get_keys
+    def get_memcached_keys
       begin
-        YAML.load read(MEM_CACHED_KEYS)
+        YAML.load read(MEMCACHED_KEYS)
       rescue TypeError
         []
       end
