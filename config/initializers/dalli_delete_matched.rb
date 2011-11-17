@@ -5,7 +5,6 @@ if Rails.env.production?
     
     alias_method :old_write_entry, :write_entry
     def write_entry(key, entry, options)
-      puts ('writing ' + key)
       keys = get_keys
       unless keys.include?(key)
         keys << key
@@ -16,7 +15,6 @@ if Rails.env.production?
     
     alias_method :old_delete_entry, :delete_entry
     def delete_entry(key, options)
-      puts ('deleting ' + key)
       ret = old_delete_entry(key, options)
       return false unless ret
       keys = get_keys
@@ -28,14 +26,11 @@ if Rails.env.production?
     end
     
     def delete_matched(matcher, options = nil)
-      puts 'DELETE MATCHED'
       loop = true
       deleted_keys = []
       keys = get_keys
       keys.each do |key|
-        puts ('trying deleting matched ' + key)
         if loop && key.match(matcher)
-          puts ('deleted ' + key)
           loop = old_delete_entry(key, options)
           deleted_keys << key
         end
@@ -53,7 +48,7 @@ if Rails.env.production?
       begin
         YAML.load read(MEM_CACHED_KEYS)
       rescue TypeError
-        []
+        [ MEM_CACHED_KEYS ]
       end
     end
     
