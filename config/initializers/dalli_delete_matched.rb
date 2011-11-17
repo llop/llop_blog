@@ -39,7 +39,7 @@ if Rails.env.production?
       if loop
         len = keys.length
         keys -= deleted_keys
-        old_write_entry(MEM_CACHED_KEYS, keys.to_yaml, options || []) if keys.length < len
+        old_write_entry(MEM_CACHED_KEYS, keys.to_yaml, options || {}) if keys.length < len
       end
       loop
     end
