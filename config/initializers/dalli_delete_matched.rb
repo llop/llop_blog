@@ -33,6 +33,7 @@ if Rails.env.production?
       keys = get_keys
       keys.each do |key|
         if loop && key.match(matcher)
+          puts ('deleting matched ' + key)
           loop = old_delete_entry(key, options)
           deleted_keys << key
         end
