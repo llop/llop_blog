@@ -2,7 +2,7 @@ Sprockets::StaticCompiler.class_eval do
   def compile
     manifest = {}
     env.each_logical_path do |logical_path|
-      STDERR.puts ('trying ' + logical_path.to_s)
+      STDERR.puts ('trying ' + logical_path.to_s + ' ' + compile_path?(logical_path).to_s)
       next unless compile_path?(logical_path)
       if asset = env.find_asset(logical_path)
         manifest[logical_path] = write_asset(asset)
