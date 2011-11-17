@@ -51,7 +51,7 @@ if Rails.env.production?
   private
     def get_keys
       begin
-        YAML.load(read('memcached_store_key_list'))
+        YAML.load read(MEM_CACHED_KEYS)
       rescue TypeError
         []
       end
