@@ -21,7 +21,6 @@ LlopBlog::Application.configure do
 
   # Generate digests for assets URLs
   config.assets.digest = true
-  config.assets.precompile += [ 'buddhatemplate.css' ]
 
   # Defaults to Rails.root.join("public/assets")
   # config.assets.manifest = YOUR_PATH
@@ -41,7 +40,6 @@ LlopBlog::Application.configure do
 
   # Use a different cache store in production
   # config.cache_store = :mem_cache_store
-  # For the dalli addon setup
   config.cache_store = :dalli_store
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server
@@ -50,9 +48,25 @@ LlopBlog::Application.configure do
 
   # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
   # config.assets.precompile += %w( search.js )
+  config.assets.precompile += [ 'buddhatemplate.css' ]
 
   # Disable delivery errors, bad email addresses will be ignored
   # config.action_mailer.raise_delivery_errors = false
+  require 'tlsmail'
+  Net::SMTP.enable_tls(OpenSSL::SSL::VERIFY_NONE)
+  ActionMailer::Base.delivery_method = :smtp
+  ActionMailer::Base.perform_deliveries = true
+  ActionMailer::Base.raise_delivery_errors = true
+  ActionMailer::Base.smtp_settings = {
+    :address => "smtp.gmail.com",
+    :port => "587",
+    :domain => "gmail.com",
+    :enable_starttls_auto => true,
+    :authentication => :login,
+    :user_name => ENV['GMAIL_USER'],
+    :password => ENV['GMAIL_PASS']
+  }
+  config.action_mailer.raise_delivery_errors = true
 
   # Enable threaded mode
   # config.threadsafe!
