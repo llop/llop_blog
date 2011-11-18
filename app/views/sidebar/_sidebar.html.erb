@@ -1,5 +1,7 @@
 <%= render "sidebar/search_posts" %>
+<% cache 'sidebar' do %>
 <%= render "sidebar/google_bar" %>
 <%= render "sidebar/categories" %>
 <%= render "sidebar/tag_cloud" %>
 <%= render "sidebar/archives" %>
+<% end %>

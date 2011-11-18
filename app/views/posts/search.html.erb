@@ -3,5 +3,9 @@
 <span>Sorry, no posts found containing '<%= params[:search] %>'</span>
 </div>
 <% else %>
+<div style="padding:0px 15px 5px 15px; font-size:1em; color:#555555;">
+<span>Found <%= (c = @posts.total_entries).to_s %> post<%= 's' if c > 1 %> matching '<%= params[:search] %>'</span>
+<hr style="margin-bottom:0px;"/>
+</div>
 <%= render 'posts/paginated_collection' %>
 <% end %>
