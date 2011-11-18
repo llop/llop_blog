@@ -13,6 +13,7 @@ gem 'dynamic_form'
 # To compile assets locally, this is for compression:
 # gem 'closure-compiler'
 gem 'dalli'
+gem 'tlsmail'
 
 # Gems used only for assets and not required
 # in production environments by default.
