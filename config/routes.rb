@@ -5,39 +5,32 @@ LlopBlog::Application.routes.draw do
   # Make urls more descriptive prefixing everything with '/blog'
   scope "/blog" do
     # Posts
-    match 'posts/page/:page' => 'posts#index', :via => :get, :as => 'posts_page'
-    match 'posts' => 'posts#index', :via => :get, :as => 'posts'
-    resources :posts, :only => [ :show ] do
-      resources :comments, :only => [ :create ]
-    end
+    get 'posts(/page/:page)' => 'posts#index', :as => 'posts', :page => /\d+/ 
+    get 'posts/:id' => 'posts#show', :as => 'post', :id => /\d+/
+    post 'posts/:post_id/comments' => 'comments#create', :as => 'post_comments', :post_id => /\d+/
     get 'search', :controller => 'posts'
     # Categories
-    match 'categories/:id/page/:page' => 'categories#show', :via => :get, :as => 'category_page'
-    match 'categories/:id' => 'categories#show', :via => :get, :as => 'category'
+    get 'categories/:id(/page/:page)' => 'categories#show', :as => 'category', :id => /\d+/, :page => /\d+/
     # Tags
-    match 'tags/:id/page/:page' => 'tags#show', :via => :get, :as => 'tag_page'
-    match 'tags/:id' => 'tags#show', :via => :get, :as => 'tag'
+    get 'tags/:id(/page/:page)' => 'tags#show', :as => 'tag', :id => /\d+/, :page => /\d+/
     # archives
-    match 'archives/:year/:month/page/:page' => 'posts#archives', :via => :get, :as => 'archives_page'
-    match 'archives/:year/:month' => 'posts#archives', :via => :get, :as => 'archives'
+    get 'archives/:year/:month(/page/:page)' => 'posts#archives', :as => 'archives', :year => /\d{4}/, :month => /\d{1,2}/, :page => /\d+/
+    get 'feed' => 'posts#index', :as => 'feed', :defaults => { :format => 'atom' }
   end
   match 'blog' => 'posts#index', :via => :get
   
   # Admin section
   scope "/admin" do
     # Posts
-    match 'posts/page/:page' => 'admin_posts#index', :via => :get, :as => 'admin_posts_page'
-    match 'posts' => 'admin_posts#index', :via => :get, :as => 'admin_posts'
+    get 'posts(/page/:page)' => 'admin_posts#index', :as => 'admin_posts', :page => /\d+/ 
     resources :posts, :controller => 'admin_posts', :only => [ :new, :create, :edit, :update ]
     resources :comments, :controller => 'admin_comments', :only => [ :destroy ]
     get 'search', :controller => 'admin_posts', :as => 'admin_search'
     # Categories
-    match 'categories/:id/page/:page' => 'admin_categories#show', :via => :get, :as => 'admin_category_page'
-    match 'categories/:id' => 'admin_categories#show', :via => :get, :as => 'admin_category'
+    get 'categories/:id(/page/:page)' => 'admin_categories#show', :as => 'admin_category', :id => /\d+/, :page => /\d+/
     resources :categories, :controller => 'admin_categories', :only => [ :create ], :as => 'admin_categories'
     # Tags
-    match 'tags/:id/page/:page' => 'admin_tags#show', :via => :get, :as => 'admin_tag_page'
-    match 'tags/:id' => 'admin_tags#show', :via => :get, :as => 'admin_tag'
+    get 'tags/:id(/page/:page)' => 'admin_tags#show', :as => 'admin_tag', :id => /\d+/, :page => /\d+/
     resources :tags, :controller => 'admin_tags', :only => [ :create ], :as => 'admin_tags'
     # Categories and tags get created from the same place
     get 'categories_tags', :controller => 'admin_categories_tags', :as => 'categories_tags'
@@ -46,10 +39,10 @@ LlopBlog::Application.routes.draw do
   
   # Buddhabrot section
   scope '/buddhabrot' do
-    match 'article/:id' => 'buddhabrot#article', :via => :get, :as => 'buddha_article'
-    match 'appendix/:id' => 'buddhabrot#appendix', :via => :get, :as => 'buddha_appendix'
-    match 'applet/:id' => 'buddhabrot#applet', :via => :get, :as => 'buddha_applet'
-    match 'gallery' => 'buddhabrot#gallery', :via => :get, :as => 'buddha_gallery'
+    get 'article/:id' => 'buddhabrot#article', :as => 'buddha_article'
+    get 'appendix/:id' => 'buddhabrot#appendix', :as => 'buddha_appendix'
+    get 'applet/:id' => 'buddhabrot#applet', :as => 'buddha_applet'
+    get 'gallery' => 'buddhabrot#gallery', :as => 'buddha_gallery'
   end
   
   # The priority is based upon order of creation:

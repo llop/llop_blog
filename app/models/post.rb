@@ -22,7 +22,7 @@ class Post < ActiveRecord::Base
   end
   
   # Set per-page pagination value
-  self.per_page = 5
+  self.per_page = 10
   
   # Methods
   def self.search(search, page) 

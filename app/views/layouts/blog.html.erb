@@ -3,6 +3,7 @@
   <%= stylesheet_link_tag    "application" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
+  <%= auto_discovery_link_tag :atom, feed_path, :title => 'Molecular density blog feed' %>
 <% end %>
 <% content_for :body do %>
   <div id="body_wrapper">
