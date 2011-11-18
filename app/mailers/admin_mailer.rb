@@ -5,6 +5,6 @@ class AdminMailer < ActionMailer::Base
   def comment_created(comment)
     @comment = comment
     @post = comment.post
-    mail subject: ("New comment on " + @post.title), sent_on: Time.now
+    mail subject: ("New comment on " + @post.title)
   end
 end
