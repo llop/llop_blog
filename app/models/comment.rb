@@ -14,7 +14,7 @@ class Comment < ActiveRecord::Base
   before_save do |comment|
     comment.uri = nil if comment.uri.empty?
   end
-  after:create do |comment|
+  after_create do |comment|
     AdminMailer.comment_created(comment).deliver
   end
   
