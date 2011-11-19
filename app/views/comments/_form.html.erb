@@ -1,8 +1,11 @@
 <% unless @comment.errors.empty? %>
 <!-- jump to the leave reply form in case errors were found -->
 <script type="text/javascript" language="javascript">
-  function jump_2_reply_form() { window.location.hash = "leave_reply"; }
-  window.onload = jump_2_reply_form;
+  <!--
+  $(document).ready(function() { 
+    window.location.hash = "leave_reply";
+  });
+  -->
 </script>
 <% end %>
 <div style="padding:0px 25px 10px 25px;">
