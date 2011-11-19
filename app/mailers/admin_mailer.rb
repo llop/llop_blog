@@ -7,4 +7,9 @@ class AdminMailer < ActionMailer::Base
     @post = comment.post
     mail subject: ("New comment on " + @post.title)
   end
+  
+  def something_crashed(exception)
+    @exception = exception
+    mail subject: ("moleculardensity crash: " + @exception.message)
+  end
 end

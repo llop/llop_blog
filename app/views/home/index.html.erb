@@ -1,5 +1,5 @@
 <% content_for :head do %>
-  <title>Molecular density</title>
+  <title>moleculardensity</title>
   <%= stylesheet_link_tag    "application" %>
   <%= javascript_include_tag "application" %>
 <% end %>
@@ -8,15 +8,9 @@
 <div style="height:400px; background-image:url(<%= asset_path 'main.jpg' %>); background-position:center; background-repeat:no-repeat;"></div>
 <div style="padding-top:20px;">molecular density is the ratio between the mass of one mole of a substance and its volume</div>
 <div style="padding-top:20px;">
-<%= link_to buddha_article_path(1) do %>
-  <span class="black_border" style="margin-left:auto; margin-right:15px; padding:5px 25px 5px 25px;">buddhabrot</span>
-<% end %>
-<%= link_to posts_path do %>
-  <span class="black_border" style="margin-left:15px; margin-right:auto; padding:5px 45px 5px 45px;">blog</span>
-<% end %>
-<%= link_to about_path do %>
-  <span class="black_border" style="margin-left:30px; margin-right:auto; padding:5px 40px 5px 40px;">about</span>
-<% end %>
+<span class="black_border" style="margin-left:auto; margin-right:15px; padding:5px 25px 5px 25px;"><%= link_to 'buddhabrot', buddha_article_path(1) %></span>
+<span class="black_border" style="margin-left:15px; margin-right:auto; padding:5px 45px 5px 45px;"><%= link_to 'blog', posts_path %></span>
+<span class="black_border" style="margin-left:30px; margin-right:auto; padding:5px 40px 5px 40px;"><%= link_to 'about', about_path %></span>
 </div>
 </div>
 <% end %>

@@ -44,6 +44,10 @@ LlopBlog::Application.routes.draw do
     get 'applet/:id' => 'buddhabrot#applet', :as => 'buddha_applet'
     get 'gallery' => 'buddhabrot#gallery', :as => 'buddha_gallery'
   end
+  get 'buddhabrot' => 'buddhabrot#gallery'
+  
+  # About section
+  get 'about' => 'home#about', as: 'about'
   
   # The priority is based upon order of creation:
   # first created -> highest priority.
@@ -94,8 +98,6 @@ LlopBlog::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  get "home/about", :as => 'about'
-  get "home/index"
   root :to => 'home#index'
 
   # See how all your routes lay out with "rake routes"

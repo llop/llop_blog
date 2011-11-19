@@ -15,12 +15,7 @@ class Comment < ActiveRecord::Base
     comment.uri = nil if comment.uri.empty?
   end
   after_create do |comment|
-    begin
-      AdminMailer.comment_created(comment).deliver
-    rescue Exception => e
-      puts e.message  
-      puts e.backtrace.inspect  
-    end
+    AdminMailer.comment_created(comment).deliver
   end
   
 end
