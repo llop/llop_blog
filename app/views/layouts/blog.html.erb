@@ -8,8 +8,9 @@
 <% content_for :body do %>
   <div id="body_wrapper">
     <div id="header"><div class="regular_border" style="height:100px; padding-bottom:0px; margin-bottom:0px;"/></div>
-	  <div id="content_wrapper">
-	    <div class="regular_border">
+    <div id="content_wrapper">
+	    <%= render "sidebar/google_ads_bar" %>
+      <div class="regular_border">
 	      <%= yield %>
       </div>
       <div class="regular_border" style="padding-left:25px;">
