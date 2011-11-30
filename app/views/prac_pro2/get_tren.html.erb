@@ -1,0 +1,19 @@
+<script type="text/javascript" language="javascript">$(function() { ajaxify('#get_id'); ajaxify('#vacia_coch'); adjust_overflow(); });</script>
+<div style="text-align:left; padding:0px 15px 0px 15px;">
+<pre><span class="comment">/** @brief Devuelve el tren con id 'id_tren'. 
+ *  \pre El tren pertenece al conjunto.
+ *  \post Retorna el tren indicado.
+ */</span>
+Tren Cjt_Trenes<span class="operator">::</span>get_tren<span class="operator">(</span><span class="type">int</span> id_tren<span class="operator">)</span><span class="keyword"> const</span><span class="operator"> {</span>
+  Tren tren<span class="operator">;</span><span class="type">
+  bool</span> loop<span class="operator"> =</span><span class="bool"> true</span><span class="operator">;</span>
+  list<span class="operator">&lt;</span>Tren<span class="operator">&gt;::</span>const_iterator it<span class="operator"> =</span> _trenes<span class="operator">.</span>begin<span class="operator">();</span><span class="flow">
+  while</span><span class="operator"> (</span>it<span class="operator"> !=</span> _trenes<span class="operator">.</span>end<span class="operator">()</span><span class="operator"> and</span> loop<span class="operator">) {</span><span class="flow">
+    if</span><span class="operator"> ((*</span>it<span class="operator">).</span><%= link_to('get_id', practica_pro2_path(:r => 'get_id'), remote: true, id: 'get_id', :'data-type' => :json) %><span class="operator">() ==</span> id_tren<span class="operator">) {</span>
+      tren<span class="operator"> = *</span>it<span class="operator">;</span>
+      loop<span class="operator"> =</span><span class="bool"> false</span><span class="operator">;
+    }</span><span class="flow"> else</span><span class="operator"> ++</span>it<span class="operator">;
+  }</span><span class="flow">
+  return</span> tren<span class="operator">;
+}</span></pre>
+</div>

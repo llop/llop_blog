@@ -1,0 +1,15 @@
+<script type="text/javascript" language="javascript">$(function() { ajaxify('#escribe_mov'); adjust_overflow(); });</script>
+<div style="text-align:left; padding:0px 15px 0px 15px;">
+<pre><span class="comment">/** @brief Escritura de los movimientos de una formacion matinal de un tren.
+ *  \pre Ha ocurrido una formacion matinal en las cocheras.
+ *  \post Los movimientos para la formacion del tren se han escrito en el canal estandar de salida.
+ */</span><span class="type">
+void</span> Cjt_Cocheras<span class="operator">::</span>escribir_movimientos<span class="operator">(</span><span class="type">int</span> id_tren<span class="operator">,</span><span class="keyword"> const</span> list<span class="operator">&lt;</span>Movimientos<span class="operator">&gt; &amp;</span>movimientos<span class="operator">)</span><span class="keyword"> const</span><span class="operator"> {</span>
+  cout<span class="operator"> &lt;&lt;</span><span class="string"> "  Tren "</span><span class="operator"> &lt;&lt;</span> id_tren<span class="operator"> &lt;&lt;</span><span class="string"> " :"</span><span class="operator"> &lt;&lt;</span> endl<span class="operator">;</span><span class="flow">
+  for</span><span class="operator"> (</span>list<span class="operator">&lt;</span>Movimientos<span class="operator">&gt;::</span>const_iterator it<span class="operator"> =</span> movimientos<span class="operator">.</span>begin<span class="operator">();</span> it<span class="operator"> !=</span> movimientos<span class="operator">.</span>end<span class="operator">(); ++</span>it<span class="operator">) {</span>
+    cout<span class="operator"> &lt;&lt;</span><span class="string"> "    Cochera "</span><span class="operator">;
+    (*</span>it<span class="operator">).</span><%= link_to('escribir_movimientos', practica_pro2_path(:r => 'escribe_mov'), remote: true, id: 'escribe_mov', :'data-type' => :json) %><span class="operator">();</span>
+    cout<span class="operator"> &lt;&lt;</span> endl<span class="operator">;
+  }
+}</span></pre>
+</div>

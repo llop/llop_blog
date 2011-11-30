@@ -1,0 +1,19 @@
+<script type="text/javascript" language="javascript">$(function() { adjust_overflow(); });</script>
+<div style="text-align:left; padding:0px 15px 0px 15px;">
+<pre><span class="comment">/** @brief Retorna la profundidad a la que se encuentra vagon en la pila.
+ *  \pre cierto
+ *  \post Retorna la profundidad.
+ */</span><span class="type">
+int</span> Cochera<span class="operator">::</span>cuenta_movimientos<span class="operator">(</span><span class="type">int</span> vagon<span class="operator">,</span> stack<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>via<span class="operator">,</span><span class="type"> int</span> profundidad<span class="operator">) {</span><span class="type">
+  int</span> cuenta<span class="operator"> =</span> profundidad<span class="operator">;</span><span class="flow">
+  if</span><span class="operator"> (</span><span class="operator">not</span> via<span class="operator">.</span>empty<span class="operator">()) {</span><span class="type">
+    int</span> vagon_via<span class="operator"> =</span> via<span class="operator">.</span>top<span class="operator">();</span><span class="flow">
+    if</span><span class="operator"> (</span>vagon<span class="operator"> !=</span> vagon_via<span class="operator">) {</span>
+      via<span class="operator">.</span>pop<span class="operator">();</span>
+      cuenta<span class="operator"> =</span> cuenta_movimientos<span class="operator">(</span>vagon<span class="operator">,</span> via<span class="operator">,</span> profundidad<span class="operator"> +</span><span class="int"> 1</span><span class="operator">);</span>
+      via<span class="operator">.</span>push<span class="operator">(</span>vagon_via<span class="operator">);
+    }
+  }</span><span class="flow">
+  return</span> cuenta<span class="operator">;
+}</span></pre>
+</div>

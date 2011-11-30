@@ -1,0 +1,14 @@
+<script type="text/javascript" language="javascript">$(function() { ajaxify('#get_salida'); ajaxify('#get_salida1'); ajaxify('#get_tiempo'); ajaxify('#get_tiempo1'); ajaxify('#get_id'); ajaxify('#get_id1'); adjust_overflow(); });</script>
+<div style="text-align:left; padding:0px 15px 0px 15px;">
+<pre><span class="comment">/** @brief Funcion auxiliar para realizar la ordenacion de los trenes por hora de llegada.
+ *  \pre cierto
+ *  \post El resultado indica si el primer tren deberia ir antes que el segundo.
+ */</span><span class="type">
+bool</span> sort_hora_llegada<span class="operator">(</span><span class="keyword">const</span> Tren<span class="operator"> &amp;</span>tren1<span class="operator">,</span><span class="keyword"> const</span> Tren<span class="operator"> &amp;</span>tren2<span class="operator">) {</span><span class="type">
+  int</span> hora_llegada_tren1<span class="operator"> =</span> tren1<span class="operator">.</span><%= link_to('get_hora_salida', practica_pro2_path(:r => 'get_salida'), remote: true, id: 'get_salida', :'data-type' => :json) %><span class="operator">() +</span> tren1<span class="operator">.</span><%= link_to('get_tiempo_recorrido', practica_pro2_path(:r => 'get_tiempo'), remote: true, id: 'get_tiempo', :'data-type' => :json) %><span class="operator">();</span><span class="type">
+  int</span> hora_llegada_tren2<span class="operator"> =</span> tren2<span class="operator">.</span><%= link_to('get_hora_salida', practica_pro2_path(:r => 'get_salida'), remote: true, id: 'get_salida1', :'data-type' => :json) %><span class="operator">() +</span> tren2<span class="operator">.</span><%= link_to('get_tiempo_recorrido', practica_pro2_path(:r => 'get_tiempo'), remote: true, id: 'get_tiempo1', :'data-type' => :json) %><span class="operator">();</span><span class="type">
+  bool</span> ret<span class="operator"> =</span> hora_llegada_tren1<span class="operator"> &lt;</span> hora_llegada_tren2<span class="operator">;</span><span class="flow">
+  if</span><span class="operator"> (</span>hora_llegada_tren1<span class="operator"> ==</span> hora_llegada_tren2<span class="operator">)</span> ret<span class="operator"> =</span> tren1<span class="operator">.</span><%= link_to('get_id', practica_pro2_path(:r => 'get_id'), remote: true, id: 'get_id', :'data-type' => :json) %><span class="operator">() &lt;</span> tren2<span class="operator">.</span><%= link_to('get_id', practica_pro2_path(:r => 'get_id'), remote: true, id: 'get_id1', :'data-type' => :json) %><span class="operator">();</span><span class="flow">
+  return</span> ret<span class="operator">;
+}</span></pre>
+</div>

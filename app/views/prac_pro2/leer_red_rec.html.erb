@@ -1,0 +1,17 @@
+<script type="text/javascript" language="javascript">$(function() { adjust_overflow(); });</script>
+<div style="text-align:left; padding:0px 15px 0px 15px;">
+<pre><span class="comment">/** @brief Se leen los datos de las etaciones de la red del canal estandar de entrada.
+ *  Cada estacion tiene un tiempo; se debe leer la red como un arbol en preorden.
+ *  \pre cierto
+ *  \post Los datos del parametro implicito son los leidos de la entrada
+ */</span><span class="type">
+void</span> Red<span class="operator">::</span>leer_red_recursivo<span class="operator">(</span>vector<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>estaciones<span class="operator">,</span><span class="type"> int</span> id_estacion<span class="operator">,</span><span class="type"> int</span> tiempo_acumulado<span class="operator">) {</span><span class="type">
+  int</span> tiempo<span class="operator"> =</span> readint<span class="operator">();</span><span class="flow">
+  if</span><span class="operator"> (</span>tiempo<span class="operator"> &gt;=</span><span class="int"> 0</span><span class="operator">) {</span>
+    tiempo_acumulado<span class="operator"> +=</span> tiempo<span class="operator">;</span>
+    estaciones<span class="operator">[</span>id_estacion<span class="operator">] =</span> tiempo_acumulado<span class="operator">;</span>
+    leer_red_recursivo<span class="operator">(</span>estaciones<span class="operator">,</span> id_estacion<span class="operator"> *</span><span class="int"> 2</span><span class="operator"> +</span><span class="int"> 1</span><span class="operator">,</span> tiempo_acumulado<span class="operator">);</span>
+    leer_red_recursivo<span class="operator">(</span>estaciones<span class="operator">,</span> id_estacion<span class="operator"> *</span><span class="int"> 2</span><span class="operator"> +</span><span class="int"> 2</span><span class="operator">,</span> tiempo_acumulado<span class="operator">);
+  }
+}</span></pre>
+</div>

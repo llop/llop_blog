@@ -1,0 +1,14 @@
+<script type="text/javascript" language="javascript">$(function() { adjust_overflow(); });</script>
+<div style="text-align:left; padding:0px 15px 0px 15px;">
+<pre><span class="comment">/** @brief Convierte la hora pasada como entero a un string del formato indicado en el juego de prubas.
+ *  \pre cierto
+ *  \post Devuelve el tiempo como un string del formato indicado en el juego de pruebas.
+ */</span>
+string Cjt_Cocheras<span class="operator">::</span>formatea_tiempo<span class="operator">(</span><span class="type">int</span> tiempo<span class="operator">)</span><span class="keyword"> const</span><span class="operator"> {</span><span class="type">
+  int</span> hora<span class="operator"> = (</span>tiempo<span class="operator"> /</span><span class="int"> 60</span><span class="operator">) %</span><span class="int"> 24</span><span class="operator">;</span><span class="type">
+  int</span> minuto<span class="operator"> =</span> tiempo<span class="operator"> %</span><span class="int"> 60</span><span class="operator">;</span>
+  stringstream out<span class="operator">;</span>
+  out<span class="operator"> &lt;&lt;</span><span class="string"> "H. "</span><span class="operator"> &lt;&lt;</span> hora<span class="operator"> &lt;&lt;</span><span class="string"> " M. "</span><span class="operator"> &lt;&lt;</span> minuto<span class="operator">;</span><span class="flow">
+  return</span> out<span class="operator">.</span>str<span class="operator">();
+}</span></pre>
+</div>

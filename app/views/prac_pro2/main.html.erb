@@ -1,0 +1,34 @@
+<script type="text/javascript" language="javascript">
+  $(function() {
+    ajaxify('#red'); ajaxify('#cjt_coch'); ajaxify('#cjt_tren'); ajaxify('#leer_red');
+    ajaxify('#leer_cjt_coch'); ajaxify('#leer_cjt_coch2'); ajaxify('#leer_cjt_tren'); ajaxify('#leer_tren_coch');  
+    ajaxify('#escribe_cjt_coch'); ajaxify('#for_mat'); ajaxify('#alm_noc'); 
+    adjust_overflow();
+  });
+</script>
+<div style="text-align:left; padding:0px 15px 0px 15px;">
+<pre><span class="comment">/** @brief Programa principal para la practica de PRO2: 'Red ferroviaria'. */</span><span class="type">
+int</span><span class="keyword"> main</span><span class="operator">() {</span><span class="comment">
+  // Leer cuantas cocheras
+</span><span class="type">  int</span> M<span class="operator"> =</span> readint<span class="operator">();</span><span class="comment">
+  // Inicializar la red, las cocheras y los trenes
+</span>  <%= link_to('Red', practica_pro2_path(:r => 'red'), remote: true, id: 'red', :'data-type' => :json) %> red<span class="operator">;</span>
+  red<span class="operator">.</span><%= link_to('leer_red', practica_pro2_path(:r => 'leer_red'), remote: true, id: 'leer_red', :'data-type' => :json) %><span class="operator">();</span>
+  <%= link_to('Cjt_Cocheras', practica_pro2_path(:r => 'cjt_coch'), remote: true, id: 'cjt_coch', :'data-type' => :json) %> cocheras<span class="operator">(</span>M<span class="operator">);</span>
+  cocheras<span class="operator">.</span><%= link_to('leer_cocheras', practica_pro2_path(:r => 'leer_cjt_coch'), remote: true, id: 'leer_cjt_coch', :'data-type' => :json) %><span class="operator">();</span>
+  <%= link_to('Cjt_Trenes', practica_pro2_path(:r => 'cjt_tren'), remote: true, id: 'cjt_tren', :'data-type' => :json) %> trenes<span class="operator">;</span>
+  trenes<span class="operator">.</span><%= link_to('leer_trenes', practica_pro2_path(:r => 'leer_cjt_tren'), remote: true, id: 'leer_cjt_tren', :'data-type' => :json) %><span class="operator">();</span><span class="comment">
+  // Procesar las opciones
+</span><span class="type">  int</span> opcion<span class="operator"> =</span> readint<span class="operator">();</span><span class="flow">
+  while</span><span class="operator"> (</span>opcion<span class="operator"> != -</span><span class="int">6</span><span class="operator">) {</span><span class="flow">
+    if</span><span class="operator"> (</span>opcion<span class="operator"> == -</span><span class="int">1</span><span class="operator">)</span> cocheras<span class="operator">.</span><%= link_to('almacenamiento_nocturno', practica_pro2_path(:r => 'alm_noc'), remote: true, id: 'alm_noc', :'data-type' => :json) %><span class="operator">(</span>red<span class="operator">,</span> trenes<span class="operator">);</span><span class="flow">
+    else if</span><span class="operator"> (</span>opcion<span class="operator"> == -</span><span class="int">2</span><span class="operator">)</span> cocheras<span class="operator">.</span><%= link_to('formacion_matinal', practica_pro2_path(:r => 'for_mat'), remote: true, id: 'for_mat', :'data-type' => :json) %><span class="operator">(</span>trenes<span class="operator">);</span><span class="flow">
+    else if</span><span class="operator"> (</span>opcion<span class="operator"> == -</span><span class="int">3</span><span class="operator">)</span> trenes<span class="operator">.</span><%= link_to('leer_tren', practica_pro2_path(:r => 'leer_tren_coch'), remote: true, id: 'leer_tren_coch', :'data-type' => :json) %><span class="operator">();</span><span class="flow">
+    else if</span><span class="operator"> (</span>opcion<span class="operator"> == -</span><span class="int">4</span><span class="operator">)</span> cocheras<span class="operator">.</span><%= link_to('leer_cocheras', practica_pro2_path(:r => 'leer_cjt_coch'), remote: true, id: 'leer_cjt_coch2', :'data-type' => :json) %><span class="operator">();</span><span class="flow">
+    else if</span><span class="operator"> (</span>opcion<span class="operator"> == -</span><span class="int">5</span><span class="operator">)</span> cocheras<span class="operator">.</span><%= link_to('escribir_cocheras', practica_pro2_path(:r => 'escribe_cjt_coch'), remote: true, id: 'escribe_cjt_coch', :'data-type' => :json) %><span class="operator">();</span>
+    opcion<span class="operator"> =</span> readint<span class="operator">();
+  }</span><span class="flow">
+  return</span><span class="int"> 0</span><span class="operator">;
+}</span>
+</pre>
+</div>

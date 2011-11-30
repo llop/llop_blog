@@ -1,0 +1,12 @@
+<script type="text/javascript" language="javascript">$(function() { ajaxify('#leer_tren_coch'); adjust_overflow(); });</script>
+<div style="text-align:left; padding:0px 15px 0px 15px;">
+<pre><span class="comment">/** @brief Se leen los datos de los trenes del canal estandar de entrada
+ *  \pre cierto
+ *  \post Los datos de los trenes son los leidos de la entrada
+ */</span><span class="type">
+void</span> Cjt_Trenes<span class="operator">::</span>leer_trenes<span class="operator">() {</span><span class="type">
+  int</span> num_trenes<span class="operator"> =</span> readint<span class="operator">();</span><span class="flow">
+  for</span><span class="operator"> (</span><span class="type">int</span> i<span class="operator"> =</span><span class="int"> 0</span><span class="operator">;</span> i<span class="operator"> &lt;</span> num_trenes<span class="operator">;</span> i<span class="operator">++)</span> 
+    <%= link_to('leer_tren', practica_pro2_path(:r => 'leer_tren_coch'), remote: true, id: 'leer_tren_coch', :'data-type' => :json) %><span class="operator">();
+}</span></pre>
+</div>

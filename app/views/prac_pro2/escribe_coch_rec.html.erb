@@ -1,0 +1,16 @@
+<script type="text/javascript" language="javascript">$(function() { adjust_overflow(); });</script>
+<div style="text-align:left; padding:0px 15px 0px 15px;">
+<pre><span class="comment">/** @brief Escribe los vagones en la via muerta por orden de antiguedad utilizando recursividad.
+ *  \pre cierto
+ *  \post Los vagones en la via muerta se han escrito en el canal estandar de salida.
+ */</span><span class="type">
+void</span> Cochera<span class="operator">::</span>escribir_cochera_recursivo<span class="operator">(</span>stack<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>via_muerta<span class="operator">) {</span><span class="flow">
+  if</span><span class="operator"> (</span><span class="operator">not</span> via_muerta<span class="operator">.</span>empty<span class="operator">()) {</span><span class="type">
+    int</span> vagon<span class="operator"> =</span> via_muerta<span class="operator">.</span>top<span class="operator">();</span>
+    via_muerta<span class="operator">.</span>pop<span class="operator">();</span>
+    escribir_cochera_recursivo<span class="operator">(</span>via_muerta<span class="operator">);</span>
+    cout<span class="operator"> &lt;&lt;</span> vagon<span class="operator"> &lt;&lt;</span><span class="char"> ' '</span><span class="operator">;</span>
+    via_muerta<span class="operator">.</span>push<span class="operator">(</span>vagon<span class="operator">);
+  }
+}</span></pre>
+</div>
