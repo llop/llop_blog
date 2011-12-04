@@ -1,0 +1,37 @@
+<script type="text/javascript" language="javascript">
+  function ajaxify2(element_id) {
+    $(element_id)
+      .bind('ajax:beforeSend', on_ajax_before_send2)
+      .bind('ajax:complete', on_ajax_complete2)
+      .bind('ajax:success', on_ajax_success2)
+      .bind('ajax:error', on_ajax_error2);
+  }
+  function on_ajax_before_send2(evt, xhr, settings) {
+    $('#loader').show();
+  }
+  function on_ajax_complete2(evt, xhr, status) {
+    $('#loader').hide();
+  }
+  function on_ajax_success2(evt, data, status, xhr) {
+    $('#loader').hide();
+    alert(data.result);
+  }
+  function on_ajax_error2(evt, xhr, status, error) {
+    $('#loader').hide();
+    alert($.parseJSON(xhr.responseText).message);
+  }
+  $(function() { ajaxify2('#jp_tester_form'); adjust_overflow(); });
+</script>
+<div style="text-align:left; padding:0px 15px 0px 15px; margin-left:100px;">
+<div style="color:blue;">
+<p>Comprueba que tu programa funciona! :D</p>
+<p>Introduce tu entrada para la practica de PRO2</p>
+</div>
+<div>
+<%= form_tag jp_tester_path, :remote => true, :'data-type' => 'json', :id => 'jp_tester_form' do %>
+  <div><%= text_area_tag :jp_data, params[:jp_data], :size => '80x18' %></div>
+  <div><%= submit_tag "Probar" %></div>
+<% end %>
+</div>
+</div>
+</div>

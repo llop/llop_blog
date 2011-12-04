@@ -49,6 +49,7 @@ LlopBlog::Application.routes.draw do
   scope '/informatica_upc' do
     get 'proyecto' => 'informatica#proyecto', as: 'proyecto'
     get 'practica_pro2' => 'informatica#practica_pro2', as: 'practica_pro2'
+    post 'jp_tester' => 'informatica#jp_tester', as: 'jp_tester'
   end
   get 'informatica_upc' => 'informatica#index', as: 'informatica_home'
   

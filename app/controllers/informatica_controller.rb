@@ -1,6 +1,8 @@
+require 'prac_pro2'
+
 class InformaticaController < ApplicationController
   
-  def index
+  def index    
     session[:rs] = [ 'proyectos' ]
     session[:pr] = 'proyectos'
     @nav = routes_tag('proyectos', session[:rs])
@@ -15,10 +17,20 @@ class InformaticaController < ApplicationController
     respond_json 'prac_pro2/'
   end
   
+  def jp_tester
+    data = params[:jp_data]
+    begin
+      result = Practica.new.metod data
+      render :json => { result: result }
+    rescue
+      render :json => { message: "Juego de pruebas chungo!!!" }, status: 500
+    end
+  end
+  
 private
 
   PROYECTO_ROUTES = [ 'proyectos', 'prac_pro2' ]
-  PRAC_PRO2_ROUTES = [ 'main', 'red', 'cjt_coch', 'cjt_tren', 'leer_red', 'leer_red_rec', 'leer_cjt_coch', 'leer_coch', 'leer_cjt_tren', 'leer_tren_coch',
+  PRAC_PRO2_ROUTES = [ 'main', 'jp_tester', 'red', 'cjt_coch', 'cjt_tren', 'leer_red', 'leer_red_rec', 'leer_cjt_coch', 'leer_coch', 'leer_cjt_tren', 'leer_tren_coch',
     'leer_tren', 'set_tren', 'get_id', 'get_vagones', 'set_vagones', 'escribe_cjt_coch', 'escribe_coch', 'escribe_coch_rec', 'for_mat', 'tren_for_mat',
     'get_tren', 'vacia_coch', 'mov', 'escribe_mov_coch', 'escribe_mov', 'anade_vagon_pila', 'saca_vagon', 'mov_via_via', 'mov_via_muerta', 'mov_via_aux',
     'anade_mov', 'cuenta_mov', 'alm_noc', 'tren_alm_noc', 'set_salida', 'set_tiempo', 'get_tiempo_rec', 'get_salida', 'get_tiempo', 'sort', 'escribe_llegada',

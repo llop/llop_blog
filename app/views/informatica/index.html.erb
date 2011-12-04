@@ -32,6 +32,7 @@
       $('#page_body').html(data.message);
       $('#page_body').fadeIn();
     });
+    $('#loader').hide();
   }
   function adjust_overflow() {
     w = $('#page_body').width()
@@ -45,6 +46,11 @@
 <% content_for :body do %>
 <div id="body_wrapper" class="blue_border" style="height:600px;">
 <div style="text-align:center; padding:10px 50px 0px 50px;">
+  <div style="float:left; padding-top:15px;"><g:plusone></g:plusone></div>
+  <div class="fb-like" data-send="false" data-layout="button_count" data-width="90" data-show-faces="false" style="float:left; padding-top:17px;"></div>
+  <div style="float:left; padding-top:17px;">
+  <a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal">Tweet</a><script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+  </div>
   <div class="blue_border" style="background-color:blue; width:120px; margin:auto; padding:5px 5px 0px 5px;">
     <a href="http://www.upc.es"><img src="<%= asset_path 'Logo_UPC.gif' %>" alt="web UPC" /></a>
     <a href="http://www.fib.upc.edu/"><img src="<%= asset_path 'Logo_FIB.gif' %>" alt="web FIB" style="padding-bottom:4px;" /></a>   
