@@ -56,7 +56,11 @@ class Practica
           hora_llegada = (hora * 60 + minuto) + estaciones[id_tren]
           trenes_alm << { id: id_tren, hora_llegada: hora_llegada, vagones: trenes[id_tren] }
         end
-        trenes_alm.sort! { |a, b| a[:hora_llegada] <=> b[:hora_llegada] }
+        trenes_alm.sort! do |a, b| 
+          pr = a[:hora_llegada] <=> b[:hora_llegada] 
+          pr = a[:id] <=> b[:id] if pr == 0
+          pr
+        end
         output += "Horarios para el almacenamiento nocturno\n"
         trenes_alm.each do |t|
           hora = (t[:hora_llegada] / 60) % 24
