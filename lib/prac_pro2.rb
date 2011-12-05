@@ -1,5 +1,9 @@
 require 'strscan'
 
+# No mas de 50 cocheras
+# Arbol no mas de 10 niveles
+# cocheras capacidad no mas de 500
+# Trenes de no mas de 200 vagones
 class Practica
 
   def metod(data)
@@ -7,22 +11,28 @@ class Practica
     # M i n 
     m = grab_next_int scanner
     n = grab_next_int scanner
+    raise "Formato chungo!" if (m > 50 or n > 10)
     # estaciones
-    estaciones = Array.new((1 << n) - 1)
+    num_estaciones = (1 << n) - 1
+    estaciones = Array.new(num_estaciones)
     leer_estaciones(scanner, 0, 0, 0, n, estaciones)
     # cocheras
     cocheras = Array.new(m)
     prioridades = Array.new(m)
     for i in 1..m do
-      cocheras[i - 1] = { capacidad: grab_next_int(scanner), via: [] }
+      c = grab_next_int scanner
+      raise "Formato chungo!" if c > 500
+      cocheras[i - 1] = { capacidad: c, via: [] }
       prioridades[grab_next_int(scanner) - 1] = i - 1
     end
     # trenes
     trenes = {}
     num_trenes = grab_next_int scanner
+    raise "Formato chungo!" if num_trenes > num_estaciones - 1
     for i in 1..num_trenes do
       id_tren = grab_next_int scanner
       num_vagones = grab_next_int scanner
+      raise "Formato chungo!" if num_vagones > 200
       vagones = []
       for j in 1..num_vagones do
         vagon = grab_next_int scanner
@@ -116,6 +126,7 @@ class Practica
         # Leer tren
         id_tren = grab_next_int scanner
         num_vagones = grab_next_int scanner
+        raise "Formato chungo!" if num_vagones > 200
         vagones = []
         for j in 1..num_vagones do
           vagon = grab_next_int scanner
@@ -125,7 +136,9 @@ class Practica
       when -4
         # Leer cocheras
         for i in 1..m do
-          cocheras[i - 1][:capacidad] = grab_next_int(scanner)
+          c = grab_next_int scanner
+          raise "Formato chungo!" if c > 500
+          cocheras[i - 1][:capacidad] = c
           prioridades[grab_next_int(scanner) - 1] = i - 1
         end
       when -5
