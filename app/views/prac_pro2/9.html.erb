@@ -1,0 +1,79 @@
+<pre><span class="comment">/** @file Tren.cpp
+ *  @brief Implementacion de la clase Tren
+ */</span><span class="pre">
+#include "Tren.hpp"
+</span><span class="comment">
+/* Clase Tren
+ * Representa un tren
+ * Los atributos de un tren son su identificador, la hora en que empieza su ultimo viaje del dia, 
+ * cuanto tarda en recorrerlo, y sus vagones (cada vagon se representa con un entero que indica su tipo -pasajeros, bar, ...).
+ */
+
+/* Constructora */
+/** @brief Creadora por defecto
+ *  \pre cierto
+ *  \post El resultado es un tren sin datos.
+ */</span>
+Tren<span class="operator">::</span>Tren<span class="operator">() {
+}</span><span class="comment">
+
+/* Consultoras */
+/** @brief Devuelve el identificador del tren.
+ *  \pre cierto
+ *  \post Retorna el id.
+ */</span><span class="type">
+int</span> Tren<span class="operator">::</span>get_id<span class="operator">()</span><span class="keyword"> const</span><span class="operator"> {</span><span class="flow">
+  return</span> _id<span class="operator">;
+}</span><span class="comment">
+
+/** @brief Devuelve la hora de llegada del ultimo tren.
+ *  \pre cierto
+ *  \post Retorna la hora de llegada.
+ */</span><span class="type">
+int</span> Tren<span class="operator">::</span>get_hora_llegada<span class="operator">()</span><span class="keyword"> const</span><span class="operator"> {</span><span class="flow">
+  return</span> _hora_llegada<span class="operator">;
+}</span><span class="comment">
+
+/** @brief Devuelve los vagones del tren.
+ *  \pre cierto
+ *  \post Retorna un vector de vagones.
+ */</span>
+queue<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt;</span> Tren<span class="operator">::</span>get_vagones<span class="operator">()</span><span class="keyword"> const</span><span class="operator"> {</span><span class="flow">
+  return</span> _vagones<span class="operator">;
+}</span><span class="comment">
+
+/* Modificadoras */
+/** @brief Establece la hora de llegada del ultimo tren.
+ *  \pre cierto
+ *  \post La hora de llegada es 'hora_llegada'.
+ */</span><span class="type">
+void</span> Tren<span class="operator">::</span>set_hora_llegada<span class="operator">(</span><span class="type">int</span> hora_llegada<span class="operator">) {</span>
+  _hora_llegada<span class="operator"> =</span> hora_llegada<span class="operator">;
+}</span><span class="comment">
+
+/** @brief Establece los vagones del tren.
+ *  \pre cierto
+ *  \post La cola de vagones es 'vagones'.
+ */</span><span class="type">
+void</span> Tren<span class="operator">::</span>set_vagones<span class="operator">(</span>queue<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>vagones<span class="operator">) {</span>
+  _vagones<span class="operator"> =</span> vagones<span class="operator">;
+}</span><span class="comment">
+
+/* Lectura */
+/** @brief Se leen los datos del tren del canal estandar de entrada.
+ *  \pre cierto
+ *  \post Los datos del parametro implicito son los leidos de la entrada.
+ */</span><span class="type">
+void</span> Tren<span class="operator">::</span>leer_tren<span class="operator">() {</span>
+  _id<span class="operator"> =</span> readint<span class="operator">();</span><span class="type">
+
+  int</span> num_vagones<span class="operator"> =</span> readint<span class="operator">();</span>
+  _vagones<span class="operator"> =</span> queue<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt;();</span><span class="flow">
+
+  for</span><span class="operator"> (</span><span class="type">int</span> i<span class="operator"> =</span><span class="int"> 0</span><span class="operator">;</span> i<span class="operator"> &lt;</span> num_vagones<span class="operator">;</span> i<span class="operator">++) {</span><span class="type">
+
+    int</span> vagon<span class="operator"> =</span> readint<span class="operator">();</span>
+    _vagones<span class="operator">.</span>push<span class="operator">(</span>vagon<span class="operator">);
+  }
+}</span>
+</pre>

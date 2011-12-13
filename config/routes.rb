@@ -39,17 +39,17 @@ LlopBlog::Application.routes.draw do
   
   # Buddhabrot section
   scope '/buddhabrot' do
-    get 'article/:id' => 'buddhabrot#article', :as => 'buddha_article'
-    get 'appendix/:id' => 'buddhabrot#appendix', :as => 'buddha_appendix'
-    get 'applet/:id' => 'buddhabrot#applet', :as => 'buddha_applet'
+    get 'article/:id' => 'buddhabrot#article', :as => 'buddha_article', :id => /\d+/
+    get 'appendix/:id' => 'buddhabrot#appendix', :as => 'buddha_appendix', :id => /\d+/
+    get 'applet/:id' => 'buddhabrot#applet', :as => 'buddha_applet', :id => /\d+/
     get 'gallery' => 'buddhabrot#gallery', :as => 'buddha_gallery'
   end
   get 'buddhabrot' => 'buddhabrot#gallery'
   
   scope '/informatica_upc' do
-    get 'proyecto' => 'informatica#proyecto', as: 'proyecto'
-    get 'practica_pro2' => 'informatica#practica_pro2', as: 'practica_pro2'
-    post 'jp_tester' => 'informatica#jp_tester', as: 'jp_tester'
+    get 'practica_pro2' => 'prac_pro2#index', as: 'prac_pro2'
+    get 'practica_pro2/file/:id' => 'prac_pro2#file', as: 'prac_pro2_file', :id => /\d+/
+    post 'practica_pro2/jp_tester' => 'prac_pro2#jp_tester', as: 'jp_tester'
   end
   get 'informatica_upc' => 'informatica#index', as: 'informatica_home'
   

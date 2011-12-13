@@ -1,0 +1,184 @@
+<pre><span class="ident">require</span> <span class="punct">'</span><span class="string">strscan</span><span class="punct">'</span>
+
+<span class="comment"># No mas de 50 cocheras</span>
+<span class="comment"># Arbol no mas de 10 niveles</span>
+<span class="comment"># cocheras capacidad no mas de 500</span>
+<span class="comment"># Trenes de no mas de 200 vagones</span>
+<span class="keyword">class </span><span class="class">Practica</span>
+
+  <span class="keyword">def </span><span class="method">metod</span><span class="punct">(</span><span class="ident">data</span><span class="punct">)</span>
+    <span class="ident">scanner</span> <span class="punct">=</span> <span class="constant">StringScanner</span><span class="punct">.</span><span class="ident">new</span><span class="punct">(</span><span class="ident">data</span><span class="punct">)</span>
+    <span class="comment"># M i n </span>
+    <span class="ident">m</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+    <span class="ident">n</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+    <span class="keyword">raise</span> <span class="punct">&quot;</span><span class="string">Formato chungo!</span><span class="punct">&quot;</span> <span class="keyword">if</span> <span class="punct">(</span><span class="ident">m</span> <span class="punct">&gt;</span> <span class="number">50</span> <span class="keyword">or</span> <span class="ident">n</span> <span class="punct">&gt;</span> <span class="number">10</span><span class="punct">)</span>
+    <span class="comment"># estaciones</span>
+    <span class="ident">num_estaciones</span> <span class="punct">=</span> <span class="punct">(</span><span class="number">1</span> <span class="punct">&lt;&lt;</span> <span class="ident">n</span><span class="punct">)</span> <span class="punct">-</span> <span class="number">1</span>
+    <span class="ident">estaciones</span> <span class="punct">=</span> <span class="constant">Array</span><span class="punct">.</span><span class="ident">new</span><span class="punct">(</span><span class="ident">num_estaciones</span><span class="punct">)</span>
+    <span class="ident">leer_estaciones</span><span class="punct">(</span><span class="ident">scanner</span><span class="punct">,</span> <span class="number">0</span><span class="punct">,</span> <span class="number">0</span><span class="punct">,</span> <span class="number">0</span><span class="punct">,</span> <span class="ident">n</span><span class="punct">,</span> <span class="ident">estaciones</span><span class="punct">)</span>
+    <span class="comment"># cocheras</span>
+    <span class="ident">cocheras</span> <span class="punct">=</span> <span class="constant">Array</span><span class="punct">.</span><span class="ident">new</span><span class="punct">(</span><span class="ident">m</span><span class="punct">)</span>
+    <span class="ident">prioridades</span> <span class="punct">=</span> <span class="constant">Array</span><span class="punct">.</span><span class="ident">new</span><span class="punct">(</span><span class="ident">m</span><span class="punct">)</span>
+    <span class="keyword">for</span> <span class="ident">i</span> <span class="keyword">in</span> <span class="number">1</span><span class="punct">..</span><span class="ident">m</span> <span class="keyword">do</span>
+      <span class="ident">c</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+      <span class="keyword">raise</span> <span class="punct">&quot;</span><span class="string">Formato chungo!</span><span class="punct">&quot;</span> <span class="keyword">if</span> <span class="ident">c</span> <span class="punct">&gt;</span> <span class="number">500</span>
+      <span class="ident">cocheras</span><span class="punct">[</span><span class="ident">i</span> <span class="punct">-</span> <span class="number">1</span><span class="punct">]</span> <span class="punct">=</span> <span class="punct">{</span> <span class="ident">capacidad</span><span class="punct">:</span> <span class="ident">c</span><span class="punct">,</span> <span class="ident">via</span><span class="punct">:</span> <span class="punct">[]</span> <span class="punct">}</span>
+      <span class="ident">prioridades</span><span class="punct">[</span><span class="ident">grab_next_int</span><span class="punct">(</span><span class="ident">scanner</span><span class="punct">)</span> <span class="punct">-</span> <span class="number">1</span><span class="punct">]</span> <span class="punct">=</span> <span class="ident">i</span> <span class="punct">-</span> <span class="number">1</span>
+    <span class="keyword">end</span>
+    <span class="comment"># trenes</span>
+    <span class="ident">trenes</span> <span class="punct">=</span> <span class="punct">{}</span>
+    <span class="ident">num_trenes</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+    <span class="keyword">raise</span> <span class="punct">&quot;</span><span class="string">Formato chungo!</span><span class="punct">&quot;</span> <span class="keyword">if</span> <span class="ident">num_trenes</span> <span class="punct">&gt;</span> <span class="ident">num_estaciones</span> <span class="punct">-</span> <span class="number">1</span>
+    <span class="keyword">for</span> <span class="ident">i</span> <span class="keyword">in</span> <span class="number">1</span><span class="punct">..</span><span class="ident">num_trenes</span> <span class="keyword">do</span>
+      <span class="ident">id_tren</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+      <span class="ident">num_vagones</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+      <span class="keyword">raise</span> <span class="punct">&quot;</span><span class="string">Formato chungo!</span><span class="punct">&quot;</span> <span class="keyword">if</span> <span class="ident">num_vagones</span> <span class="punct">&gt;</span> <span class="number">200</span>
+      <span class="ident">vagones</span> <span class="punct">=</span> <span class="punct">[]</span>
+      <span class="keyword">for</span> <span class="ident">j</span> <span class="keyword">in</span> <span class="number">1</span><span class="punct">..</span><span class="ident">num_vagones</span> <span class="keyword">do</span>
+        <span class="ident">vagon</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+        <span class="ident">vagones</span> <span class="punct">&lt;&lt;</span> <span class="ident">vagon</span>
+      <span class="keyword">end</span>
+      <span class="ident">trenes</span><span class="punct">[</span><span class="ident">id_tren</span><span class="punct">]</span> <span class="punct">=</span> <span class="ident">vagones</span>
+    <span class="keyword">end</span>
+    <span class="comment"># bucle</span>
+    <span class="ident">output</span> <span class="punct">=</span> <span class="punct">&quot;</span><span class="string"></span><span class="punct">&quot;</span>
+    <span class="ident">opcion</span> <span class="punct">=</span> <span class="ident">grab_next_int_neg</span> <span class="ident">scanner</span>
+    <span class="keyword">while</span> <span class="punct">(</span><span class="ident">opcion</span> <span class="punct">!=</span> <span class="punct">-</span><span class="number">6</span><span class="punct">)</span>
+      <span class="keyword">case</span> <span class="ident">opcion</span>
+      <span class="keyword">when</span> <span class="punct">-</span><span class="number">1</span>
+        <span class="comment"># Almacenamiento nocturno</span>
+        <span class="ident">num_trenes</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+        <span class="ident">trenes_alm</span> <span class="punct">=</span> <span class="punct">[]</span>
+        <span class="keyword">for</span> <span class="ident">i</span> <span class="keyword">in</span> <span class="number">1</span><span class="punct">..</span><span class="ident">num_trenes</span> <span class="keyword">do</span>
+          <span class="ident">id_tren</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+          <span class="ident">hora</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+          <span class="ident">minuto</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+          <span class="ident">hora_llegada</span> <span class="punct">=</span> <span class="punct">(</span><span class="ident">hora</span> <span class="punct">*</span> <span class="number">60</span> <span class="punct">+</span> <span class="ident">minuto</span><span class="punct">)</span> <span class="punct">+</span> <span class="ident">estaciones</span><span class="punct">[</span><span class="ident">id_tren</span><span class="punct">]</span>
+          <span class="ident">trenes_alm</span> <span class="punct">&lt;&lt;</span> <span class="punct">{</span> <span class="ident">id</span><span class="punct">:</span> <span class="ident">id_tren</span><span class="punct">,</span> <span class="ident">hora_llegada</span><span class="punct">:</span> <span class="ident">hora_llegada</span><span class="punct">,</span> <span class="ident">vagones</span><span class="punct">:</span> <span class="ident">trenes</span><span class="punct">[</span><span class="ident">id_tren</span><span class="punct">]</span> <span class="punct">}</span>
+        <span class="keyword">end</span>
+        <span class="ident">trenes_alm</span><span class="punct">.</span><span class="ident">sort!</span> <span class="keyword">do</span> <span class="punct">|</span><span class="ident">a</span><span class="punct">,</span> <span class="ident">b</span><span class="punct">|</span> 
+          <span class="ident">pr</span> <span class="punct">=</span> <span class="ident">a</span><span class="punct">[</span><span class="symbol">:hora_llegada</span><span class="punct">]</span> <span class="punct">&lt;=&gt;</span> <span class="ident">b</span><span class="punct">[</span><span class="symbol">:hora_llegada</span><span class="punct">]</span> 
+          <span class="ident">pr</span> <span class="punct">=</span> <span class="ident">a</span><span class="punct">[</span><span class="symbol">:id</span><span class="punct">]</span> <span class="punct">&lt;=&gt;</span> <span class="ident">b</span><span class="punct">[</span><span class="symbol">:id</span><span class="punct">]</span> <span class="keyword">if</span> <span class="ident">pr</span> <span class="punct">==</span> <span class="number">0</span>
+          <span class="ident">pr</span>
+        <span class="keyword">end</span>
+        <span class="ident">output</span> <span class="punct">+=</span> <span class="punct">&quot;</span><span class="string">Horarios para el almacenamiento nocturno<span class="escape">\n</span></span><span class="punct">&quot;</span>
+        <span class="ident">trenes_alm</span><span class="punct">.</span><span class="ident">each</span> <span class="keyword">do</span> <span class="punct">|</span><span class="ident">t</span><span class="punct">|</span>
+          <span class="ident">hora</span> <span class="punct">=</span> <span class="punct">(</span><span class="ident">t</span><span class="punct">[</span><span class="symbol">:hora_llegada</span><span class="punct">]</span> <span class="punct">/</span> <span class="number">60</span><span class="punct">)</span> <span class="punct">%</span> <span class="number">24</span>
+          <span class="ident">minuto</span> <span class="punct">=</span> <span class="ident">t</span><span class="punct">[</span><span class="symbol">:hora_llegada</span><span class="punct">]</span> <span class="punct">%</span> <span class="number">60</span>
+          <span class="ident">output</span> <span class="punct">+=</span> <span class="punct">&quot;</span><span class="string">Tren </span><span class="punct">&quot;</span> <span class="punct">+</span> <span class="ident">t</span><span class="punct">[</span><span class="symbol">:id</span><span class="punct">].</span><span class="ident">to_s</span> <span class="punct">+</span> <span class="punct">&quot;</span><span class="string"> H. </span><span class="punct">&quot;</span> <span class="punct">+</span> <span class="ident">hora</span><span class="punct">.</span><span class="ident">to_s</span> <span class="punct">+</span> <span class="punct">&quot;</span><span class="string"> M. </span><span class="punct">&quot;</span> <span class="punct">+</span> <span class="ident">minuto</span><span class="punct">.</span><span class="ident">to_s</span> <span class="punct">+</span> <span class="punct">&quot;</span><span class="string"><span class="escape">\n</span></span><span class="punct">&quot;</span>
+          <span class="ident">prioridades</span><span class="punct">.</span><span class="ident">each</span> <span class="keyword">do</span> <span class="punct">|</span><span class="ident">p</span><span class="punct">|</span>
+            <span class="ident">espacio</span> <span class="punct">=</span> <span class="ident">cocheras</span><span class="punct">[</span><span class="ident">p</span><span class="punct">][</span><span class="symbol">:capacidad</span><span class="punct">]</span> <span class="punct">-</span> <span class="ident">cocheras</span><span class="punct">[</span><span class="ident">p</span><span class="punct">][</span><span class="symbol">:via</span><span class="punct">].</span><span class="ident">length</span>
+            <span class="keyword">if</span> <span class="punct">(</span><span class="ident">t</span><span class="punct">[</span><span class="symbol">:vagones</span><span class="punct">].</span><span class="ident">length</span> <span class="punct">&lt;=</span> <span class="ident">espacio</span><span class="punct">)</span>
+              <span class="ident">t</span><span class="punct">[</span><span class="symbol">:vagones</span><span class="punct">].</span><span class="ident">each</span> <span class="punct">{</span> <span class="punct">|</span><span class="ident">v</span><span class="punct">|</span> <span class="ident">cocheras</span><span class="punct">[</span><span class="ident">p</span><span class="punct">][</span><span class="symbol">:via</span><span class="punct">]</span> <span class="punct">&lt;&lt;</span> <span class="ident">v</span> <span class="punct">}</span>
+              <span class="keyword">break</span>
+            <span class="keyword">end</span>
+          <span class="keyword">end</span>
+        <span class="keyword">end</span>
+        <span class="ident">output</span> <span class="punct">+=</span> <span class="punct">&quot;</span><span class="string"><span class="escape">\n</span></span><span class="punct">&quot;</span>
+      <span class="keyword">when</span> <span class="punct">-</span><span class="number">2</span>
+        <span class="comment"># Formacion matinal</span>
+        <span class="ident">num_trenes</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+        <span class="ident">trenes_for</span> <span class="punct">=</span> <span class="punct">[]</span>
+        <span class="keyword">for</span> <span class="ident">i</span> <span class="keyword">in</span> <span class="number">1</span><span class="punct">..</span><span class="ident">num_trenes</span> <span class="keyword">do</span>
+          <span class="ident">id_tren</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+          <span class="ident">trenes_for</span> <span class="punct">&lt;&lt;</span> <span class="punct">{</span> <span class="ident">id</span><span class="punct">:</span> <span class="ident">id_tren</span><span class="punct">,</span> <span class="ident">vagones</span><span class="punct">:</span> <span class="ident">trenes</span><span class="punct">[</span><span class="ident">id_tren</span><span class="punct">]</span> <span class="punct">}</span>
+        <span class="keyword">end</span>
+        <span class="ident">aux</span> <span class="punct">=</span> <span class="punct">[]</span>
+        <span class="ident">output</span> <span class="punct">+=</span> <span class="punct">&quot;</span><span class="string">Movimientos para la formacion matinal</span><span class="punct">&quot;</span>
+        <span class="ident">trenes_for</span><span class="punct">.</span><span class="ident">each</span> <span class="keyword">do</span> <span class="punct">|</span><span class="ident">t</span><span class="punct">|</span>
+          <span class="ident">i</span> <span class="punct">=</span> <span class="ident">j</span> <span class="punct">=</span> <span class="number">0</span>
+          <span class="ident">output</span> <span class="punct">+=</span> <span class="punct">&quot;</span><span class="string"><span class="escape">\n</span>  Tren <span class="expr">#{t[:id]}</span> :<span class="escape">\n</span></span><span class="punct">&quot;</span>
+          <span class="ident">output</span> <span class="punct">+=</span> <span class="punct">&quot;</span><span class="string">    Cochera <span class="expr">#{prioridades[i] + 1}</span> :</span><span class="punct">&quot;</span>
+          <span class="keyword">while</span> <span class="punct">(</span><span class="ident">j</span> <span class="punct">&lt;</span> <span class="ident">t</span><span class="punct">[</span><span class="symbol">:vagones</span><span class="punct">].</span><span class="ident">length</span><span class="punct">)</span>
+            <span class="ident">v</span> <span class="punct">=</span> <span class="ident">t</span><span class="punct">[</span><span class="symbol">:vagones</span><span class="punct">][</span><span class="ident">j</span><span class="punct">]</span>
+            <span class="ident">vm</span> <span class="punct">=</span> <span class="ident">cocheras</span><span class="punct">[</span><span class="ident">prioridades</span><span class="punct">[</span><span class="ident">i</span><span class="punct">]][</span><span class="symbol">:via</span><span class="punct">]</span>
+            <span class="ident">d_v</span> <span class="punct">=</span> <span class="ident">vm</span><span class="punct">.</span><span class="ident">reverse</span><span class="punct">.</span><span class="ident">index</span><span class="punct">(</span><span class="ident">v</span><span class="punct">)</span>
+            <span class="ident">d_a</span> <span class="punct">=</span> <span class="ident">aux</span><span class="punct">.</span><span class="ident">reverse</span><span class="punct">.</span><span class="ident">index</span><span class="punct">(</span><span class="ident">v</span><span class="punct">)</span>
+            <span class="ident">ndv</span> <span class="punct">=</span> <span class="punct">!</span><span class="ident">d_v</span><span class="punct">.</span><span class="ident">nil?</span> 
+            <span class="ident">nda</span> <span class="punct">=</span> <span class="punct">!</span><span class="ident">d_a</span><span class="punct">.</span><span class="ident">nil?</span>
+            <span class="keyword">if</span> <span class="punct">(</span><span class="ident">ndv</span> <span class="punct">||</span> <span class="ident">nda</span><span class="punct">)</span>
+              <span class="keyword">if</span> <span class="punct">(</span> <span class="punct">(</span><span class="ident">ndv</span> <span class="punct">&amp;&amp;</span> <span class="ident">nda</span> <span class="punct">&amp;&amp;</span> <span class="punct">(</span><span class="ident">d_v</span> <span class="punct">+</span> <span class="number">1</span> <span class="punct">&lt;</span> <span class="ident">d_a</span> <span class="punct">+</span> <span class="number">2</span><span class="punct">))</span> <span class="punct">||</span> <span class="punct">(</span><span class="ident">ndv</span> <span class="punct">&amp;&amp;</span> <span class="punct">!</span><span class="ident">nda</span><span class="punct">)</span> <span class="punct">)</span>
+                <span class="keyword">while</span> <span class="punct">(</span><span class="ident">vm</span><span class="punct">.</span><span class="ident">last</span> <span class="punct">!=</span> <span class="ident">v</span><span class="punct">)</span>
+                  <span class="ident">aux</span> <span class="punct">&lt;&lt;</span> <span class="ident">vm</span><span class="punct">.</span><span class="ident">last</span>
+                  <span class="ident">output</span> <span class="punct">+=</span> <span class="punct">&quot;</span><span class="string"> 2 </span><span class="punct">&quot;</span> <span class="punct">+</span> <span class="ident">vm</span><span class="punct">.</span><span class="ident">last</span><span class="punct">.</span><span class="ident">to_s</span> <span class="punct">+</span> <span class="punct">'</span><span class="string"> </span><span class="punct">'</span>
+                  <span class="ident">vm</span><span class="punct">.</span><span class="ident">pop</span>
+                <span class="keyword">end</span>
+                <span class="ident">output</span> <span class="punct">+=</span> <span class="punct">&quot;</span><span class="string"> 1 </span><span class="punct">&quot;</span> <span class="punct">+</span> <span class="ident">vm</span><span class="punct">.</span><span class="ident">last</span><span class="punct">.</span><span class="ident">to_s</span> <span class="punct">+</span> <span class="punct">'</span><span class="string"> </span><span class="punct">'</span>
+                <span class="ident">vm</span><span class="punct">.</span><span class="ident">pop</span>
+              <span class="keyword">else</span>
+                <span class="keyword">while</span> <span class="punct">(</span><span class="ident">aux</span><span class="punct">.</span><span class="ident">last</span> <span class="punct">!=</span> <span class="ident">v</span><span class="punct">)</span>
+                  <span class="ident">vm</span> <span class="punct">&lt;&lt;</span> <span class="ident">aux</span><span class="punct">.</span><span class="ident">last</span>
+                  <span class="ident">output</span> <span class="punct">+=</span> <span class="punct">&quot;</span><span class="string"> 3 </span><span class="punct">&quot;</span> <span class="punct">+</span> <span class="ident">aux</span><span class="punct">.</span><span class="ident">last</span><span class="punct">.</span><span class="ident">to_s</span> <span class="punct">+</span> <span class="punct">'</span><span class="string"> </span><span class="punct">'</span>
+                  <span class="ident">aux</span><span class="punct">.</span><span class="ident">pop</span>
+                <span class="keyword">end</span>
+                <span class="ident">output</span> <span class="punct">+=</span> <span class="punct">&quot;</span><span class="string"> 3 </span><span class="punct">&quot;</span> <span class="punct">+</span> <span class="ident">aux</span><span class="punct">.</span><span class="ident">last</span><span class="punct">.</span><span class="ident">to_s</span> <span class="punct">+</span> <span class="punct">&quot;</span><span class="string">  1 </span><span class="punct">&quot;</span> <span class="punct">+</span> <span class="ident">aux</span><span class="punct">.</span><span class="ident">last</span><span class="punct">.</span><span class="ident">to_s</span> <span class="punct">+</span> <span class="punct">'</span><span class="string"> </span><span class="punct">'</span>
+                <span class="ident">aux</span><span class="punct">.</span><span class="ident">pop</span>
+              <span class="keyword">end</span>
+              <span class="ident">j</span> <span class="punct">+=</span> <span class="number">1</span>
+            <span class="keyword">else</span>
+              <span class="ident">aux</span><span class="punct">.</span><span class="ident">reverse</span><span class="punct">.</span><span class="ident">each</span> <span class="punct">{</span> <span class="punct">|</span><span class="ident">a</span><span class="punct">|</span> <span class="ident">vm</span> <span class="punct">&lt;&lt;</span> <span class="ident">a</span> <span class="punct">}</span>
+              <span class="ident">aux</span> <span class="punct">=</span> <span class="punct">[]</span>
+              <span class="ident">i</span> <span class="punct">+=</span> <span class="number">1</span>
+              <span class="ident">output</span> <span class="punct">+=</span> <span class="punct">&quot;</span><span class="string"><span class="escape">\n</span>    Cochera <span class="expr">#{prioridades[i] + 1}</span> :</span><span class="punct">&quot;</span>
+            <span class="keyword">end</span>
+          <span class="keyword">end</span>
+          <span class="ident">aux</span><span class="punct">.</span><span class="ident">reverse</span><span class="punct">.</span><span class="ident">each</span> <span class="punct">{</span> <span class="punct">|</span><span class="ident">a</span><span class="punct">|</span> <span class="ident">cocheras</span><span class="punct">[</span><span class="ident">prioridades</span><span class="punct">[</span><span class="ident">i</span><span class="punct">]][</span><span class="symbol">:via</span><span class="punct">]</span> <span class="punct">&lt;&lt;</span> <span class="ident">a</span> <span class="punct">}</span>
+          <span class="ident">aux</span> <span class="punct">=</span> <span class="punct">[]</span>
+        <span class="keyword">end</span>
+        <span class="ident">output</span> <span class="punct">+=</span> <span class="punct">&quot;</span><span class="string"><span class="escape">\n\n</span></span><span class="punct">&quot;</span>
+      <span class="keyword">when</span> <span class="punct">-</span><span class="number">3</span>
+        <span class="comment"># Leer tren</span>
+        <span class="ident">id_tren</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+        <span class="ident">num_vagones</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+        <span class="keyword">raise</span> <span class="punct">&quot;</span><span class="string">Formato chungo!</span><span class="punct">&quot;</span> <span class="keyword">if</span> <span class="ident">num_vagones</span> <span class="punct">&gt;</span> <span class="number">200</span>
+        <span class="ident">vagones</span> <span class="punct">=</span> <span class="punct">[]</span>
+        <span class="keyword">for</span> <span class="ident">j</span> <span class="keyword">in</span> <span class="number">1</span><span class="punct">..</span><span class="ident">num_vagones</span> <span class="keyword">do</span>
+          <span class="ident">vagon</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+          <span class="ident">vagones</span> <span class="punct">&lt;&lt;</span> <span class="ident">vagon</span>
+        <span class="keyword">end</span>
+        <span class="ident">trenes</span><span class="punct">[</span><span class="ident">id_tren</span><span class="punct">]</span> <span class="punct">=</span> <span class="ident">vagones</span>
+      <span class="keyword">when</span> <span class="punct">-</span><span class="number">4</span>
+        <span class="comment"># Leer cocheras</span>
+        <span class="keyword">for</span> <span class="ident">i</span> <span class="keyword">in</span> <span class="number">1</span><span class="punct">..</span><span class="ident">m</span> <span class="keyword">do</span>
+          <span class="ident">c</span> <span class="punct">=</span> <span class="ident">grab_next_int</span> <span class="ident">scanner</span>
+          <span class="keyword">raise</span> <span class="punct">&quot;</span><span class="string">Formato chungo!</span><span class="punct">&quot;</span> <span class="keyword">if</span> <span class="ident">c</span> <span class="punct">&gt;</span> <span class="number">500</span>
+          <span class="ident">cocheras</span><span class="punct">[</span><span class="ident">i</span> <span class="punct">-</span> <span class="number">1</span><span class="punct">][</span><span class="symbol">:capacidad</span><span class="punct">]</span> <span class="punct">=</span> <span class="ident">c</span>
+          <span class="ident">prioridades</span><span class="punct">[</span><span class="ident">grab_next_int</span><span class="punct">(</span><span class="ident">scanner</span><span class="punct">)</span> <span class="punct">-</span> <span class="number">1</span><span class="punct">]</span> <span class="punct">=</span> <span class="ident">i</span> <span class="punct">-</span> <span class="number">1</span>
+        <span class="keyword">end</span>
+      <span class="keyword">when</span> <span class="punct">-</span><span class="number">5</span>
+        <span class="comment"># Escribir cocheras</span>
+        <span class="ident">output</span> <span class="punct">+=</span> <span class="punct">&quot;</span><span class="string">Cocheras<span class="escape">\n</span></span><span class="punct">&quot;</span>
+        <span class="keyword">for</span> <span class="ident">i</span> <span class="keyword">in</span> <span class="number">1</span><span class="punct">..</span><span class="ident">cocheras</span><span class="punct">.</span><span class="ident">length</span> <span class="keyword">do</span>
+          <span class="ident">output</span> <span class="punct">+=</span> <span class="ident">i</span><span class="punct">.</span><span class="ident">to_s</span> <span class="punct">+</span> <span class="punct">&quot;</span><span class="string"> : </span><span class="punct">&quot;</span> <span class="punct">+</span> <span class="ident">cocheras</span><span class="punct">[</span><span class="ident">i</span> <span class="punct">-</span> <span class="number">1</span><span class="punct">][</span><span class="symbol">:via</span><span class="punct">].</span><span class="ident">join</span><span class="punct">(&quot;</span><span class="string"> </span><span class="punct">&quot;)</span> <span class="punct">+</span> <span class="punct">&quot;</span><span class="string"><span class="escape">\n</span></span><span class="punct">&quot;</span>
+        <span class="keyword">end</span>
+        <span class="ident">output</span> <span class="punct">+=</span> <span class="punct">&quot;</span><span class="string"><span class="escape">\n</span></span><span class="punct">&quot;</span>
+      <span class="keyword">end</span>
+      <span class="ident">opcion</span> <span class="punct">=</span> <span class="ident">grab_next_int_neg</span> <span class="ident">scanner</span>
+    <span class="keyword">end</span>
+    <span class="ident">output</span>
+  <span class="keyword">end</span>
+  
+  <span class="keyword">def </span><span class="method">grab_next_int</span><span class="punct">(</span><span class="ident">scanner</span><span class="punct">)</span>
+    <span class="ident">digit</span> <span class="punct">=</span> <span class="ident">scanner</span><span class="punct">.</span><span class="ident">scan_until</span><span class="punct">(/</span><span class="regex"><span class="escape">\d</span>+</span><span class="punct">/)</span>
+    <span class="keyword">raise</span> <span class="punct">'</span><span class="string">Formato chungo</span><span class="punct">'</span> <span class="keyword">if</span> <span class="punct">(</span><span class="ident">digit</span><span class="punct">.</span><span class="ident">nil?</span> <span class="punct">||</span> <span class="ident">digit</span><span class="punct">.</span><span class="ident">to_i</span> <span class="punct">&lt;</span> <span class="number">0</span><span class="punct">)</span>
+    <span class="ident">digit</span><span class="punct">.</span><span class="ident">to_i</span>
+  <span class="keyword">end</span>
+  
+  <span class="keyword">def </span><span class="method">grab_next_int_neg</span><span class="punct">(</span><span class="ident">scanner</span><span class="punct">)</span>
+    <span class="ident">digit</span> <span class="punct">=</span> <span class="ident">scanner</span><span class="punct">.</span><span class="ident">scan_until</span><span class="punct">(/</span><span class="regex"><span class="escape">\d</span>+</span><span class="punct">/)</span>
+    <span class="keyword">raise</span> <span class="punct">'</span><span class="string">Formato chungo</span><span class="punct">'</span> <span class="keyword">if</span> <span class="punct">(</span><span class="ident">digit</span><span class="punct">.</span><span class="ident">nil?</span> <span class="punct">||</span> <span class="ident">digit</span><span class="punct">.</span><span class="ident">to_i</span> <span class="punct">&gt;=</span> <span class="number">0</span><span class="punct">)</span>
+    <span class="ident">digit</span><span class="punct">.</span><span class="ident">to_i</span>
+  <span class="keyword">end</span>
+  
+  <span class="keyword">def </span><span class="method">leer_estaciones</span><span class="punct">(</span><span class="ident">scanner</span><span class="punct">,</span> <span class="ident">tot</span><span class="punct">,</span> <span class="ident">i</span><span class="punct">,</span> <span class="ident">p</span><span class="punct">,</span> <span class="ident">n</span><span class="punct">,</span> <span class="ident">estaciones</span><span class="punct">)</span>
+    <span class="keyword">if</span> <span class="punct">(</span><span class="ident">p</span> <span class="punct">&lt;</span> <span class="ident">n</span><span class="punct">)</span>
+      <span class="ident">t</span> <span class="punct">=</span> <span class="ident">tot</span> <span class="punct">+</span> <span class="ident">grab_next_int</span><span class="punct">(</span><span class="ident">scanner</span><span class="punct">)</span>
+      <span class="ident">estaciones</span><span class="punct">[</span><span class="ident">i</span><span class="punct">]</span> <span class="punct">=</span> <span class="ident">t</span>
+      <span class="ident">leer_estaciones</span><span class="punct">(</span><span class="ident">scanner</span><span class="punct">,</span> <span class="ident">t</span><span class="punct">,</span> <span class="ident">i</span> <span class="punct">*</span> <span class="number">2</span> <span class="punct">+</span> <span class="number">1</span><span class="punct">,</span> <span class="ident">p</span> <span class="punct">+</span> <span class="number">1</span><span class="punct">,</span> <span class="ident">n</span><span class="punct">,</span> <span class="ident">estaciones</span><span class="punct">)</span>
+      <span class="ident">leer_estaciones</span><span class="punct">(</span><span class="ident">scanner</span><span class="punct">,</span> <span class="ident">t</span><span class="punct">,</span> <span class="ident">i</span> <span class="punct">*</span> <span class="number">2</span> <span class="punct">+</span> <span class="number">2</span><span class="punct">,</span> <span class="ident">p</span> <span class="punct">+</span> <span class="number">1</span><span class="punct">,</span> <span class="ident">n</span><span class="punct">,</span> <span class="ident">estaciones</span><span class="punct">)</span>
+    <span class="keyword">else</span>
+      <span class="ident">grab_next_int_neg</span> <span class="ident">scanner</span>
+    <span class="keyword">end</span>
+  <span class="keyword">end</span>
+  
+<span class="keyword">end</span></pre>

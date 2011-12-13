@@ -1,0 +1,277 @@
+                               RED FERROVIARIA
+
+
+Consideremos una determinada red ferroviaria de cercanías que conecta una serie
+de estaciones, entre las cuales hay una única estación central que dispone de
+cocheras para guardar los vagones de los trenes por la noche.
+
+
+ESTRUCTURA DE LA RED
+--------------------
+
+La red tiene una estructura de árbol binario completo de n niveles, con n>=2,
+donde la raíz corresponde a la estación central (primer nivel).  Por ejemplo, si
+n es 4 entonces la estructura es
+
+
+                                  M cocheras
+                                     |
+                                     |
+                                  E0 (Estación central)
+                                /         \
+                               /           \
+                              /             \
+                            E1               E2
+                          /    \           /    \
+                         /      \         /      \ 
+                       E3       E4       E5      E6
+                      /  \      / \      / \     / \
+                     /    \    /   \    /   \   /   \
+                    E7    E8  E9  E10  E11 E12 E13 E14 
+
+
+donde E0 ... E14 son las estaciones de la red y, en particular, E0 es la
+estación central. Ésta está también conectada a un conjunto de M cocheras, con
+M>0, e identificadas mediante el conjunto de valores 1..M, pero las conexiones
+entre E0 y las cocheras no se consideran parte de la estructura de la red.
+
+Cada estación tiene asociado un identificador natural (entre 0 y 2^n-2) que se
+define así:
+
+- la raíz del árbol (E0) tiene el identificador cero;
+
+- cada nodo transmite el doble de su identificador más uno a su hijo izquierdo y
+  el doble de su identificador más dos a su hijo derecho.
+
+Entonces, cada estación posee un identificador distinto en el intervalo
+[0..(2^n)-2] y, dado que el árbol es completo, se usan todos los valores de ese
+rango para identificar alguna estación. Nótese que esta numeración es por
+niveles y, dentro de cada nivel, de izquierda a derecha.
+
+
+LOS VIAJES
+----------
+
+Cada día se realizan una serie de viajes en los dos sentidos entre la estación
+central y el resto de estaciones (aunque no necesariamente todas ellas). Algunas
+de estas estaciones pueden ser orígen y destino de trenes (final de trayecto)
+mientras que otras pueden ser sólo estaciones de paso. Las estaciones situadas
+en las hojas de la estructura del árbol son claramente estaciones final de
+trayecto, pero otras estaciones situadas en nodos internos del árbol también lo
+podrían ser. Por ejemplo, en la figura, E1 y E5 podrían ser final de trayecto y
+eso daría lugar a un total de 10 trayectos, los 8 que conectarían E0 con cada
+una de las hojas (las estaciones E7..E14), más el trayecto E0-E1 y el trayecto
+E0-E2-E5.  Además, podría ser que en un día concreto no hubiera viajes en alguno
+de estos trayectos.
+
+Para simplificar, supondremos que existe un único tren por trayecto, que realiza
+viajes de ida y vuelta entre la estación central y la estación final del
+trayecto, y que se identificará por el número de esta última. También
+supondremos que todos los trenes van a una misma velocidad, por lo que en lugar
+de tener que calcular los tiempos de duración de cada trayecto en función de las
+distancias entre unas estaciones y otras, conoceremos para cada estación cuál es
+el tiempo (en minutos) que necesita un tren para llegar a la siguiente estación
+en dirección a la estación central (es decir, el tiempo en llegar a la estación
+situada en su nodo padre en el árbol).
+ 
+
+ESTRUCTURA DE LOS TRENES
+------------------------
+
+Además del identificador, de cada tren conoceremos su configuración, es decir,
+la secuencia de vagones que necesita, donde el número de vagones de cada tren es
+variable. Además, los vagones pueden ser de diferentes tipos y cada tipo viene
+denotado por un número entero mayor que cero.
+
+Por ejemplo, un tren podría definirse como la siguiente secuencia de vagones
+
+            primer vagón --->    1 2 2 4 3 3 5    <--- último vagón
+
+donde la correspondencia podría ser:
+
+   1 vagón de tipo 1 (máquina)
+   2 vagones de tipo 2 (primera clase)
+   1 vagón de tipo 4 (bar)
+   2 vagones de tipo 3 (segunda clase)
+   1 vagón de tipo 5 (mercancías)
+
+
+FUNCIONAMIENTO DE LAS COCHERAS
+------------------------------
+
+En cuanto a las cocheras, cada una de ellas podrá contener una determinada
+capacidad máxima de vagones, que puede ser distinta de la de las demás. Para
+todas las cocheras el almacenamiento es secuencial: los trenes se guardan uno
+detrás de otro (en orden de llegada) y, para cada tren, los vagones se guardan
+asímismo uno detrás de otro (en orden de configuración).
+
+Una cochera es esencialmente una vía muerta, es decir, los vagones solo pueden
+salir de ella en orden contrario al que entraron. Por otra parte, en cada
+cochera puede utilizarse una vía muerta auxiliar (de la misma capacidad) para
+disponer de una cierta maniobrabilidad en el proceso de formación de trenes.
+Cada vagón de la cochera podrá moverse según convenga o bien al tren al que va
+destinado o a la vía auxiliar; los vagones de ésta solo podrán volver a la
+cochera, es decir, no podrán moverse directamente a un tren en formación.
+
+
+PROCESOS CRITICOS
+-----------------
+
+Cada noche, el último tren de cada trayecto que termina en la estación central se
+almacena en las cocheras.
+
+Cada mañana, antes del primer viaje diario de cada tren desde la estación
+central, se lleva a cabo la correspondiente formación, es decir, la selección y
+enganche de los vagones que configuran cada uno de los trenes, a partir del
+estado en que han quedado las cocheras la noche anterior.
+
+La simulación de ambos procesos es el objetivo principal de está práctica.
+
+1) Almacenamiento nocturno:
+
+Para simular este proceso en un día concreto, tendremos como datos las horas de
+salida (hh:mm) del último viaje de vuelta hacia la estación central de cada uno
+de los trenes que funcionen aquel día, junto con sus correspondientes
+identificadores. Todas las salidas de un día serán anteriores a las 00:00 del
+día siguiente, pero no así las correspondientes llegadas, por lo que se ha de
+tener cuidado para mantener el correcto orden cronológico de las mismas (por
+ejemplo, una llegada a las 23:55 es *anterior* a otra a las 00:05 del dia
+siguiente, pues se ha producido 10 minutos antes).
+
+El orden de llegada a la estación central de los trenes determinará el
+almacenamiento de éstos según la siguiente política:
+
+En la estación central se habrá establecido un orden de prioridad entre las
+cocheras, que será una permutación del conjunto de identificadores 1..M.  El
+primer tren en llegar irá a parar a la cochera más prioritaria si cabe en
+ella. Si no, irá a parar a la siguiente más prioritaria en la que quepa.  Lo
+mismo pasará con el resto de trenes por orden de llegada y teniendo en cuenta
+la ocupación de las cocheras por los trenes que han llegado antes.  Si dos o
+más trenes llegan a la estación central en el mismo minuto, consideraremos que
+tiene prioridad de entrada el de identificador más pequeño.  Se garantiza que
+todos los trenes podrán guardarse en alguna cochera. Las vías auxiliares no se
+usan en este proceso.
+
+
+2) Formación matinal:
+
+Para simular este proceso en un día concreto, tendremos como datos la lista de
+los trenes (identificadores de éstos) que hayan de partir de la estación
+central.  El orden de los trenes en esta lista marcará su orden de salida.
+
+Con el mismo orden de prioridad de la cocheras que se emplea para el
+almacenamiento, se ha de intentar formar cada tren a partir de los vagones
+guardados en ellas.  Dado un tren y una cochera, se han de obtener los vagones
+del tren en orden de formación hasta completar todos o llegar a uno que no se
+encuentre en la cochera. En este segundo caso, se continuarán buscando los
+siguientes vagones en la siguiente cochera y así sucesivamente. Se garantiza que
+sólo se pedirán configuraciones que sean posibles de obtener.
+
+Tal como se ha descrito más arriba, a partir del estado de una cochera (y su vía
+auxiliar) se permiten solamente tres tipos de movimientos de vagones para formar
+un tren (recordemos que en una cochera, y en su vía auxiliar, el primer vagón que
+puede salir es el último que ha entrado):
+
+    1: pasar el primer vagón de la cochera al tren deseado
+    2: pasar el primer vagón de la cochera a la vía auxiliar
+    3: pasar el primer vagón de la vía auxiliar a la cochera
+
+
+    Cochera                                                 Estación central 
+    ------------------------------------------------------------------------
+    vagones  [] [] [] []                     1 ->   []-[]  tren en formación
+    -------------------------\  2     _ \-----------------------------------
+                              \ _\|  |\  \
+              vía auxiliar     \       3  \
+                                \   []     \
+                                 \   []     \
+                                  \          \
+                                   \ vagones  \
+
+
+Para minimizar el número de movimientos reales de los vagones durante la
+formación, se aplicará una estrategia de optimización local. Cada vagón ha de
+buscarse en la cochera, y en su vía auxiliar, y se elegirá la opción que menos
+movimientos requiera. En caso de empate, tendrá preferencia el vagón de la vía
+auxiliar. Obviamente, los movimientos realizados mientras se decide qué opción es
+la mejor son "virtuales": para el resultado definitivo solo se tienen en cuenta
+los de la mejor opción.
+
+Mientras se esté realizando la formación en una misma cochera, la búsqueda de
+cada vagón partirá del estado en el que quedaron la cochera y su vía auxiliar
+tras la búsqueda y la colocación del anterior en el tren. Sin embargo, cuando se
+termine el proceso en una cochera, su vía auxiliar ha de vaciarse (sus vagones
+han de retornarse a la cochera).
+
+
+PROCESOS AUXILIARES
+-------------------
+
+Entre un día y el siguiente, es decir, entre una operación de almacenamiento y
+otra de formación de trenes, podremos cambiar las características (configuración
+de vagones) de algunos trenes. Para ello usaremos una operación de configuración
+de un tren que leerá los datos necesarios.  Supondremos que cada tren mantiene
+sus características hasta que se procese una nueva operación de configuración
+que le afecte.
+
+Análogamente, entre una operación de formación y otra de almacenamiento,
+podremos cambiar los datos de las cocheras (capacidad y orden de prioridad).
+
+Además, nos interesará conocer en un momento dado, ya sea después de un
+almacenamiento o después de una formación, el contenido preciso de las cocheras,
+listando para cada una los vagones que contiene.
+
+
+SE PIDE:
+=======
+
+Diseñar un programa modular razonablemente eficiente que permita simular las
+operaciones descritas anteriormente. En primer lugar, debe leer los números M y
+n, que serán fijos para una misma ejecución del programa. Luego debe leer la
+estructura de la red ferroviaria con los datos de las estaciones.  Seguidamente
+debe leer los datos de las cocheras (capacidad de vagones y orden de prioridad)
+y de los trenes (identificador y configuración de vagones). Las cocheras estarán
+vacías al comienzo del proceso. Después, el programa tendrá que ir procesando
+las diversas tareas que se le pidan.  Estas podrán ser las siguientes:
+
+1) Almacenamiento nocturno. Se guardan los trenes en las cocheras y se escriben
+por orden de llegada a la estación central los identificadores de los trenes y
+su hora de llegada. Se aplica el criterio de desempate antes expuesto.
+
+2) Formación matinal. En este caso se deben escribir, para cada tren solicitado,
+los movimientos necesarios para formar el tren, indicando la cochera en la que se
+ha producido cada uno.
+
+3) Substituir la configuración de un tren por una nueva, volviendo a leer los
+datos de sus vagones.
+
+4) Substituir los datos de las cocheras (capacidad y orden de prioridad) por
+unos nuevos, leyéndolos. En total se leerán los datos de las M cocheras.  Si se
+desea que alguna cochera conserve sus datos anteriores, éstos simplemente
+reaparecerán entre la información leída.
+  
+5) Escribir el contenido de las M cocheras por orden creciente de identificador
+de cochera, indicando la secuencia de vagones que contienen y el tipo de cada uno.
+Dentro de una misma cochera, el orden de escritura será el de entrada a
+la misma, es decir, de más antiguo a más reciente.
+
+Notad que, para poder cumplir las garantías mencionadas a lo largo del
+enunciado, son inevitables algunas restricciones en el orden de aplicación de
+estas operaciones. Además, el cumplimiento de dichas garantías induce ciertas
+restricciones en el tamaño de algunos de los datos del programa como, por
+ejemplo, el de los trenes.
+
+La forma de comunicarnos con el programa para que realice dichas tareas será
+parecida a la del caso de estudio "Cubeta" que se ve en la sesión 8 de
+laboratorio. Podéis diseñar un esquema provisional que ya refinaréis cuando
+conozcáis el juego de pruebas público.
+
+En días sucesivos se completarán los detalles que se hayan podido pasar por alto
+en este enunciado y se publicarán las aclaraciones oportunas.
+
+La sintaxis *exacta* de los datos y resultados, acompañada del juego de pruebas
+público, se conocerá dos semanas antes del día de la entrega de la práctica.
+Hasta entonces no podréis implementar de forma definitiva las operaciones de
+lectura y escritura necesarias para los tipos que utilicéis, aunque sí podréis
+especificarlas.
+

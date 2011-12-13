@@ -1,0 +1,73 @@
+<pre><span class="comment">/** @file Tren.hpp
+ *  @brief Especificacion de la clase Tren
+ */</span><span class="pre">
+#ifndef TREN_HPP
+#define TREN_HPP
+
+#include &lt;queue&gt;
+#include "utils.PRO2"
+</span><span class="comment">
+
+/*
+ * Clase Tren
+ */
+/** @class Tren
+ *  @brief Representa un tren
+ *  Los atributos de un tren son su identificador, la hora en que empieza su ultimo viaje del dia, cuanto tarda en recorrerlo, y sus vagones (cada vagon se representa con un entero que indica su tipo -pasajeros, bar, ...).
+ */</span><span class="keyword">
+class</span> Tren<span class="operator"> {</span><span class="keyword">
+private</span><span class="operator">:</span><span class="comment">
+  /** @brief Identificador unico del tren. */</span><span class="type">
+  int</span> _id<span class="operator">;</span><span class="comment">
+
+  /** @brief Hora de llegada del ultimo viaje del tren. */</span><span class="type">
+  int</span> _hora_llegada<span class="operator">;</span><span class="comment">
+  /** @brief Contiene los vagones que conforman el tren. */</span>
+  queue<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt;</span> _vagones<span class="operator">;</span><span class="keyword">
+
+public</span><span class="operator">:</span><span class="comment">
+  /* Constructora */
+  /** @brief Creadora por defecto
+   *  \pre cierto
+   *  \post El resultado es un tren sin datos.
+   */</span>
+  Tren<span class="operator">();</span><span class="comment">
+  /* Consultoras */
+  /** @brief Devuelve el identificador del tren.
+   *  \pre cierto
+   *  \post Retorna el id.
+   */</span><span class="type">
+  int</span> get_id<span class="operator">()</span><span class="keyword"> const</span><span class="operator">;</span><span class="comment">
+
+  /** @brief Devuelve la hora de llegada del ultimo tren.
+   *  \pre cierto
+   *  \post Retorna la hora de llegada.
+   */</span><span class="type">
+  int</span> get_hora_llegada<span class="operator">()</span><span class="keyword"> const</span><span class="operator">;</span><span class="comment">
+  /** @brief Devuelve los vagones del tren.
+   *  \pre cierto
+   *  \post Retorna un vector de vagones.
+   */</span>
+  queue<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt;</span> get_vagones<span class="operator">()</span><span class="keyword"> const</span><span class="operator">;</span><span class="comment">
+
+  /* Modificadoras */
+  /** @brief Establece la hora de llegada del ultimo tren.
+   *  \pre cierto
+   *  \post La hora de llegada es 'hora_llegada'.
+   */</span><span class="type">
+  void</span> set_hora_llegada<span class="operator">(</span><span class="type">int</span> hora_llegada<span class="operator">);</span><span class="comment">
+  /** @brief Establece los vagones del tren.
+   *  \pre cierto
+   *  \post La cola de vagones es 'vagones'.
+   */</span><span class="type">
+  void</span> set_vagones<span class="operator">(</span>queue<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>vagones<span class="operator">);</span><span class="comment">
+
+  /* Lectura */
+  /** @brief Se leen los datos del tren del canal estandar de entrada.
+   *  \pre cierto
+   *  \post Los datos del parametro implicito son los leidos de la entrada.
+   */</span><span class="type">
+  void</span> leer_tren<span class="operator">();
+};</span><span class="pre">
+#endif
+</span></pre>

@@ -1,0 +1,57 @@
+<pre><span class="comment">/** @file Cjt_Trenes.hpp
+ *  @brief Especificacion de la clase Cjt_Trenes
+ */</span><span class="pre">
+#ifndef CJT_TRENES_HPP
+#define CJT_TRENES_HPP
+
+#include "Tren.hpp"
+#include "Red.hpp"
+#include &lt;list&gt;
+#include "utils.PRO2"
+</span><span class="comment">
+
+/*
+ * Clase Cjt_Trenes
+ */
+/** @class Cjt_Trenes
+ *  @brief Representa el conjunto de trenes
+ */</span><span class="keyword">
+class</span> Cjt_Trenes<span class="operator"> {</span><span class="keyword">
+private</span><span class="operator">:</span><span class="comment">
+  /** @brief Lista de trenes. */</span>
+  list<span class="operator">&lt;</span>Tren<span class="operator">&gt;</span> _trenes<span class="operator">;</span><span class="comment">
+
+  /** @brief Anade el tren indicado al conjunto; si ya existe un tren con el mismo identificador, sus datos se sobreescriben.
+   *  \pre cierto
+   *  \post 'tren' forma parte del conjunto.
+   */</span><span class="type">
+  void</span> set_tren<span class="operator">(</span>Tren<span class="operator"> &amp;</span>tren<span class="operator">);</span><span class="keyword">
+public</span><span class="operator">:</span><span class="comment">
+  /* Constructora */
+  /** @brief Creadora por defecto
+   *  \pre cierto
+   *  \post El resultado es un conjunto de trenes vacio.
+   */</span>
+
+  Cjt_Trenes<span class="operator">();</span><span class="comment">
+  /* Consultoras */
+  /** @brief Devuelve el tren con id 'id_tren'. 
+   *  \pre El tren pertenece al conjunto.
+   *  \post Retorna el tren indicado.
+   */</span>
+  Tren get_tren<span class="operator">(</span><span class="type">int</span> id_tren<span class="operator">)</span><span class="keyword"> const</span><span class="operator">;</span><span class="comment">
+
+  /* Lectura */
+  /** @brief Se leen los datos de los trenes del canal estandar de entrada
+   *  \pre cierto
+   *  \post Los datos de los trenes son los leidos de la entrada
+   */</span><span class="type">
+  void</span> leer_trenes<span class="operator">();</span><span class="comment">
+  /** @brief Se leen los datos de un tren del canal estandar de entrada, y: se anade al conjunto si en este no hay otro tren con el mismo 'id'; si lo hay, se machacan sus datos.
+   *  \pre cierto
+   *  \post El tren descrito forma parte del conjunto.
+   */</span><span class="type">
+  void</span> leer_tren<span class="operator">();
+};</span><span class="pre">
+
+#endif</span></pre>

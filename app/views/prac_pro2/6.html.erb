@@ -1,0 +1,52 @@
+<pre><span class="comment">/** @file Red.hpp
+ *  @brief Especificacion de la clase Red
+ */</span><span class="pre">
+#ifndef RED_HPP
+#define RED_HPP
+
+#include &lt;vector&gt;
+#include "Arbre.hpp"
+#include "utils.PRO2"
+</span><span class="comment">
+
+/*
+ * Clase Red
+ */
+/** @class Red
+ *  @brief Representa una red
+ *  La red tiene una estructura de arbol binario completo de n niveles, en que cada nodo representa una estacion.
+ */</span><span class="keyword">
+class</span> Red<span class="operator"> {</span><span class="keyword">
+private</span><span class="operator">:</span><span class="comment">
+  /** @brief Contiene los tiempos entre cada estacion y la central. */</span>
+  vector<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt;</span> _estaciones<span class="operator">;</span><span class="comment">
+
+  /** @brief Se leen los datos de las etaciones de la red del canal estandar de entrada.
+   *  Cada estacion tiene un tiempo; se debe leer la red como un arbol en preorden.
+   *  \pre cierto
+   *  \post Los datos del parametro implicito son los leidos de la entrada
+   */</span><span class="type">
+  void</span> leer_red_recursivo<span class="operator">(</span>Arbre<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>a<span class="operator">,</span> vector<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>estaciones<span class="operator">,</span><span class="type"> int</span> id_estacion<span class="operator">,</span><span class="type"> int</span> tiempo_acumulado<span class="operator">);</span><span class="keyword">
+
+public</span><span class="operator">:</span><span class="comment">
+  /* Constructora */
+  /** @brief Creadora por defecto
+   *  \pre cierto
+   *  \post El resultado es una red vacia.
+   */</span>
+  Red<span class="operator">();</span><span class="comment">
+  /* Modificadoras */
+  /** @brief Devuelve el tiempo que hay entre la estacion con id 'id_estacion' y la estacion central.
+   *  \pre id_estacion pertenece a una estacion valida.
+   *  \post Retorna el tiempo entre la estacion indicada y su padre
+   */</span><span class="type">
+  int</span> get_tiempo_estacion<span class="operator">(</span><span class="type">int</span> id_estacion<span class="operator">)</span><span class="keyword"> const</span><span class="operator">;</span><span class="comment">
+
+  /* Lectura */
+  /** @brief Se leen los datos de las etaciones de la red del canal estandar de entrada.
+   *  \pre cierto
+   *  \post Los datos del parametro implicito son los leidos de la entrada
+   */</span><span class="type">
+  void</span> leer_red<span class="operator">();
+};</span><span class="pre">
+#endif</span></pre>

@@ -1,0 +1,103 @@
+<pre><span class="comment">/** @file Cochera.hpp
+ *  @brief Especificacion de la clase Cochera
+ */</span><span class="pre">
+#ifndef COCHERA_HPP
+#define COCHERA_HPP
+
+#include &lt;stack&gt;
+#include &lt;queue&gt;
+
+#include "utils.PRO2"
+</span><span class="comment">
+/*
+ * Clase Cochera
+ */
+/** @class Cochera
+ *  @brief Representa una cochera
+ *  Una cochera se caracteriza por una via muerta donde poner los vagones de un tren, y la capacidad de esta.
+ */</span><span class="keyword">
+class</span> Cochera<span class="operator"> {</span><span class="keyword">
+private</span><span class="operator">:</span><span class="comment">
+  /** @brief Capacidad de la via muerta. */</span><span class="type">
+  int</span> _capacidad<span class="operator">;</span><span class="comment">
+
+  /** @brief Via muerta de la cochera. */</span>
+  stack<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt;</span> _via_muerta<span class="operator">;</span><span class="comment">
+  /** @brief Retorna la profundidad a la que se encuentra vagon en la pila.
+   *  \pre cierto
+   *  \post Retorna la profundidad.
+   */</span><span class="type">
+  int</span> cuenta_movimientos<span class="operator">(</span><span class="type">int</span> vagon<span class="operator">,</span> stack<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>via<span class="operator">,</span><span class="type"> int</span> profundidad<span class="operator">);</span><span class="comment">
+
+  /** @brief Mueve vagones desde la via1 hasta la via2, hasta encontrar 'vagon' en la via1.
+   *  \pre cierto
+   *  \post La via auxiliar tiene los vagones que habia en la muerta hasta 'vagon'.
+   */</span><span class="type">
+  void</span> mueve_de_via_a_via<span class="operator">(</span><span class="type">int</span> vagon<span class="operator">,</span> stack<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>via1<span class="operator">,</span> stack<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>via2<span class="operator">,</span><span class="type"> int</span> tipo_movimiento<span class="operator">);</span><span class="comment">
+
+  /** @brief Mueve vagones desde la via muerta hasta la auxiliar, hasta encontrar 'vagon' en la via muerta.
+   *  \pre cierto
+   *  \post La via auxiliar tiene los vagones que habia en la muerta hasta 'vagon'.
+   */</span><span class="type">
+  void</span> mueve_desde_via_muerta<span class="operator">(</span><span class="type">int</span> vagon<span class="operator">,</span> stack<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>via_auxiliar<span class="operator">);</span><span class="comment">
+
+  /** @brief Mueve vagones desde la via auxiliar hasta la muerta, hasta encontrar 'vagon' en la via auxiliar.
+   *  \pre cierto
+   *  \post La via muerta tiene los vagones que habia en la auxiliar hasta 'vagon'.
+   */</span><span class="type">
+  void</span> mueve_desde_via_auxiliar<span class="operator">(</span><span class="type">int</span> vagon<span class="operator">,</span> stack<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>via_auxiliar<span class="operator">);</span><span class="comment">
+
+  /** @brief Escribe los vagones en la via muerta por orden de antiguedad utilizando recursividad.
+   *  \pre cierto
+   *  \post Los vagones en la via muerta se han escrito en el canal estandar de salida.
+   */</span><span class="type">
+  void</span> escribir_cochera_recursivo<span class="operator">(</span>stack<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>via_muerta<span class="operator">);</span><span class="keyword">
+public</span><span class="operator">:</span><span class="comment">
+
+  /* Constructora */
+  /** @brief Creadora por defecto.
+   *  \pre cierto
+   *  \post El resultado es una cochera sin datos.
+   */</span>
+  Cochera<span class="operator">();</span><span class="comment">
+  /* Consultoras */
+  /** @brief Devuelve cuantos huecos quedan en la via muerta.
+   *  \pre cierto
+   *  \post Retorna la capacidad.
+   */</span><span class="type">
+  int</span> get_espacios_libres<span class="operator">()</span><span class="keyword"> const</span><span class="operator">;</span><span class="comment">
+
+  /* Modificadoras */
+  /** @brief Forma el tren cuyos vagones estan 'vagones'.
+   *  Los movimientos ejecutados para formar los vagones encontrados en la cochera se escriben en el canal estandar de salida.
+   *  \pre cierto
+   *  \post Los vagones del tren encontrados se han quitado de la cochera.
+   */</span><span class="type">
+  void</span> formar_tren<span class="operator">(</span>queue<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>vagones<span class="operator">,</span> stack<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>via_auxiliar<span class="operator">);</span><span class="comment">
+
+  /** @brief Anade los vagones a la via muerta.
+   *  \pre cierto
+   *  \post Los vagones estan en la via muerta.
+   */</span><span class="type">
+  void</span> anadir_vagones<span class="operator">(</span>queue<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>vagones<span class="operator">);</span><span class="comment">
+  /** @brief Anade los vagones a la via muerta. La via auxiliar queda vacia.
+   *  \pre cierto
+   *  \post Los vagones estan en la via muerta, y la auxiliar esta vacia.
+   */</span><span class="type">
+
+  void</span> anadir_vagones<span class="operator">(</span>stack<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt; &amp;</span>via_auxiliar<span class="operator">);</span><span class="comment">
+  /* Lectura y escritura */
+  /** @brief Se leen los datos de la cochera del canal estandar de entrada.
+   *  \pre cierto
+   *  \post Los datos del parametro implicito son los leidos de la entrada.
+   */</span><span class="type">
+  void</span> leer_cochera<span class="operator">();</span><span class="comment">
+
+  /** @brief Escribe los vagones en la via muerta por orden de antiguedad.
+   *  \pre cierto
+   *  \post Los vagones en la via muerta se han escrito en el canal estandar de salida.
+   */</span><span class="type">
+  void</span> escribir_cochera<span class="operator">();
+};</span><span class="pre">
+#endif
+</span></pre>

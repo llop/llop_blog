@@ -1,0 +1,86 @@
+<pre><span class="comment">/** @file Cjt_Trenes.cpp
+ *  @brief Implementacion de la clase Cjt_Trenes
+ */</span><span class="pre">
+#include "Cjt_Trenes.hpp"
+</span><span class="comment">
+/* Clase Cjt_Trenes
+ * Representa el conjunto de trenes
+ */
+  
+/* Constructora */
+/** @brief Creadora por defecto.
+ *  \pre cierto
+ *  \post El resultado es un conjunto de trenes vacio.
+ */</span>
+Cjt_Trenes<span class="operator">::</span>Cjt_Trenes<span class="operator">() {
+}</span><span class="comment">
+
+/* Modificadoras */
+/** @brief Anade el tren indicado al conjunto; si ya existe un tren con el mismo identificador, sus datos se sobreescriben.
+ *  \pre cierto
+ *  \post 'tren' forma parte del conjunto.
+ */</span><span class="type">
+void</span> Cjt_Trenes<span class="operator">::</span>set_tren<span class="operator">(</span>Tren<span class="operator"> &amp;</span>tren<span class="operator">) {</span><span class="type">
+  bool</span> found<span class="operator"> =</span><span class="bool"> false</span><span class="operator">;</span><span class="type">
+
+  int</span> id_tren<span class="operator"> =</span> tren<span class="operator">.</span>get_id<span class="operator">();</span>
+  list<span class="operator">&lt;</span>Tren<span class="operator">&gt;::</span>iterator it<span class="operator"> =</span> _trenes<span class="operator">.</span>begin<span class="operator">();</span><span class="flow">
+
+  while</span><span class="operator"> (</span>it<span class="operator"> !=</span> _trenes<span class="operator">.</span>end<span class="operator">()</span><span class="operator"> and</span> it<span class="operator">-&gt;</span>get_id<span class="operator">() &lt;=</span> id_tren<span class="operator"> and not</span> found<span class="operator">) {</span><span class="flow">
+
+    if</span><span class="operator"> (</span>it<span class="operator">-&gt;</span>get_id<span class="operator">() ==</span> id_tren<span class="operator">) {</span>
+      queue<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt;</span> vagones<span class="operator"> =</span> tren<span class="operator">.</span>get_vagones<span class="operator">();</span>
+
+      it<span class="operator">-&gt;</span>set_vagones<span class="operator">(</span>vagones<span class="operator">);</span>
+      found<span class="operator"> =</span><span class="bool"> true</span><span class="operator">;
+    }</span><span class="flow"> else</span><span class="operator"> ++</span>it<span class="operator">;
+  }</span><span class="flow">
+
+  if</span><span class="operator"> (</span><span class="operator">not</span> found<span class="operator">)</span> _trenes<span class="operator">.</span>insert<span class="operator">(</span>it<span class="operator">,</span> tren<span class="operator">);
+}</span><span class="comment">
+
+/* Consultoras */
+/** @brief Devuelve el tren con id 'id_tren'. 
+ *  \pre El tren pertenece al conjunto.
+ *  \post Retorna el tren indicado.
+ */</span>
+Tren Cjt_Trenes<span class="operator">::</span>get_tren<span class="operator">(</span><span class="type">int</span> id_tren<span class="operator">)</span><span class="keyword"> const</span><span class="operator"> {</span>
+  Tren tren<span class="operator">;</span><span class="type">
+
+  bool</span> loop<span class="operator"> =</span><span class="bool"> true</span><span class="operator">;</span>
+  list<span class="operator">&lt;</span>Tren<span class="operator">&gt;::</span>const_iterator it<span class="operator"> =</span> _trenes<span class="operator">.</span>begin<span class="operator">();</span><span class="flow">
+
+  while</span><span class="operator"> (</span>it<span class="operator"> !=</span> _trenes<span class="operator">.</span>end<span class="operator">()</span><span class="operator"> and</span> loop<span class="operator">) {</span><span class="flow">
+
+    if</span><span class="operator"> (</span>it<span class="operator">-&gt;</span>get_id<span class="operator">() ==</span> id_tren<span class="operator">) {</span>
+      tren<span class="operator"> = *</span>it<span class="operator">;</span>
+
+      loop<span class="operator"> =</span><span class="bool"> false</span><span class="operator">;
+    }</span><span class="flow"> else</span><span class="operator"> ++</span>it<span class="operator">;
+  }</span><span class="flow">
+  return</span> tren<span class="operator">;
+}</span><span class="comment">
+
+/* Lectura */
+/** @brief Se leen los datos de los trenes del canal estandar de entrada
+ *  \pre cierto
+ *  \post Los datos de los trenes son los leidos de la entrada
+ */</span><span class="type">
+void</span> Cjt_Trenes<span class="operator">::</span>leer_trenes<span class="operator">() {</span><span class="type">
+  int</span> num_trenes<span class="operator"> =</span> readint<span class="operator">();</span><span class="flow">
+
+  for</span><span class="operator"> (</span><span class="type">int</span> i<span class="operator"> =</span><span class="int"> 0</span><span class="operator">;</span> i<span class="operator"> &lt;</span> num_trenes<span class="operator">;</span> i<span class="operator">++)</span> 
+    leer_tren<span class="operator">();
+}</span><span class="comment">
+
+/** @brief Se leen los datos de un tren del canal estandar de entrada, y: se anade al conjunto si en este no hay otro tren con el mismo 'id'; si lo hay, se machacan sus datos.
+ *  \pre cierto
+ *  \post El tren descrito forma parte del conjunto.
+ */</span><span class="type">
+void</span> Cjt_Trenes<span class="operator">::</span>leer_tren<span class="operator">() {</span>
+  Tren tren<span class="operator">;</span>
+  tren<span class="operator">.</span>leer_tren<span class="operator">();</span>
+
+  set_tren<span class="operator">(</span>tren<span class="operator">);
+}</span>
+</pre>

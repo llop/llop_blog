@@ -1,0 +1,80 @@
+<script type="text/javascript" language="javascript">
+  function ajaxify(element_id) {
+    $(element_id)
+      .bind('ajax:beforeSend', on_ajax_before_send)
+      .bind('ajax:complete', on_ajax_complete)
+      .bind('ajax:success', on_ajax_success)
+      .bind('ajax:error', on_ajax_error);
+  }
+  function on_ajax_before_send(evt, xhr, settings) {
+    $('#loader').show();
+  }
+  function on_ajax_complete(evt, xhr, status) {
+    $('#loader').hide();
+  }
+  function on_ajax_success(evt, data, status, xhr) {
+    $('#page_body').fadeOut(400, function() {
+      $('#page_body').html(data.body);
+      $('#page_body').fadeIn();
+    });
+    $('#loader').hide();
+  }
+  function on_ajax_error(evt, xhr, status, error) {
+    $('#page_body').fadeOut(400, function() {
+      $('#page_body').html($.parseJSON(xhr.responseText).message);
+      $('#page_body').fadeIn();
+    });
+    $('#loader').hide();
+  }
+  $(function() { 
+    ajaxify('#pro2_cpp'); 
+    ajaxify('#cjt_coch_cpp'); 
+    ajaxify('#cjt_coch_hpp'); 
+    ajaxify('#cjt_tren_cpp'); 
+    ajaxify('#cjt_tren_hpp'); 
+    ajaxify('#red_cpp'); 
+    ajaxify('#red_hpp'); 
+    ajaxify('#coch_cpp'); 
+    ajaxify('#coch_hpp'); 
+    ajaxify('#tren_cpp'); 
+    ajaxify('#tren_hpp');
+    ajaxify('#red_app');  
+    ajaxify('#red_ruby');  
+  });
+</script>
+<div style="text-align:left; overflow:auto;">
+<div style="padding:20px 10px 0px 10px;">
+<div style="width:16px; height:16px; float:left; padding-right:3px;"><div id="loader" style="display:none;"><img src="<%= asset_path 'ajax-loader.gif' %>"></div></div>
+<b>Red Ferroviaria (Practica PRO2 QT 2010-2011)</b>
+</div>
+<table style="width:100%; height:100%">
+<tr>
+<td style="padding:20px 10px 10px 25px; vertical-align:top;">
+  <div style=" float:left;">
+    <div style="padding:3px;">Documentación:</div>
+    <div style="padding:3px;"><span><%= link_to 'Enunciado', asset_path('enun_prac_pro2.txt'), target: '_blank' %></span></div>
+    <div style="padding:3px;"><span><%= link_to 'Formato JP', asset_path('jpinfo_prac_pro2.txt'), target: '_blank' %></span></div>
+    <div style="padding:3px;"><span><%= link_to 'Ejemplo JP', asset_path('ejemplojp_prac_pro2.txt'), target: '_blank' %></span></div>
+    <div style="padding:18px 3px 3px 3px;">Código C++:</div>
+    <div style="padding:3px;"><span><%= link_to 'pro2.cpp', prac_pro2_file_path(:id => 0), remote: true, id: 'pro2_cpp', :'data-type' => :json %></span></div>
+    <div style="padding:3px;"><span><%= link_to 'Red.cpp', prac_pro2_file_path(:id => 5), remote: true, id: 'red_cpp', :'data-type' => :json %></span></div>
+    <div style="padding:3px;"><span><%= link_to 'Red.hpp', prac_pro2_file_path(:id => 6), remote: true, id: 'red_hpp', :'data-type' => :json %></span></div>
+    <div style="padding:3px;"><span><%= link_to 'Cjt_Cocheras.cpp', prac_pro2_file_path(:id => 1), remote: true, id: 'cjt_coch_cpp', :'data-type' => :json %></span></div>
+    <div style="padding:3px;"><span><%= link_to 'Cjt_Cocheras.hpp', prac_pro2_file_path(:id => 2), remote: true, id: 'cjt_coch_hpp', :'data-type' => :json %></span></div>
+    <div style="padding:3px;"><span><%= link_to 'Cochera.cpp', prac_pro2_file_path(:id => 7), remote: true, id: 'coch_cpp', :'data-type' => :json %></span></div>
+    <div style="padding:3px;"><span><%= link_to 'Cochera.hpp', prac_pro2_file_path(:id => 8), remote: true, id: 'coch_hpp', :'data-type' => :json %></span></div>
+    <div style="padding:3px;"><span><%= link_to 'Cjt_Trenes.cpp', prac_pro2_file_path(:id => 3), remote: true, id: 'cjt_tren_cpp', :'data-type' => :json %></span></div>
+    <div style="padding:3px;"><span><%= link_to 'Cjt_Trenes.hpp', prac_pro2_file_path(:id => 4), remote: true, id: 'cjt_tren_hpp', :'data-type' => :json %></span></div>
+    <div style="padding:3px;"><span><%= link_to 'Tren.cpp', prac_pro2_file_path(:id => 9), remote: true, id: 'tren_cpp', :'data-type' => :json %></span></div>
+    <div style="padding:3px;"><span><%= link_to 'Tren.cpp', prac_pro2_file_path(:id => 10), remote: true, id: 'tren_hpp', :'data-type' => :json %></span></div>
+    <div style="padding:18px 3px 3px 3px;">Programa online:</div>
+    <div style="padding:3px;"><span><%= link_to 'Red Ferroviaria', prac_pro2_file_path(:id => 11), remote: true, id: 'red_app', :'data-type' => :json %></span></div>
+    <div style="padding:3px;"><span><%= link_to 'Código Ruby', prac_pro2_file_path(:id => 12), remote: true, id: 'red_ruby', :'data-type' => :json %></span></div>
+  </div>
+</td>
+<td style="padding:15px 10px 10px 10px; vertical-align:top;">
+  <div id="page_body" style="width:770px; overflow:auto;"><%= raw @body %></div>
+</td>
+</tr>
+</table>
+</div>

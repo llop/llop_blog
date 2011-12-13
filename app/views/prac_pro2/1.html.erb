@@ -1,0 +1,207 @@
+<pre><span class="comment">/** @file Cjt_Cocheras.cpp
+ *  @brief Implementacion de la clase Cjt_Cocheras
+ */</span><span class="pre">
+#include "Cjt_Cocheras.hpp"
+</span><span class="comment">
+/* Clase Cjt_Cocheras
+ * Representa un conjunto de cocheras
+ */
+
+/* Constructora */
+/** @brief Creadora
+ *  M es el numero de cocheras.
+ *  \pre M &gt; 0
+ *  \post El resultado es un conjunto de M cocheras.
+ */</span>
+
+Cjt_Cocheras<span class="operator">::</span>Cjt_Cocheras<span class="operator">(</span><span class="type">int</span> M<span class="operator">) {</span>
+  _cocheras<span class="operator"> =</span> vector<span class="operator">&lt;</span>Cochera<span class="operator">&gt;(</span>M<span class="operator">);</span>
+
+  _prioridades<span class="operator"> =</span> vector<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt;(</span>M<span class="operator">);
+}</span><span class="comment">
+/* Modificadoras */
+/** @brief Realiza el almacenamiento nocturno de trenes en el conjunto proporcionado.
+ *  Se informara de los trenes y sus respectivas horas de salida por el canal estandar de entrada.
+ *  \pre cierto
+ *  \post Las cocheras contienen los vagones de los trenes indicados.
+ */</span><span class="type">
+void</span> Cjt_Cocheras<span class="operator">::</span>almacenamiento_nocturno<span class="operator">(</span><span class="keyword">const</span> Red<span class="operator"> &amp;</span>red<span class="operator">,</span> Cjt_Trenes<span class="operator"> &amp;</span>trenes<span class="operator">) {</span>
+
+  list<span class="operator">&lt;</span>Tren<span class="operator">&gt;</span> trenes_almacenamiento<span class="operator"> =</span> get_trenes_almacenamiento_nocturno<span class="operator">(</span>red<span class="operator">,</span> trenes<span class="operator">);</span>
+  escribir_llegadas<span class="operator">(</span>trenes_almacenamiento<span class="operator">);</span>
+
+  rellena_cocheras<span class="operator">(</span>trenes_almacenamiento<span class="operator">);
+}</span><span class="comment">
+/** @brief Rellena las cocheras con los vagones de los trenes, siguiendo la politica descrita en el enunciado.
+ *  Se informara de los trenes y sus respectivas horas de salida por el canal estandar de entrada.
+ *  \pre La lista de cocheras esta ordenada por prioridad, y la de trenes por hora de llegada. Todos los trenes caben en las cocheras.
+ *  \post Las cocheras contienen los vagones de los trenes indicados.
+ */</span><span class="type">
+void</span> Cjt_Cocheras<span class="operator">::</span>rellena_cocheras<span class="operator">(</span><span class="keyword">const</span> list<span class="operator">&lt;</span>Tren<span class="operator">&gt; &amp;</span>trenes<span class="operator">) {</span><span class="flow">
+
+  for</span><span class="operator"> (</span>list<span class="operator">&lt;</span>Tren<span class="operator">&gt;::</span>const_iterator it_t<span class="operator"> =</span> trenes<span class="operator">.</span>begin<span class="operator">();</span> it_t<span class="operator"> !=</span> trenes<span class="operator">.</span>end<span class="operator">(); ++</span>it_t<span class="operator">) {</span><span class="type">
+
+    bool</span> almacenado<span class="operator"> =</span><span class="bool"> false</span><span class="operator">;</span>
+    queue<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt;</span> vagones<span class="operator"> =</span> it_t<span class="operator">-&gt;</span>get_vagones<span class="operator">();</span><span class="flow">
+
+    for</span><span class="operator"> (</span><span class="type">int</span> i<span class="operator"> =</span><span class="int"> 0</span><span class="operator">;</span> i<span class="operator"> &lt;</span> _cocheras<span class="operator">.</span>size<span class="operator">()</span><span class="operator"> and not</span> almacenado<span class="operator">;</span> i<span class="operator">++) {</span><span class="type">
+
+      int</span> espacios_libres<span class="operator"> =</span> _cocheras<span class="operator">[</span>_prioridades<span class="operator">[</span>i<span class="operator">]].</span>get_espacios_libres<span class="operator">();</span><span class="flow">
+      if</span><span class="operator"> (</span>vagones<span class="operator">.</span>size<span class="operator">() &lt;=</span> espacios_libres<span class="operator">) {</span>
+
+	_cocheras<span class="operator">[</span>_prioridades<span class="operator">[</span>i<span class="operator">]].</span>anadir_vagones<span class="operator">(</span>vagones<span class="operator">);</span>
+        almacenado<span class="operator"> =</span><span class="bool"> true</span><span class="operator">;
+      }
+    }
+  }
+}</span><span class="comment">
+
+/** @brief Escribe las horas de llegada de los trenes en el canal estandar de salida
+ *  \pre Los trenes deben haber realizado su ultimo viaje
+ *  \post Las horas de llegada se han escrito en el canal estandar de salida
+ */</span><span class="type">
+void</span> Cjt_Cocheras<span class="operator">::</span>escribir_llegadas<span class="operator">(</span>list<span class="operator">&lt;</span>Tren<span class="operator">&gt; &amp;</span>trenes<span class="operator">)</span><span class="keyword"> const</span><span class="operator"> {</span>
+
+  cout<span class="operator"> &lt;&lt;</span><span class="string"> "Horarios para el almacenamiento nocturno"</span><span class="operator"> &lt;&lt;</span> endl<span class="operator">;</span><span class="flow">
+  for</span><span class="operator"> (</span>list<span class="operator">&lt;</span>Tren<span class="operator">&gt;::</span>iterator it<span class="operator"> =</span> trenes<span class="operator">.</span>begin<span class="operator">();</span> it<span class="operator"> !=</span> trenes<span class="operator">.</span>end<span class="operator">(); ++</span>it<span class="operator">) {</span><span class="type">
+
+    int</span> tiempo<span class="operator"> =</span> it<span class="operator">-&gt;</span>get_hora_llegada<span class="operator">();</span><span class="type">
+    int</span> hora<span class="operator"> =</span> tiempo<span class="operator"> /</span><span class="int"> 60</span><span class="operator">;</span><span class="type">
+
+    int</span> minuto<span class="operator"> =</span> tiempo<span class="operator"> %</span><span class="int"> 60</span><span class="operator">;</span>
+    cout<span class="operator"> &lt;&lt;</span><span class="string"> "Tren "</span><span class="operator"> &lt;&lt;</span> it<span class="operator">-&gt;</span>get_id<span class="operator">() &lt;&lt;</span><span class="char"> ' '</span><span class="operator"> &lt;&lt;</span><span class="string"> "H. "</span><span class="operator"> &lt;&lt;</span> hora<span class="operator"> &lt;&lt;</span><span class="string"> " M. "</span><span class="operator"> &lt;&lt;</span> minuto<span class="operator"> &lt;&lt;</span> endl<span class="operator">;
+  }</span>
+
+  cout<span class="operator"> &lt;&lt;</span> endl<span class="operator">;
+}</span><span class="comment">
+/** @brief Funcion auxiliar para realizar la ordenacion de los trenes por hora de llegada.
+ *  \pre cierto
+ *  \post El resultado indica si el primer tren deberia ir antes que el segundo.
+ */</span><span class="type">
+bool</span> sort_hora_llegada<span class="operator">(</span><span class="keyword">const</span> Tren<span class="operator"> &amp;</span>tren1<span class="operator">,</span><span class="keyword"> const</span> Tren<span class="operator"> &amp;</span>tren2<span class="operator">) {</span><span class="type">
+
+  int</span> hora_llegada_tren1<span class="operator"> =</span> tren1<span class="operator">.</span>get_hora_llegada<span class="operator">();</span><span class="type">
+  int</span> hora_llegada_tren2<span class="operator"> =</span> tren2<span class="operator">.</span>get_hora_llegada<span class="operator">();</span><span class="type">
+
+  bool</span> ret<span class="operator"> =</span> hora_llegada_tren1<span class="operator"> &lt;</span> hora_llegada_tren2<span class="operator">;</span><span class="flow">
+  if</span><span class="operator"> (</span>hora_llegada_tren1<span class="operator"> ==</span> hora_llegada_tren2<span class="operator">)</span> ret<span class="operator"> =</span> tren1<span class="operator">.</span>get_id<span class="operator">() &lt;</span> tren2<span class="operator">.</span>get_id<span class="operator">();</span><span class="flow">
+
+  return</span> ret<span class="operator">;
+}</span><span class="comment">
+/** @brief Lee las horas de salida de los trenes para el almacenamiento nocturno del canal estandar de entrada, y devuelve una lista con esos trenes ordenada por hora de llegada.
+ *  \pre cierto
+ *  \post Retorna una lista de los trenes indicados ordenada por hora de llegada.
+ */</span>
+list<span class="operator">&lt;</span>Tren<span class="operator">&gt;</span> Cjt_Cocheras<span class="operator">::</span>get_trenes_almacenamiento_nocturno<span class="operator">(</span><span class="keyword">const</span> Red<span class="operator"> &amp;</span>red<span class="operator">,</span> Cjt_Trenes<span class="operator"> &amp;</span>trenes<span class="operator">)</span><span class="keyword"> const</span><span class="operator"> {</span>
+
+  list<span class="operator">&lt;</span>Tren<span class="operator">&gt;</span> trenes_almacenamiento<span class="operator">;</span><span class="type">
+  int</span> num_trenes<span class="operator"> =</span> readint<span class="operator">();</span><span class="flow">
+
+  for</span><span class="operator"> (</span><span class="type">int</span> i<span class="operator"> =</span><span class="int"> 0</span><span class="operator">;</span> i<span class="operator"> &lt;</span> num_trenes<span class="operator">;</span> i<span class="operator">++) {</span><span class="type">
+
+    int</span> id_tren<span class="operator"> =</span> readint<span class="operator">();</span><span class="type">
+    int</span> hora<span class="operator"> =</span> readint<span class="operator">();</span><span class="type">
+
+    int</span> minuto<span class="operator"> =</span> readint<span class="operator">();</span><span class="type">
+    int</span> hora_salida<span class="operator"> =</span> hora<span class="operator"> *</span><span class="int"> 60</span><span class="operator"> +</span> minuto<span class="operator">;</span><span class="type">
+
+    int</span> hora_llegada<span class="operator"> =</span> hora_salida<span class="operator"> +</span> red<span class="operator">.</span>get_tiempo_estacion<span class="operator">(</span>id_tren<span class="operator">);</span>
+
+    Tren tren<span class="operator"> =</span> trenes<span class="operator">.</span>get_tren<span class="operator">(</span>id_tren<span class="operator">);</span>
+    tren<span class="operator">.</span>set_hora_llegada<span class="operator">(</span>hora_llegada<span class="operator">);</span>
+
+    trenes_almacenamiento<span class="operator">.</span>insert<span class="operator">(</span>trenes_almacenamiento<span class="operator">.</span>end<span class="operator">(),</span> tren<span class="operator">);
+  }</span>
+  trenes_almacenamiento<span class="operator">.</span>sort<span class="operator">(</span>sort_hora_llegada<span class="operator">);</span><span class="flow">
+
+  return</span> trenes_almacenamiento<span class="operator">;
+}</span><span class="comment">
+/** @brief Realiza la formacion matinal de trenes pertenecientes al conjunto proporcionado que salen un dia.
+ *  Se informara de que trenes salen por el canal estandar de entrada.
+ *  \pre Las cocheras se han llenado en una almacenamiento nocturno.
+ *  \post Se han formado los trenes indicados con los vagones de las cocheras.
+ */</span><span class="type">
+void</span> Cjt_Cocheras<span class="operator">::</span>formacion_matinal<span class="operator">(</span>Cjt_Trenes<span class="operator"> &amp;</span>trenes<span class="operator">) {</span>
+
+  list<span class="operator">&lt;</span>Tren<span class="operator">&gt;</span> trenes_formacion<span class="operator"> =</span> get_trenes_formacion_matinal<span class="operator">(</span>trenes<span class="operator">);</span>
+  vacia_cocheras<span class="operator">(</span>trenes_formacion<span class="operator">);
+}</span><span class="comment">
+
+/** @brief Forma los trenes indicados con los vagones de las vias de las cocheras.
+ *  Al terminar, las cocheras quedan sin los vagones que se utilizaron para los trenes.
+ *  Los movimientos para formar los trenes se escriben en el canal estandar de salida.
+ *  \pre Se garantiza que los trenes se podran formar porque todos sus vagones estan en las cocheras.
+ *  \post Se han formado los trenes indicados con los vagones de las cocheras.
+ */</span><span class="type">
+void</span> Cjt_Cocheras<span class="operator">::</span>vacia_cocheras<span class="operator">(</span>list<span class="operator">&lt;</span>Tren<span class="operator">&gt; &amp;</span>trenes<span class="operator">) {</span>
+  stack<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt;</span> via_auxiliar<span class="operator">;</span>
+
+  cout<span class="operator"> &lt;&lt;</span><span class="string"> "Movimientos para la formacion matinal"</span><span class="operator"> &lt;&lt;</span> endl<span class="operator">;</span><span class="flow">
+  for</span><span class="operator"> (</span>list<span class="operator">&lt;</span>Tren<span class="operator">&gt;::</span>iterator it<span class="operator"> =</span> trenes<span class="operator">.</span>begin<span class="operator">();</span> it<span class="operator"> !=</span> trenes<span class="operator">.</span>end<span class="operator">(); ++</span>it<span class="operator">) {</span>
+
+    cout<span class="operator"> &lt;&lt;</span><span class="string"> "  Tren "</span><span class="operator"> &lt;&lt;</span> it<span class="operator">-&gt;</span>get_id<span class="operator">() &lt;&lt;</span><span class="string"> " :"</span><span class="operator"> &lt;&lt;</span> endl<span class="operator">;</span>
+
+    queue<span class="operator">&lt;</span><span class="type">int</span><span class="operator">&gt;</span> vagones<span class="operator"> =</span> it<span class="operator">-&gt;</span>get_vagones<span class="operator">();</span><span class="flow">
+    for</span><span class="operator"> (</span><span class="type">int</span> i<span class="operator"> =</span><span class="int"> 0</span><span class="operator">;</span> i<span class="operator"> &lt;</span> _cocheras<span class="operator">.</span>size<span class="operator">()</span><span class="operator"> and not</span> vagones<span class="operator">.</span>empty<span class="operator">();</span> i<span class="operator">++) {</span>
+
+      cout<span class="operator"> &lt;&lt;</span><span class="string"> "    Cochera "</span><span class="operator"> &lt;&lt; (</span>_prioridades<span class="operator">[</span>i<span class="operator">] +</span><span class="int"> 1</span><span class="operator">) &lt;&lt;</span><span class="string"> " : "</span><span class="operator">;</span>
+
+      _cocheras<span class="operator">[</span>_prioridades<span class="operator">[</span>i<span class="operator">]].</span>formar_tren<span class="operator">(</span>vagones<span class="operator">,</span> via_auxiliar<span class="operator">);</span>
+      _cocheras<span class="operator">[</span>_prioridades<span class="operator">[</span>i<span class="operator">]].</span>anadir_vagones<span class="operator">(</span>via_auxiliar<span class="operator">);</span>
+
+      cout<span class="operator"> &lt;&lt;</span> endl<span class="operator">;
+    }
+  }</span>
+  cout<span class="operator"> &lt;&lt;</span> endl<span class="operator">;
+}</span><span class="comment">
+
+/** @brief Se leen los trenes para la formacion matinal del canal estandar de entrada.
+ *  \pre cierto
+ *  \post Retorna una lista con los trenes.
+ */</span>
+list<span class="operator">&lt;</span>Tren<span class="operator">&gt;</span> Cjt_Cocheras<span class="operator">::</span>get_trenes_formacion_matinal<span class="operator">(</span>Cjt_Trenes<span class="operator"> &amp;</span>trenes<span class="operator">)</span><span class="keyword"> const</span><span class="operator"> {</span>
+
+  list<span class="operator">&lt;</span>Tren<span class="operator">&gt;</span> trenes_formacion<span class="operator">;</span><span class="type">
+  int</span> num_trenes<span class="operator"> =</span> readint<span class="operator">();</span><span class="flow">
+
+  for</span><span class="operator"> (</span><span class="type">int</span> i<span class="operator"> =</span><span class="int"> 0</span><span class="operator">;</span> i<span class="operator"> &lt;</span> num_trenes<span class="operator">;</span> i<span class="operator">++) {</span><span class="type">
+
+    int</span> id_tren<span class="operator"> =</span> readint<span class="operator">();</span>
+    Tren tren<span class="operator"> =</span> trenes<span class="operator">.</span>get_tren<span class="operator">(</span>id_tren<span class="operator">);</span>
+
+    trenes_formacion<span class="operator">.</span>insert<span class="operator">(</span>trenes_formacion<span class="operator">.</span>end<span class="operator">(),</span> tren<span class="operator">);
+  }</span><span class="flow">
+  return</span> trenes_formacion<span class="operator">;
+}</span><span class="comment">
+
+/* Lectura y escritura */
+/** @brief Se leen los datos de las cocheras de la red del canal estandar de entrada.
+ *  \pre cierto
+ *  \post Los datos del parametro implicito son los leidos de la entrada.
+ */</span><span class="type">
+void</span> Cjt_Cocheras<span class="operator">::</span>leer_cocheras<span class="operator">() {</span><span class="flow">
+  for</span><span class="operator"> (</span><span class="type">int</span> i<span class="operator"> =</span><span class="int"> 0</span><span class="operator">;</span> i<span class="operator"> &lt;</span> _cocheras<span class="operator">.</span>size<span class="operator">();</span> i<span class="operator">++) {</span>
+
+    _cocheras<span class="operator">[</span>i<span class="operator">].</span>leer_cochera<span class="operator">();</span><span class="type">
+    int</span> prioridad<span class="operator"> =</span> readint<span class="operator">();</span>
+
+    _prioridades<span class="operator">[</span>prioridad<span class="operator"> -</span><span class="int"> 1</span><span class="operator">] =</span> i<span class="operator">;
+  }
+}</span><span class="comment">
+/** @brief Escritura de las cocheras.
+ *  \pre cierto
+ *  \post Los datos de las cocheras se han escrito en el canal estandar de salida.
+ */</span><span class="type">
+void</span> Cjt_Cocheras<span class="operator">::</span>escribir_cocheras<span class="operator">() {</span>
+
+  cout<span class="operator"> &lt;&lt;</span><span class="string"> "Cocheras"</span><span class="operator"> &lt;&lt;</span> endl<span class="operator">;</span><span class="flow">
+  for</span><span class="operator"> (</span><span class="type">int</span> i<span class="operator"> =</span><span class="int"> 0</span><span class="operator">;</span> i<span class="operator"> &lt;</span> _cocheras<span class="operator">.</span>size<span class="operator">();</span> i<span class="operator">++) {</span>
+
+    cout<span class="operator"> &lt;&lt; (</span>i<span class="operator"> +</span><span class="int"> 1</span><span class="operator">) &lt;&lt;</span><span class="string"> " : "</span><span class="operator">;</span>
+    _cocheras<span class="operator">[</span>i<span class="operator">].</span>escribir_cochera<span class="operator">();</span>
+
+    cout<span class="operator"> &lt;&lt;</span> endl<span class="operator">;
+  }</span>
+  cout<span class="operator"> &lt;&lt;</span> endl<span class="operator">;
+}</span>
+</pre>

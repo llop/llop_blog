@@ -1,0 +1,604 @@
+PRACTICA DE PRO2 - JUEGO DE PRUEBAS PÚBLICO
+
+Esquema de este documento:
+
+0. Observaciones previas.
+1. Composición de los juegos de pruebas.
+2. Entrada y salida de las operaciones.
+3. Juego de pruebas público.
+
+-------------------------------------------------------------------------------
+0. OBSERVACIONES PREVIAS
+-------------------------------------------------------------------------------
+
+* Para una ejecución, el valor M que determina el número de cocheras es
+  constante.  Dicho valor M es un entero mayor que 0 y se lee como dato de
+  inicialización.
+
+* Para una ejecución, el valor n que determina el número de niveles de la red de
+  estaciones es constante. Dicho valor n es un entero mayor que 1 y se lee como
+  dato de inicialización. Se usa para calcular el número de estaciones.
+
+* Nunca se introducirán datos no válidos.
+
+* Los ficheros de entrada de los juegos de pruebas tendrán líneas de menos de 80
+  caracteres. Si necesitamos datos muy grandes para una misma operación, los
+  dividiremos en varias líneas.
+
+
+-------------------------------------------------------------------------------
+1. COMPOSICIÓN DE LOS JUEGOS DE PRUEBAS
+-------------------------------------------------------------------------------
+
+En primer lugar se lee el número M que determina la cantidad de cocheras.
+Después se lee el número n que determina la cantidad de niveles de la red.
+
+Luego se introduce la estructura de la red de estaciones en preorden, leyendo
+para cada nodo (estaciones) el tiempo en minutos para llegar a su estación
+padre, que para la estación central será siempre 0. Cualquier entero negativo
+servirá como marca. Por ejemplo, nosotros usaremos el valor -1.
+
+Tras esto se leen los datos de las M cocheras.  Los identificadores de las
+cocheras van de 1 a M, y no se han de leer. Por orden de identificador se lee la
+capacidad, que será un entero mayor que 0 y la prioridad de cada cochera, que
+será un número entre 1 y M, distinto para cada cochera.
+
+A continuacion se leerá la configuración de una serie de trenes. El primer valor
+nos indica el número de trenes cuya configuración aparecerá a continuación. Como
+mínimo habrá un tren y como máximo tantos como estaciones hay en la red excepto
+la estación central.  Para cada tren se lee su identificador que coincidirá con
+el identificador de la estación que tiene asociada (no puede haber
+identificadores repetidos y la estación central no tiene ningún tren asociado,
+con lo que no puede aparecer el identificador 0). Luego se lee el número de
+vagones del tren y finalmente su configuración, es decir, los tipos de los
+vagones que componen el tren. Un tipo de vagón puede ser cualquier natural mayor
+que 0. El orden de los vagones de la configuración es relevante para la
+realización de las diferentes operaciones: el primer vagón leído será el primer
+vagón a almacenar o formar, y así sucesivamente.
+
+A partir de aquí se aplican las operaciones abajo comentadas.  Cada operación se
+identifica mediante un código numérico, que será un entero negativo entre -1 y
+-6 (esto se ha elegido simplemente para favorecer la legibilidad de los juegos
+de pruebas). Cada operación comenzará con su código y a éste le seguirán los
+datos de la misma, si es que necesita alguno. Se garantiza que no aparecerán
+códigos de operación inexistentes.
+
+-------------------------------------------------------------------------------
+2. ENTRADA Y SALIDA DE LAS OPERACIONES
+-------------------------------------------------------------------------------
+
+Seguidamente detallamos los elementos propios de las diferentes operaciones.  Se
+garantiza que los valores proporcionados serán válidos según los convenios
+expuestos en el enunciado y en este documento.  Para ver ejemplos concretos de
+la sintaxis de sus entradas y salidas, id al apartado 3.
+
+Todas las operaciones que realicen alguna escritura, es decir, las operaciones
+-1, -2 y -5, dejarán una línea en blanco al final.
+
+* ALMACENAMIENTO NOCTURNO
+
+Identificador: -1
+
+Entrada: se lee el número de trenes que van a ser almacenados. Para cada uno de
+ellos se lee su identificador y la hora de salida, que consta de dos enteros,
+uno es la hora y el otro el minuto.  Los identificadores de los trenes
+corresponden a trenes cuya configuración ya existe. No habrá identificadores
+repetidos. Se cumple que los trenes han de caber necesariamente en las
+cocheras. Todas las horas de salida corresponden al mismo día. Todos los trenes
+llegan el mismo día que parten o el día siguiente.
+
+Salida: por cada tren que ha salido se escribe su identificador, la hora de
+llegada y el minuto de llegada, todo ello por orden de llegada.
+
+Efectos de la operación sobre el sistema: se añaden trenes completos en las
+cocheras por orden de llegada y prioridad de las cocheras. Los vagones de los
+trenes se añaden en las cocheras en el mismo orden que aparecen en la
+configuración del tren. El primer vagón de la configuración será el primero que
+se almacene en la cochera correspondiente y así sucesivamente. Para poder
+acceder a dicho vagón cuando se quiera sacarlo de la cochera habrá que mover
+todos los demás vagones del tren y el resto de vagones que se hubieran añadido a
+la cochera posteriormente.
+
+* FORMACIÓN MATINAL
+
+Identificador: -2
+
+Entrada: se lee el número de trenes que se van a formar y luego sus
+identificadores. Los identificadores de los trenes corresponden a trenes cuya
+configuración ya existe. No habrá identificadores repetidos.  Se garantiza que
+habrá vagones suficientes para formar los trenes respetando la prioridad de las
+cocheras.
+
+Salida: para cada tren formado se escribe la secuencia de movimientos necesaria
+para completar su configuración. Los movimientos se escriben agrupados por la
+cochera en la que se realizan. Para cada cochera, empezando por la más
+prioritaria y en orden decreciente de prioridad, se escribirá su identificador y
+la secuencia de movimientos realizados en dicha cochera. Si antes de acabar la
+formación se trata alguna cochera de la que no se extrae ningún vagón, solo se
+escribirá el identificador de dicha cochera pero ningún movimiento. Las cocheras
+restantes después de acabar la formación no aparecerán en la salida.  Para cada
+movimiento se indica su tipo (1, 2 ó 3) y el tipo de vagón que se mueve.  El
+tren se forma siguiendo el orden de los vagones de su configuración.
+
+Efectos de la operación sobre el sistema: los vagones usados para formar los
+trenes se eliminan de las cocheras. El resto quedan el mismo orden en el que
+estaban.
+
+* SUSTITUIR CONFIGURACIÓN TREN
+
+Identificador: -3
+
+Entrada: se lee el identificador del tren, que coincidirá con el identificador
+de la estación que tiene asociada, y que no podrá ser 0, puesto que la
+estación central no tendrá tren asociado. Luego se leerá el número de vagones
+del tren y finalmente su configuración, es decir, los tipos de los vagones que
+componen el tren. Un tipo de vagón puede ser cualquier natural mayor que 0.
+
+Salida: NO TIENE SALIDA.
+
+Efectos de la operación sobre el sistema: se sustituye la configuración de un
+tren existente por una nueva o se añade un tren que no existía.
+
+* SUSTITUIR DATOS COCHERAS
+
+Identificador: -4
+
+Entrada: se leen los datos de las M cocheras por orden creciente de
+identificador.  Los identificadores de las cocheras van de 1 a M, y no se han de
+leer. Los datos de una cochera son la capacidad y la prioridad.  Se garantiza
+que la nueva capacidad de cada cochera no será menor que el número de vagones
+que haya en ese momento en dicha cochera.
+
+Salida: NO TIENE SALIDA.
+
+Efectos de la operación sobre el sistema: cambia los datos antiguos de las
+cocheras por los nuevos, que no necesariamente serán distintos de los antiguos.
+
+
+* ESCRIBIR COCHERAS
+
+Identificador: -5
+
+Entrada: NO TIENE ENTRADA.
+
+Salida: escribe el contenido de las cocheras, en orden de identificador. Para
+cada cochera se escriben su identificador y los vagones que contiene. Primero se
+escribe el vagón que lleva más tiempo en la cochera y así sucesivamente.
+
+Efectos de la operación sobre el sistema: NO TIENE EFECTOS.
+
+* SALIR DEL PROGRAMA
+
+Identificador: -6
+
+
+-------------------------------------------------------------------------------
+3. JUEGO DE PRUEBAS PÚBLICO
+-------------------------------------------------------------------------------
+
+Entrada comentada:
+
+-------------------------------------------------------------------------------
+
+5       // Número de cocheras (M)
+4       // Niveles del árbol (n)
+
+0 10 30 500 -1 -1     // Árbol de tiempos entre estaciones en preorden
+80 -1 -1              // Raíz siempre 0
+40 90 -1 -1           // La marca puede ser cualquier número negativo,
+100 -1 -1             // porque no hay tiempos negativos
+20 50 110 -1 -1
+120 -1 -1
+60 130 -1 -1
+140 -1 -1
+
+100 1                 // M cocheras
+100 2                 // Capacidad y prioridad de cada cochera
+100 3
+100 4
+100 5
+
+8                     // Lectura de trenes: número de trenes que se van a leer
+7 3 12 4 12           // id del tren, numero de vagones, tipo de cada vagón
+8 3 1 2 3
+9 4 5 6 7 5
+10 3 4 4 4
+11 3 4 4 4
+12 4 12 23 34 34
+13 2 10 20
+14 1 13
+
+
+-1                    // Operación almacenamiento nocturno
+                      // Los trenes han de existir
+8                     // Número de trenes
+7 18 0                // id del tren, hora y minuto de salida
+8 18 0
+9 18 0
+10 18 0
+11 18 0
+12 18 0
+13 18 0
+14 18 0
+
+-5                    // Escribir cochera
+
+
+-2                    // Formación matinal
+8                     // Número de trenes que se han de formar
+11 10 7 9 8 14 13 12  // Códigos de los trenes
+                      // Los trenes ha de existir
+
+-5
+
+
+-3                    // Modificar o añadir un tren
+6 5 9 9 9 9 9         // id del tren, numero de vagones, tipo de cada vagón
+
+-3
+5 7 9 4 13 5 7 34 23
+
+
+-4                    // Leer cocheras
+5 2                   // Capacidad y prioridad de cada cochera
+5 4
+5 3
+5 1
+100 5
+
+-1
+10
+7 18 0
+8 16 0
+9 18 25
+10 18 0
+11 17 0
+5 23 43
+12 18 10
+13 18 0
+14 18 0
+6 12 0
+
+-5
+
+-2
+6
+10 5 13 6 14 7
+
+-5
+
+-6
+
+-------------------------------------------------------------------------------
+
+Salida comentada:
+
+-------------------------------------------------------------------------------
+
+
+              // Resultado de la operación -1
+              // id tren, hora y minuto de llegada, ordenados cronológicamente
+
+Horarios para el almacenamiento nocturno
+Tren 8 H. 20 M. 0
+Tren 9 H. 20 M. 20
+Tren 10 H. 20 M. 30
+Tren 11 H. 21 M. 0
+Tren 12 H. 21 M. 10
+Tren 13 H. 21 M. 30
+Tren 14 H. 21 M. 40
+Tren 7 H. 3 M. 0
+
+              // Resultado de la operación -5;
+              // se escriben todas las cocheras aunque no tengan vagones
+
+Cocheras
+1 : 1 2 3 5 6 7 5 4 4 4 4 4 4 12 23 34 34 10 20 13 12 4 12
+2 :
+3 :
+4 :
+5 :
+              // Resultado de la operación -2
+              // Para cada tren se escribe la secuencia de movimientos
+              // necesarios para formarlo. Se escriben los movimientos
+              // clasificados por cochera en orden de prioridad
+              // Cada movimiento va separado del siguiente por un blanco adicional.
+              // En este ejemplo solo se usa una cochera para cada tren
+
+Movimientos para la formacion matinal
+  Tren 11 :
+    Cochera 1 : 2 12  1 4  2 12  2 13  2 20  2 10  2 34  2 34  2 23  2 12  1 4  1 4
+  Tren 10 :
+    Cochera 1 : 2 12  2 12  2 13  2 20  2 10  2 34  2 34  2 23  2 12  1 4  1 4  1 4
+  Tren 7 :
+    Cochera 1 : 1 12  2 12  2 13  2 20  2 10  2 34  2 34  2 23  2 12  1 4  3 12  1 12
+  Tren 9 :
+    Cochera 1 : 2 12  2 13  2 20  2 10  2 34  2 34  2 23  1 5  2 7  1 6  3 7  1 7  1 5
+  Tren 8 :
+    Cochera 1 : 2 12  2 13  2 20  2 10  2 34  2 34  2 23  2 3  2 2  1 1  3 2  1 2  3 3  1 3
+  Tren 14 :
+    Cochera 1 : 2 12  1 13
+  Tren 13 :
+    Cochera 1 : 2 12  2 20  1 10  3 20  1 20
+  Tren 12 :
+    Cochera 1 : 1 12  2 34  2 34  1 23  3 34  1 34  3 34  1 34
+
+
+              // Resultado de la operación -5
+              // No se escriben vagones porque se han extraido
+              // todos los que había en las cocheras
+
+Cocheras
+1 :
+2 :
+3 :
+4 :
+5 :
+
+Horarios para el almacenamiento nocturno
+Tren 6 H. 13 M. 20
+Tren 8 H. 18 M. 0
+Tren 11 H. 20 M. 0
+Tren 10 H. 20 M. 30
+Tren 9 H. 20 M. 45
+Tren 12 H. 21 M. 20
+Tren 13 H. 21 M. 30
+Tren 14 H. 21 M. 40
+Tren 5 H. 0 M. 53
+Tren 7 H. 3 M. 0
+
+Cocheras
+1 : 1 2 3 10 20
+2 : 4 4 4
+3 : 4 4 4 13
+4 : 9 9 9 9 9
+5 : 5 6 7 5 12 23 34 34 9 4 13 5 7 34 23 12 4 12
+
+              // Resultado de la operación -2
+              // En este ejemplo ya intervienen varias cocheras
+
+Movimientos para la formacion matinal
+  Tren 10 :
+    Cochera 4 :
+    Cochera 1 :
+    Cochera 3 : 2 13  1 4  1 4  1 4
+  Tren 5 :
+    Cochera 4 : 1 9
+    Cochera 1 :
+    Cochera 3 :
+    Cochera 2 : 1 4
+    Cochera 5 : 2 12  2 4  2 12  2 23  2 34  2 7  2 5  1 13  3 5  1 5  3 7  1 7  3 34  1 34  3 23  1 23
+  Tren 13 :
+    Cochera 4 :
+    Cochera 1 : 2 20  1 10  3 20  1 20
+  Tren 6 :
+    Cochera 4 : 1 9  1 9  1 9  1 9
+    Cochera 1 :
+    Cochera 3 :
+    Cochera 2 :
+    Cochera 5 : 2 12  2 4  2 12  2 4  1 9
+  Tren 14 :
+    Cochera 4 :
+    Cochera 1 :
+    Cochera 3 : 1 13
+  Tren 7 :
+    Cochera 4 :
+    Cochera 1 :
+    Cochera 3 :
+    Cochera 2 :
+    Cochera 5 : 1 12  1 4  1 12
+
+Cocheras
+1 : 1 2 3
+2 : 4 4
+3 :
+4 :
+5 : 5 6 7 5 12 23 34 34 4
+
+
+Al final puede haber una línea en blanco o más.
+
+-------------------------------------------------------------------------------
+
+Entrada sin comentar: cortadla y pegadla en un fichero para usarla como entrada
+para vuestro programa mediante la redirección <. La entrada se ha de poder
+procesar si donde hay un blanco, tabulador o salto de línea se ponen dos o más
+(por ejemplo, para separar las distintas acciones) o si donde hay dos o más
+saltos de línea sólo se pone uno.
+
+-------------------------------------------------------------------------------
+
+5
+4
+
+0 10 30 500 -1 -1
+80 -1 -1
+40 90 -1 -1
+100 -1 -1
+20 50 110 -1 -1
+120 -1 -1
+60 130 -1 -1
+140 -1 -1
+
+100 1
+100 2
+100 3
+100 4
+100 5
+
+8
+7 3 12 4 12
+8 3 1 2 3
+9 4 5 6 7 5
+10 3 4 4 4
+11 3 4 4 4
+12 4 12 23 34 34
+13 2 10 20
+14 1 13
+
+-1
+
+8
+7 18 0
+8 18 0
+9 18 0
+10 18 0
+11 18 0
+12 18 0
+13 18 0
+14 18 0
+
+-5
+
+-2
+8
+11 10 7 9 8 14 13 12
+
+-5
+
+-3
+6 5 9 9 9 9 9
+
+-3
+5 7 9 4 13 5 7 34 23
+
+-4
+5 2
+5 4
+5 3
+5 1
+100 5
+
+-1
+10
+7 18 0
+8 16 0
+9 18 25
+10 18 0
+11 17 0
+5 23 43
+12 18 10
+13 18 0
+14 18 0
+6 12 0
+
+-5
+
+-2
+6
+10 5 13 6 14 7
+
+-5
+
+-6
+
+-------------------------------------------------------------------------------
+
+Salida sin comentar: vuestro resultado ha de coincidir exactamente con éste
+(probándolo con el comando diff -Bb de Linux), salvo las líneas en blanco del
+principio y del final, que pueden variar.
+
+-------------------------------------------------------------------------------
+
+Horarios para el almacenamiento nocturno
+Tren 8 H. 20 M. 0
+Tren 9 H. 20 M. 20
+Tren 10 H. 20 M. 30
+Tren 11 H. 21 M. 0
+Tren 12 H. 21 M. 10
+Tren 13 H. 21 M. 30
+Tren 14 H. 21 M. 40
+Tren 7 H. 3 M. 0
+
+Cocheras
+1 : 1 2 3 5 6 7 5 4 4 4 4 4 4 12 23 34 34 10 20 13 12 4 12
+2 :
+3 :
+4 :
+5 :
+
+Movimientos para la formacion matinal
+  Tren 11 :
+    Cochera 1 : 2 12  1 4  2 12  2 13  2 20  2 10  2 34  2 34  2 23  2 12  1 4  1 4
+  Tren 10 :
+    Cochera 1 : 2 12  2 12  2 13  2 20  2 10  2 34  2 34  2 23  2 12  1 4  1 4  1 4
+  Tren 7 :
+    Cochera 1 : 1 12  2 12  2 13  2 20  2 10  2 34  2 34  2 23  2 12  1 4  3 12  1 12
+  Tren 9 :
+    Cochera 1 : 2 12  2 13  2 20  2 10  2 34  2 34  2 23  1 5  2 7  1 6  3 7  1 7  1 5
+  Tren 8 :
+    Cochera 1 : 2 12  2 13  2 20  2 10  2 34  2 34  2 23  2 3  2 2  1 1  3 2  1 2  3 3  1 3
+  Tren 14 :
+    Cochera 1 : 2 12  1 13
+  Tren 13 :
+    Cochera 1 : 2 12  2 20  1 10  3 20  1 20
+  Tren 12 :
+    Cochera 1 : 1 12  2 34  2 34  1 23  3 34  1 34  3 34  1 34
+
+Cocheras
+1 :
+2 :
+3 :
+4 :
+5 :
+
+Horarios para el almacenamiento nocturno
+Tren 6 H. 13 M. 20
+Tren 8 H. 18 M. 0
+Tren 11 H. 20 M. 0
+Tren 10 H. 20 M. 30
+Tren 9 H. 20 M. 45
+Tren 12 H. 21 M. 20
+Tren 13 H. 21 M. 30
+Tren 14 H. 21 M. 40
+Tren 5 H. 0 M. 53
+Tren 7 H. 3 M. 0
+
+Cocheras
+1 : 1 2 3 10 20
+2 : 4 4 4
+3 : 4 4 4 13
+4 : 9 9 9 9 9
+5 : 5 6 7 5 12 23 34 34 9 4 13 5 7 34 23 12 4 12
+
+Movimientos para la formacion matinal
+  Tren 10 :
+    Cochera 4 :
+    Cochera 1 :
+    Cochera 3 : 2 13  1 4  1 4  1 4
+  Tren 5 :
+    Cochera 4 : 1 9
+    Cochera 1 :
+    Cochera 3 :
+    Cochera 2 : 1 4
+    Cochera 5 : 2 12  2 4  2 12  2 23  2 34  2 7  2 5  1 13  3 5  1 5  3 7  1 7  3 34  1 34  3 23  1 23
+  Tren 13 :
+    Cochera 4 :
+    Cochera 1 : 2 20  1 10  3 20  1 20
+  Tren 6 :
+    Cochera 4 : 1 9  1 9  1 9  1 9
+    Cochera 1 :
+    Cochera 3 :
+    Cochera 2 :
+    Cochera 5 : 2 12  2 4  2 12  2 4  1 9
+  Tren 14 :
+    Cochera 4 :
+    Cochera 1 :
+    Cochera 3 : 1 13
+  Tren 7 :
+    Cochera 4 :
+    Cochera 1 :
+    Cochera 3 :
+    Cochera 2 :
+    Cochera 5 : 1 12  1 4  1 12
+
+Cocheras
+1 : 1 2 3
+2 : 4 4
+3 :
+4 :
+5 : 5 6 7 5 12 23 34 34 4
+
+
+
+------------------------------------------------------------------------------
