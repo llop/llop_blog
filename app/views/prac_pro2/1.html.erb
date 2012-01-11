@@ -66,7 +66,7 @@ void</span> Cjt_Cocheras<span class="operator">::</span>escribir_llegadas<span c
   for</span><span class="operator"> (</span>list<span class="operator">&lt;</span>Tren<span class="operator">&gt;::</span>iterator it<span class="operator"> =</span> trenes<span class="operator">.</span>begin<span class="operator">();</span> it<span class="operator"> !=</span> trenes<span class="operator">.</span>end<span class="operator">(); ++</span>it<span class="operator">) {</span><span class="type">
 
     int</span> tiempo<span class="operator"> =</span> it<span class="operator">-&gt;</span>get_hora_llegada<span class="operator">();</span><span class="type">
-    int</span> hora<span class="operator"> =</span> tiempo<span class="operator"> /</span><span class="int"> 60</span><span class="operator">;</span><span class="type">
+    int</span> hora<span class="operator"> = (</span>tiempo<span class="operator"> /</span><span class="int"> 60</span><span class="operator">) %<span class="int"> 24</span></span><span class="operator">;</span><span class="type">
 
     int</span> minuto<span class="operator"> =</span> tiempo<span class="operator"> %</span><span class="int"> 60</span><span class="operator">;</span>
     cout<span class="operator"> &lt;&lt;</span><span class="string"> "Tren "</span><span class="operator"> &lt;&lt;</span> it<span class="operator">-&gt;</span>get_id<span class="operator">() &lt;&lt;</span><span class="char"> ' '</span><span class="operator"> &lt;&lt;</span><span class="string"> "H. "</span><span class="operator"> &lt;&lt;</span> hora<span class="operator"> &lt;&lt;</span><span class="string"> " M. "</span><span class="operator"> &lt;&lt;</span> minuto<span class="operator"> &lt;&lt;</span> endl<span class="operator">;
