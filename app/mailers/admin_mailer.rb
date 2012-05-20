@@ -6,7 +6,6 @@ class AdminMailer < ActionMailer::Base
     @comment = comment
     @post = comment.post
     @remote_ip = request.remote_ip
-    puts @remote_ip
     mail subject: ("New comment on " + @post.title)
   end
   

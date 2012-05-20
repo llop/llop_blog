@@ -1,3 +1,4 @@
 <h3>Comment added to <%= link_to raw(@post.title), ('http://www.moleculardensity.net' + post_path(@post.id)), target: '_blank', style: 'text-decoration:none;' %></h3>
 <%= render partial: 'comments/comment', object: @comment %>
+<br/>Ip: <%= @remote_ip %><br/>
 <%= link_to 'EDIT!', ('http://www.moleculardensity.net' + edit_post_path(@post.id)), method: 'get', target: '_blank' %>
