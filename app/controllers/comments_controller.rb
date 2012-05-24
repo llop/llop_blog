@@ -16,6 +16,7 @@ class CommentsController < BlogController
     
     # Dont mail from shit ips
     if (@is_shit_ip)
+      AdminMailer.comment_created(@comment, request).deliver
       render :inline => "<html><head><meta http-equiv=\"Refresh\" content=\"0; url=http://www.sandnes-sykleklubb.no\" /></head><body></body></html>", :status => 200
     elsif (@comment.save)
       AdminMailer.comment_created(@comment, request).deliver unless @is_shit_ip
