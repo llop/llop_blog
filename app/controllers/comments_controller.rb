@@ -6,7 +6,7 @@ class CommentsController < BlogController
   # POST /comments
   def create
     # Quick deal with shit ips
-    shit_ips = [ "217.172.180.18" ]
+    shit_ips = [ "217.172.180.18", "62.75.181.210" ]
     @is_shit_ip = shit_ips.include?(request.remote_ip)
     
     # Prepare post + comment

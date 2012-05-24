@@ -11,8 +11,9 @@
     <%= label_tag 'name', comment.name %>
   <% end %> says:
   </span> 
-  </div>
+  </div><% if comment.created_at != nil %>
   <div style="float:right;"><%= l comment.created_at, :format => :long %></div>
+  <% end %>
 </div>
 </td>
 </tr>
