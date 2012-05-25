@@ -13,7 +13,7 @@ protected
     # Quick deal with shit ips
     shit_ips = [ "217.172.180.18", "62.75.181.210" ]
     if shit_ips.include?(request.remote_ip)
-      render :inline => "<html><head><meta http-equiv=\"Refresh\" content=\"0; url=http://www.sandnes-sykleklubb.no\" /></head><body></body></html>", :status => 200
+      render :inline => " ", :status => 200
     end
   end
   
