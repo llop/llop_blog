@@ -17,6 +17,11 @@ class ApplicationController < ActionController::Base
   # Constants
   @@shit_ips = [ "217.172.180.18", "62.75.181.210" ]  
   
+  # This is actually an action
+  def routing_error
+    render_404
+  end
+  
   # Protected methods
 protected
   
@@ -25,10 +30,6 @@ protected
     if @@shit_ips.include?(request.remote_ip)
       render :inline => "", :status => 301
     end
-  end
-  
-  def routing_error
-    render_404
   end
   
   def exception_handler(exception)
