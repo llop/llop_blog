@@ -1,7 +1,7 @@
 class AdminCategoriesController < AdminController
   
   # cache stuff
-  caches_action :show  #
+  caches_action :show
   
   # GET /admin/categories/1
   # GET /admin/categories/1/page/1
